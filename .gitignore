@@ -16,3 +16,9 @@ gradle-app.setting
 
 #need these files for modded vim syntax hl but don't want to track
 *.taghl
+tags
+
+
+#ignore class files
+*.class
+
