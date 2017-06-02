@@ -10,7 +10,8 @@ public class OaklandOligarchy{
 	ArrayList<Player> all_players = new ArrayList<>();
 	//manual creation of players for skeleton purposes
 	Player p1 = new Player("player1", 800);
-	Player p2 = new Player("player2", 800);
+	Player p2 = new Player("player2", 12000);
+	Player p3 = new Player("player3HasAReallyLongNameSoLetsSeeWhadfasdf", 800);
 	public static void main(String[] args){
 		new OaklandOligarchy();	
 	}//end of main method
@@ -20,6 +21,7 @@ public class OaklandOligarchy{
 		//manually add players for skeleton
 		all_players.add(p1);
 		all_players.add(p2);
+		all_players.add(p3);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setSize(1000,1000);
 
