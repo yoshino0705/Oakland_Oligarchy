@@ -7,14 +7,15 @@ public class Player{
 		this.money = money;
 	}
 
-	public int  getMoney(){
-		return money;	
+	public int getMoney(){
+		return this.money;	
 	}
-	public int setMoney(int money){
+	public void setMoney(int money){
 		this.money = money;
-		return this.money;
 	}
-
+	public String getName(){
+		return this.name;
+	}
 
 }//end of class Player
 	
