@@ -6,13 +6,16 @@ import java.util.ArrayList;
 public class OaklandOligarchy{
 	//main window for the application
 	JFrame window = new JFrame("OaklandOligarchy");
+	JLabel currentTurnPlayerLabel;
+	JButton tradeButton = new JButton("<html>Make<br>Trade</html>");
+	JButton rollButton = new JButton("Roll");
 	JButton newGame = new JButton("New Game");
 	JButton endGame = new JButton("End Game");
-	JLabel currentTurnPlayerLabel;
+	JButton helpButton  = new JButton("Help");
 
 	int numPlayers = 0;//keep track of how many players there are
 	int numTurns = 0;//keep track of how many turns to mod with the all_players array
-	Player currentTurnPlayer = null;
+	Player currentTurnPlayer = null;//the player whos turn it is
 
 	//list of all the players in this game
 	ArrayList<Player> all_players = new ArrayList<>();
@@ -41,7 +44,7 @@ public class OaklandOligarchy{
 		menu.setPreferredSize(new Dimension(1000, 100));
 		menu.setBorder(BorderFactory.createLineBorder(Color.black));
 		window.add(menu, BorderLayout.NORTH);
-		menu.setLayout(new GridLayout(0, 6));
+		menu.setLayout(new GridLayout(0, 7));
 
 		//set game title in top left
 		JLabel title = new JLabel("<html>Oakland<br>Oligarchy</html>");
@@ -50,15 +53,24 @@ public class OaklandOligarchy{
 
 		//add component to keep track of turns
 		currentTurnPlayer = all_players.get(getIndexCurrentTurnPlayer());
-		currentTurnPlayerLabel = new JLabel("<html>Turn:<br>"+currentTurnPlayer.getName()+"</html>");
+		currentTurnPlayerLabel = new JLabel("<html>Turn:<br>"+currentTurnPlayer.getName()+"</html>", SwingConstants.CENTER);
 		currentTurnPlayerLabel.setFont(new Font("Courier", Font.PLAIN, 20));
 		menu.add(currentTurnPlayerLabel,0,1);
+
+		tradeButton.setFont(new Font("Courier", Font.PLAIN, 20));
+		menu.add(tradeButton,0,2);
+		rollButton.setFont(new Font("Courier", Font.PLAIN, 20));
+		menu.add(rollButton,0,3);
 		//set font for buttons in menu panel
 		newGame.setFont(new Font("Courier", Font.PLAIN, 20));
-		menu.add(newGame, 0, 2);
+		menu.add(newGame, 0, 4);
 
 		endGame.setFont(new Font("Courier", Font.PLAIN, 20));
-		menu.add(endGame, 0, 3);
+		menu.add(endGame, 0, 5);
+
+		
+		helpButton.setFont(new Font("Courier", Font.PLAIN, 20));
+		menu.add(helpButton, 0, 6);
 
 		//add info to the left side of the frame
 		InfoPanel info = new InfoPanel(all_players);
