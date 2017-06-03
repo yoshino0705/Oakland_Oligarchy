@@ -8,6 +8,11 @@ public class OaklandOligarchy{
 	JFrame window = new JFrame("OaklandOligarchy");
 	JButton newGame = new JButton("New Game");
 	JButton endGame = new JButton("End Game");
+	JLabel currentTurnPlayerLabel;
+
+	int numPlayers = 0;//keep track of how many players there are
+	int numTurns = 0;//keep track of how many turns to mod with the all_players array
+	Player currentTurnPlayer = null;
 
 	//list of all the players in this game
 	ArrayList<Player> all_players = new ArrayList<>();
@@ -23,14 +28,18 @@ public class OaklandOligarchy{
 	OaklandOligarchy(){
 		//manually add players for skeleton
 		all_players.add(p1);
+		numPlayers++;
 		all_players.add(p2);
+		numPlayers++;
 		all_players.add(p3);
+		numPlayers++;
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setSize(1000,1000);
 
 		//add menu panel accross the top of the game UI
 		JPanel menu = new JPanel();
 		menu.setPreferredSize(new Dimension(1000, 100));
+		menu.setBorder(BorderFactory.createLineBorder(Color.black));
 		window.add(menu, BorderLayout.NORTH);
 		menu.setLayout(new GridLayout(0, 6));
 
@@ -39,12 +48,17 @@ public class OaklandOligarchy{
 		title.setFont(new Font("Times", Font.PLAIN, 30));
 		menu.add(title, 0, 0);
 
+		//add component to keep track of turns
+		currentTurnPlayer = all_players.get(getIndexCurrentTurnPlayer());
+		currentTurnPlayerLabel = new JLabel("<html>Turn:<br>"+currentTurnPlayer.getName()+"</html>");
+		currentTurnPlayerLabel.setFont(new Font("Courier", Font.PLAIN, 20));
+		menu.add(currentTurnPlayerLabel,0,1);
 		//set font for buttons in menu panel
 		newGame.setFont(new Font("Courier", Font.PLAIN, 20));
-		menu.add(newGame, 0, 1);
+		menu.add(newGame, 0, 2);
 
 		endGame.setFont(new Font("Courier", Font.PLAIN, 20));
-		menu.add(endGame, 0, 2);
+		menu.add(endGame, 0, 3);
 
 		//add info to the left side of the frame
 		InfoPanel info = new InfoPanel(all_players);
@@ -54,6 +68,14 @@ public class OaklandOligarchy{
 		window.setVisible(true);
 	}//end of OaklandOligarchy constructor
 
+	//get index of current turn player to use in all_players
+	int getIndexCurrentTurnPlayer(){
+		if(numTurns == 0){
+			return 0;
+		}else{
+			return (numTurns % numPlayers);
+		}
+	}
 
 
 }//end of class OaklandOligarchy
