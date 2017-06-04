@@ -6,20 +6,24 @@ public class GameBoard extends JPanel{
 	private int shiftX = 0;
 	private int shiftY = 0;
 	
-	private int rectWidthHorizontal = 150;
-	private int rectHeightHorizontal = 100;
-	private int rectWidthVertical = 100;
-	private int rectHeightVertical = 150;
-	private int cornerWidth = 200;
-	private int cornerHeight = 200;
+	/***********CHANGE SCALE HERE***************/
+	private double scaleX = 0.63;
+	private double scaleY = 0.63;
 	
-	private int boardWidth = cornerWidth * 2 + rectWidthVertical * 8;
-	private int boardHeight = cornerHeight * 2 + rectHeightHorizontal * 8;
+	private double rectWidthHorizontal = 150 * scaleX;
+	private double rectHeightHorizontal = 100 * scaleY;
+	private double rectWidthVertical = 100 * scaleX;
+	private double rectHeightVertical = 150 * scaleY;
+	private double cornerWidth = 200 * scaleX;
+	private double cornerHeight = 200 * scaleY;
+	
+	private double boardWidth = cornerWidth * 2 + rectWidthVertical * 8;
+	private double boardHeight = cornerHeight * 2 + rectHeightHorizontal * 8;
 	
 	public GameBoard(int x, int y){
 		shiftX = x;
 		shiftY = y;
-		
+
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -56,16 +60,16 @@ public class GameBoard extends JPanel{
 	    
 	}
 	
-	private void drawCorner(Graphics g, int x, int y){
-		g.drawRect(x, y, cornerWidth, cornerHeight);
+	private void drawCorner(Graphics g, double x, double y){
+		g.drawRect( (int) x,  (int) y, (int) cornerWidth, (int) cornerHeight);
 	}
 	
-	private void drawVerticalBox(Graphics g, int x, int y){
-		g.drawRect(x, y, rectWidthVertical, rectHeightVertical);
+	private void drawVerticalBox(Graphics g, double x, double y){
+		g.drawRect( (int) x,  (int) y,  (int) rectWidthVertical, (int) rectHeightVertical);
 	}
 	
-	private void drawHorizontalBox(Graphics g, int x, int y){
-		g.drawRect(x, y, rectWidthHorizontal, rectHeightHorizontal);
+	private void drawHorizontalBox(Graphics g, double x, double y){
+		g.drawRect( (int) x, (int) y, (int) rectWidthHorizontal, (int) rectHeightHorizontal);
 	}
 	
 	public static void main(String args[]){
@@ -75,7 +79,7 @@ public class GameBoard extends JPanel{
 		newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		newFrame.setSize(2000,2000);
 		
-		GameBoard gb = new GameBoard(300,300);
+		GameBoard gb = new GameBoard(300, 300);
 		newFrame.add(gb, BorderLayout.CENTER);
 		
 		newFrame.setVisible(true);
