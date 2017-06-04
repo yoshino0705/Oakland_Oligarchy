@@ -3,6 +3,13 @@ import java.awt.Graphics;
 import javax.swing.*;
 
 public class GameBoard extends JPanel{
+	/*
+		usage:
+		GameBoard gb = new GameBoard(0, 0);
+		window.add(gb, BorderLayout.CENTER);
+	
+	*/
+	
 	private int shiftX = 0;
 	private int shiftY = 0;
 	
