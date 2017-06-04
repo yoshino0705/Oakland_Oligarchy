@@ -7,36 +7,57 @@ import javax.swing.*;
 public class GameBoard extends JPanel{
 	/*
 		usage:
-		GameBoard gb = new GameBoard(0, 0);
+		new GameBoard (x coordinate, y coordinate, scale of x axis, scale of y axis)
+		
+		example code:
+		
+		JFrame window = new JFrame();
+		GameBoard gb = new GameBoard(0, 0, 0.63, 0.63);
 		window.add(gb, BorderLayout.CENTER);
 
 	*/
 
 	private int shiftX = 0;
 	private int shiftY = 0;
+
+	private double scaleX = 1;
+	private double scaleY = 1;
 	
-	/***********CHANGE SCALE HERE***************/
-	private double scaleX = 0.63;
-	private double scaleY = 0.63;
+	private double rectWidthHorizontal = 150;
+	private double rectHeightHorizontal = 100;
+	private double rectWidthVertical = 100;
+	private double rectHeightVertical = 150;
+	private double cornerWidth = 200;
+	private double cornerHeight = 200;
 	
-	private double rectWidthHorizontal = 150 * scaleX;
-	private double rectHeightHorizontal = 100 * scaleY;
-	private double rectWidthVertical = 100 * scaleX;
-	private double rectHeightVertical = 150 * scaleY;
-	private double cornerWidth = 200 * scaleX;
-	private double cornerHeight = 200 * scaleY;
-	
-	private double subRectWidthHorizontal = 30 * scaleX;
+	private double subRectWidthHorizontal = 30;
 	private double subRectHeightHorizontal = rectHeightHorizontal;
 	private double subRectWidthVertical = rectWidthVertical;
-	private double subRectHeightVertical = 30 * scaleY;
+	private double subRectHeightVertical = 30;
 	
 	private double boardWidth = cornerWidth * 2 + rectWidthVertical * 8;
 	private double boardHeight = cornerHeight * 2 + rectHeightHorizontal * 8;
 	
-	public GameBoard(int x, int y){
+	public GameBoard(int x, int y, double scaleX, double scaleY){
 		shiftX = x;
 		shiftY = y;
+		this.scaleX = scaleX;
+		this.scaleY = scaleY;
+		
+		rectWidthHorizontal = 150 * scaleX;
+		rectHeightHorizontal = 100 * scaleY;
+		rectWidthVertical = 100 * scaleX;
+		rectHeightVertical = 150 * scaleY;
+		cornerWidth = 200 * scaleX;
+		cornerHeight = 200 * scaleY;
+		
+		subRectWidthHorizontal = 30 * scaleX;
+		subRectHeightHorizontal = rectHeightHorizontal;
+		subRectWidthVertical = rectWidthVertical;
+		subRectHeightVertical = 30 * scaleY;
+		
+		boardWidth = cornerWidth * 2 + rectWidthVertical * 8;
+		boardHeight = cornerHeight * 2 + rectHeightHorizontal * 8;
 
 	}
 	
@@ -135,7 +156,7 @@ public class GameBoard extends JPanel{
 		newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		newFrame.setSize(2000,2000);
 		
-		GameBoard gb = new GameBoard(300, 300);
+		GameBoard gb = new GameBoard(300, 300, 0.63, 0.63);
 		newFrame.add(gb, BorderLayout.CENTER);
 		
 		newFrame.setVisible(true);
