@@ -20,6 +20,12 @@ public class GameBoard extends JPanel{
 		JFrame window = new JFrame();
 		GameBoard gb = new GameBoard(0, 0, 0.63, 0.63);
 		window.add(gb, BorderLayout.CENTER);
+		
+		move player:
+		usage:
+		GameBoard gb = new GameBoard(0, 0, 0.63, 0.63);
+		gb.movePlayer(playerNum, 0 to 35);	// playerNum could be substituted by GameBoard.PLAYER_1, GameBoard.PLAYER_2, etc...
+		gb.refreshBoard();
 
 	*/
 
@@ -44,9 +50,12 @@ public class GameBoard extends JPanel{
 	private double boardWidth = cornerWidth * 2 + rectWidthVertical * 8;
 	private double boardHeight = cornerHeight * 2 + rectHeightHorizontal * 8;
 	
-	private int playerOnTile[];
+	public static final int PLAYER_1 = 0;
+	public static final int PLAYER_2 = 1;
+	public static final int PLAYER_3 = 2;
+	public static final int PLAYER_4 = 3;
 	
-	//private Graphics g;
+	private int playerOnTile[];
 	
 	public GameBoard(int x, int y, double scaleX, double scaleY){
 		shiftX = x;
@@ -82,9 +91,9 @@ public class GameBoard extends JPanel{
 	    
 	    drawBasicBoard(g);
 	    drawSubRect(g);
-	    drawText(g, "Oakland Oligarchy", boardWidth/2 - getStringLengthOnBoard(g, "Oakland Oligarchy", new Font("TimesNewRoman", Font.BOLD, 50))/2, boardHeight / 2.0, new Font("TimesNewRoman", Font.BOLD, 50));
-	    drawPlayerOnBottomRow(g, 3, 8);
-	    drawPlayerOnCorner(g, 2, 20);
+	    Font font = new Font("TimesNewRoman", Font.BOLD, 50);
+	    drawText(g, "Oakland Oligarchy", boardWidth/2 - getStringLengthOnBoard(g, "Oakland Oligarchy", font)/2, boardHeight / 2.0, font);
+	    drawPlayersOnBoard(g);
 	    
 //	    Graphics2D g2d = (Graphics2D) g;
 //	    AffineTransform at = new AffineTransform();
@@ -97,11 +106,19 @@ public class GameBoard extends JPanel{
 //        g2d.setTransform(at2);
 //         
 //        g2d.drawString("Hello World", -100, -280);
-        
-	    //drawPlayerOnTopRow(g, 0, 0);
-	    //drawPlayerOnLeftRow(g, 0, 0);
-	    //drawPlayerOnRightRow(g, 0, 0);
+
 	    
+	}
+	
+	public void refreshBoard(){
+		clearDrawingBoard(this.getGraphics());
+		drawBasicBoard(this.getGraphics());
+		drawSubRect(this.getGraphics());
+		Font font = new Font("TimesNewRoman", Font.BOLD, 50);
+		drawText(this.getGraphics(), "Oakland Oligarchy", boardWidth/2 - getStringLengthOnBoard(this.getGraphics(), "Oakland Oligarchy", font)/2, boardHeight / 2.0, font);
+		drawPlayersOnBoard(this.getGraphics());
+		
+		
 	}
 	
 	public void movePlayer(int playerNum, int toThisTileID){
@@ -114,26 +131,32 @@ public class GameBoard extends JPanel{
 	}
 	
 	private void drawPlayersOnBoard(Graphics g){
-		for(int tileID: playerOnTile){
-			switch(getTileCategoryID(tileID)){
+		// corner : 0
+		// bottom : 1
+		// left   : 2
+		// top    : 3
+		// right  : 4
+		
+		for(int playerNum = 0; playerNum < 4; playerNum++){
+			switch(getTileCategoryID(playerOnTile[playerNum])){
 				case 0:
-					
+					drawPlayerOnCorner(g, playerNum, playerOnTile[playerNum]);
 					break;
 					
 				case 1:
-					
+					drawPlayerOnBottomRow(g, playerNum, playerOnTile[playerNum]);
 					break;
 					
 				case 2:
-	
+					drawPlayerOnLeftRow(g, playerNum, playerOnTile[playerNum]);
 					break;
 			
 				case 3:
-					
+					drawPlayerOnTopRow(g, playerNum, playerOnTile[playerNum]);
 					break;
 					
 				case 4:
-					
+					drawPlayerOnRightRow(g, playerNum, playerOnTile[playerNum]);
 					break;
 			
 			}
@@ -149,13 +172,13 @@ public class GameBoard extends JPanel{
 		// top    : 3
 		// right  : 4
 		
-		if(tileID >= 1 && tileID <= 9)
+		if(tileID >= 1 && tileID <= 8)
 			return 1;
-		else if(tileID >= 11 && tileID <= 19)
+		else if(tileID >= 10 && tileID <= 17)
 			return 2;
-		else if(tileID >= 21 && tileID <= 29)
+		else if(tileID >= 19 && tileID <= 26)
 			return 3;
-		else if(tileID >= 31 && tileID <= 39)
+		else if(tileID >= 28 && tileID <= 35)
 			return 4;
 		else
 			return 0;
@@ -165,6 +188,12 @@ public class GameBoard extends JPanel{
 	private int getStringLengthOnBoard(Graphics g, String text, Font font){		
 		FontMetrics metrics = g.getFontMetrics(font);
 		return metrics.stringWidth(text);
+		
+	}
+
+	private void clearDrawingBoard(Graphics g){
+		g.setColor(Color.lightGray);
+		g.fillRect(shiftX, shiftY, (int)boardWidth, (int)boardHeight);
 		
 	}
 	
@@ -271,17 +300,17 @@ public class GameBoard extends JPanel{
 				cornerYShiftDistance *= 0;
 				break;
 				
-			case 10:
+			case 9:
 				cornerXShiftDistance *= -1;
 				cornerYShiftDistance *= 0;
 				break;
 				
-			case 20:
+			case 18:
 				cornerXShiftDistance *= -1;
 				cornerYShiftDistance *= -1;
 				break;
 				
-			case 30:
+			case 27:
 				cornerXShiftDistance *= 0;
 				cornerYShiftDistance *= -1;
 				break;
@@ -390,22 +419,96 @@ public class GameBoard extends JPanel{
 		int player4RelativePosX = (int)(boardWidth - playerIconWidth - cornerWidth) + shiftX - fixedValueX;
 		int player4RelativePosY = (int)(rectHeightVertical - subRectHeightVertical - playerIconHeight) + shiftY - fixedValueY;
 				
-		// top left
-		g.setColor(Color.red);
-		g.fillRect(player1RelativePosX, player1RelativePosY, playerIconWidth, playerIconHeight);
-		// bottom right
-		g.setColor(Color.orange);
-		g.fillRect(player2RelativePosX, player2RelativePosY, playerIconWidth, playerIconHeight);
-		// bottom left
-		g.setColor(Color.green);
-		g.fillRect(player3RelativePosX, player3RelativePosY, playerIconWidth, playerIconHeight);
-		// top right
-		g.setColor(Color.blue);
-		g.fillRect(player4RelativePosX, player4RelativePosY, playerIconWidth, playerIconHeight);			
+		// tileID range: 19-26
+		int cornerXShiftDistance = (int)(rectHeightHorizontal * (26 - tileID) * -1);		
+		
+		switch(playerNum){
+			case 0:
+				// top left
+				g.setColor(Color.red);
+				g.fillRect(player1RelativePosX + cornerXShiftDistance, player1RelativePosY, playerIconWidth, playerIconHeight);
+
+				break;
+			case 1:
+				// bottom right
+				g.setColor(Color.orange);
+				g.fillRect(player2RelativePosX + cornerXShiftDistance, player2RelativePosY, playerIconWidth, playerIconHeight);
+		
+				break;
+			case 2:
+				// bottom left
+				g.setColor(Color.green);
+				g.fillRect(player3RelativePosX + cornerXShiftDistance, player3RelativePosY, playerIconWidth, playerIconHeight);
+
+				break;
+			case 3:
+				// top right
+				g.setColor(Color.blue);
+				g.fillRect(player4RelativePosX + cornerXShiftDistance, player4RelativePosY, playerIconWidth, playerIconHeight);
+
+				break;
+			
+			default:
+				System.out.println("Error in GameBoard.java drawPlayerOnBottomRow(): invalid playerNum " + playerNum + "!");
+				break;
+		}				
 		
 	}
 
 	private void drawPlayerOnLeftRow(Graphics g, int playerNum, int tileID){
+		int playerIconWidth = 50;
+		int playerIconHeight = 50;
+		int fixedValueX = 5;
+		int fixedValueY = 5;
+		
+
+		
+		int player1RelativePosX = shiftX + fixedValueX;
+		int player1RelativePosY = (int)(rectHeightHorizontal - playerIconHeight + cornerHeight) + shiftY - fixedValueY;
+		int player2RelativePosX = (int)(boardWidth - playerIconWidth) + shiftX - fixedValueX;
+		int player2RelativePosY = (int)(cornerHeight) + shiftY + fixedValueY;
+		int player3RelativePosX = shiftX + fixedValueX;
+		int player3RelativePosY = (int)(cornerHeight) + shiftY + fixedValueY;
+		int player4RelativePosX = (int)(rectWidthHorizontal - subRectWidthHorizontal - playerIconWidth) + shiftX - fixedValueX;
+		int player4RelativePosY = (int)(rectHeightHorizontal - playerIconHeight + cornerHeight) + shiftY - fixedValueY;
+				
+		// tileID range: 10-17
+		int cornerYShiftDistance = (int)(rectHeightHorizontal * (tileID - 9) * 1);		
+				
+		switch(playerNum){
+			case 0:
+				// top left
+				g.setColor(Color.red);
+				g.fillRect(player1RelativePosX, player1RelativePosY + cornerYShiftDistance, playerIconWidth, playerIconHeight);
+
+				break;
+			case 1:
+				// bottom right
+				g.setColor(Color.orange);
+				g.fillRect(player2RelativePosX, player2RelativePosY + cornerYShiftDistance, playerIconWidth, playerIconHeight);
+				
+				break;
+			case 2:
+				// bottom left
+				g.setColor(Color.green);
+				g.fillRect(player3RelativePosX, player3RelativePosY + cornerYShiftDistance, playerIconWidth, playerIconHeight);
+				
+				break;
+			case 3:
+				// top right
+				g.setColor(Color.blue);
+				g.fillRect(player4RelativePosX, player4RelativePosY + cornerYShiftDistance, playerIconWidth, playerIconHeight);
+
+			break;
+					
+			default:
+				System.out.println("Error in GameBoard.java drawPlayerOnBottomRow(): invalid playerNum " + playerNum + "!");
+				break;
+			}							
+	
+	}
+	
+	private void drawPlayerOnRightRow(Graphics g, int playerNum, int tileID){
 		int playerIconWidth = 50;
 		int playerIconHeight = 50;
 		int fixedValueX = 5;
@@ -419,51 +522,40 @@ public class GameBoard extends JPanel{
 		int player3RelativePosY = (int)(cornerHeight) + shiftY + fixedValueY;
 		int player4RelativePosX = (int)(boardWidth - playerIconWidth) + shiftX - fixedValueX;
 		int player4RelativePosY = (int)(rectHeightHorizontal - playerIconHeight + cornerHeight) + shiftY - fixedValueY;
-				
-		// top left
-		g.setColor(Color.red);
-		g.fillRect(player1RelativePosX, player1RelativePosY, playerIconWidth, playerIconHeight);
-		// bottom right
-		g.setColor(Color.orange);
-		g.fillRect(player2RelativePosX, player2RelativePosY, playerIconWidth, playerIconHeight);
-		// bottom left
-		g.setColor(Color.green);
-		g.fillRect(player3RelativePosX, player3RelativePosY, playerIconWidth, playerIconHeight);
-		// top right
-		g.setColor(Color.blue);
-		g.fillRect(player4RelativePosX, player4RelativePosY, playerIconWidth, playerIconHeight);			
-			
-	
-	}
-	
-	private void drawPlayerOnRightRow(Graphics g, int playerNum, int tileID){
-		int playerIconWidth = 50;
-		int playerIconHeight = 50;
-		int fixedValueX = 5;
-		int fixedValueY = 5;
 		
-		int player1RelativePosX = shiftX + fixedValueX;
-		int player1RelativePosY = (int)(rectHeightHorizontal - playerIconHeight + cornerHeight) + shiftY - fixedValueY;
-		int player2RelativePosX = (int)(boardWidth - playerIconWidth) + shiftX - fixedValueX;
-		int player2RelativePosY = (int)(cornerHeight) + shiftY + fixedValueY;
-		int player3RelativePosX = shiftX + fixedValueX;
-		int player3RelativePosY = (int)(cornerHeight) + shiftY + fixedValueY;
-		int player4RelativePosX = (int)(rectWidthHorizontal - subRectWidthHorizontal - playerIconWidth) + shiftX - fixedValueX;
-		int player4RelativePosY = (int)(rectHeightHorizontal - playerIconHeight + cornerHeight) + shiftY - fixedValueY;
-		
-				
-		// top left
-		g.setColor(Color.red);
-		g.fillRect(player1RelativePosX, player1RelativePosY, playerIconWidth, playerIconHeight);
-		// bottom right
-		g.setColor(Color.orange);
-		g.fillRect(player2RelativePosX, player2RelativePosY, playerIconWidth, playerIconHeight);
-		// bottom left
-		g.setColor(Color.green);
-		g.fillRect(player3RelativePosX, player3RelativePosY, playerIconWidth, playerIconHeight);
-		// top right
-		g.setColor(Color.blue);
-		g.fillRect(player4RelativePosX, player4RelativePosY, playerIconWidth, playerIconHeight);			
+		// tileID range: 28-35
+		int cornerYShiftDistance = (int)(rectHeightHorizontal * (tileID - 28) * 1);		
+						
+		switch(playerNum){
+			case 0:
+				// top left
+				g.setColor(Color.red);
+				g.fillRect(player1RelativePosX, player1RelativePosY + cornerYShiftDistance, playerIconWidth, playerIconHeight);
+
+				break;
+			case 1:
+				// bottom right
+				g.setColor(Color.orange);
+				g.fillRect(player2RelativePosX, player2RelativePosY + cornerYShiftDistance, playerIconWidth, playerIconHeight);
+						
+				break;
+			case 2:
+				// bottom left
+				g.setColor(Color.green);
+				g.fillRect(player3RelativePosX, player3RelativePosY + cornerYShiftDistance, playerIconWidth, playerIconHeight);
+						
+				break;
+			case 3:
+				// top right
+				g.setColor(Color.blue);
+				g.fillRect(player4RelativePosX, player4RelativePosY + cornerYShiftDistance, playerIconWidth, playerIconHeight);
+
+			break;
+							
+			default:
+				System.out.println("Error in GameBoard.java drawPlayerOnBottomRow(): invalid playerNum " + playerNum + "!");
+			break;
+		}
 				
 		
 	}
@@ -475,8 +567,10 @@ public class GameBoard extends JPanel{
 		newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		newFrame.setSize(2000,2000);
 		
-		GameBoard gb = new GameBoard(5, 5, 1.5, 1.5);
+		GameBoard gb = new GameBoard(100, 100, 1.5, 1.5);
 		newFrame.add(gb, BorderLayout.CENTER);
+		
+		//gb.movePlayer(0, 35);
 		
 		newFrame.setVisible(true);
 		
