@@ -165,7 +165,7 @@ public class GameBoard extends JPanel{
 		
 	}
 	
-	private int getTileCategoryID(int tileID){
+	public int getTileCategoryID(int tileID){
 		// corner : 0
 		// bottom : 1
 		// left   : 2
@@ -277,8 +277,8 @@ public class GameBoard extends JPanel{
 	}
 	
 	private void drawPlayerOnCorner(Graphics g, int playerNum, int tileID){	
-		int playerIconWidth = 50;
-		int playerIconHeight = 50;
+		int playerIconWidth = 20;
+		int playerIconHeight = 20;
 		int fixedValueX = 15;
 		int fixedValueY = 15;
 		
@@ -355,8 +355,8 @@ public class GameBoard extends JPanel{
 	}
 	
 	private void drawPlayerOnBottomRow(Graphics g, int playerNum, int tileID){
-		int playerIconWidth = 50;
-		int playerIconHeight = 50;
+		int playerIconWidth = 20;
+		int playerIconHeight = 20;
 		int fixedValueX = 5;
 		int fixedValueY = 5;
 		
@@ -405,8 +405,8 @@ public class GameBoard extends JPanel{
 	}
 	
 	private void drawPlayerOnTopRow(Graphics g, int playerNum, int tileID){
-		int playerIconWidth = 50;
-		int playerIconHeight = 50;
+		int playerIconWidth = 20;
+		int playerIconHeight = 20;
 		int fixedValueX = 5;
 		int fixedValueY = 5;
 		
@@ -456,8 +456,8 @@ public class GameBoard extends JPanel{
 	}
 
 	private void drawPlayerOnLeftRow(Graphics g, int playerNum, int tileID){
-		int playerIconWidth = 50;
-		int playerIconHeight = 50;
+		int playerIconWidth = 20;
+		int playerIconHeight = 20;
 		int fixedValueX = 5;
 		int fixedValueY = 5;
 		
@@ -509,8 +509,8 @@ public class GameBoard extends JPanel{
 	}
 	
 	private void drawPlayerOnRightRow(Graphics g, int playerNum, int tileID){
-		int playerIconWidth = 50;
-		int playerIconHeight = 50;
+		int playerIconWidth = 20;
+		int playerIconHeight = 20;
 		int fixedValueX = 5;
 		int fixedValueY = 5;
 		
