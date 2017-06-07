@@ -43,7 +43,10 @@ public class OaklandOligarchy{
 		InfoPanel info = new InfoPanel(all_players);
 		window.add(info, BorderLayout.WEST);
 
-
+		GameBoard gb = new GameBoard(0, 0, .63, .63);
+		gb.movePlayer(1, 23);	// for skeleton purposes
+		gb.movePlayer(2, 14);	// for skeleton purposes
+		window.add(gb, BorderLayout.CENTER);
 		window.setVisible(true);
 	}//end of OaklandOligarchy constructor
 
