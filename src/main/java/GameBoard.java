@@ -32,7 +32,7 @@ public class GameBoard extends JPanel{
 		
 		MouseEvent e... some way to get the mouse event object
 		GameBoard gb = new GameBoard();
-		showTileDetails(e.getX(), e.getY());
+		showTileDetails(e.getX(), e.getY(), 20);	// 20 is font size, can be set to any preferrable number
 
 	*/
 
@@ -303,13 +303,27 @@ public class GameBoard extends JPanel{
 		
 	}
 	
-	public void showTileDetails(int mouseX, int mouseY){
+	public void showTileDetails(int mouseX, int mouseY, int fontSize){
 		int tileIndex = getTileID(mouseX, mouseY);
-		System.out.println(tileIndex);
+		String toolTipText = "<html><font size=" + fontSize + "> "
+							+ "Property Name: " + "<b>" + "UNKNOWN " + "</b>" + tileIndex 
+							+ "<br>Property Rent: " + "<b>" + "> $0.00 " + "</b>"
+							+ "<br>Property Owned: " + "<b>" + "MAYBE" + "</b>"
+							+ "</font></html>";
 		
 		if(tileIndex != -1)
-			this.setToolTipText("<html> " + "<br>Property Name: " + "UNKNOWN " + tileIndex + "<br>Property Rent: " + "UNKNOWN" + "<br> </html>");
-		
+			this.setToolTipText(toolTipText);
+		else
+			this.setToolTipText("");
+			//this.setToolTipText("<html><font size=20>Nothing to show here. </font></html>");
+	}
+	
+	public void showCustomDetails(int fontSize, String customMessage){
+		String toolTipText = "<html><font size=" + fontSize + "> "
+							+ customMessage
+							+ "</font></html>";
+
+		setToolTipText(toolTipText);
 	}
 	
 	private int getStringLengthOnBoard(Graphics g, String text, Font font){		
