@@ -18,11 +18,15 @@ public class StartFrame{
 	JButton num_players_button = new JButton("START");
 	JLabel num_players_error_label = new JLabel();
 	
+	//wrappers for sizing
+	JPanel field_panel = new JPanel();
+	JPanel button_panel = new JPanel();
+
 	ArrayList<JTextField> name_fields = new ArrayList<JTextField>();
 
 	public StartFrame(){
 		start_window = new JFrame("Welcome to Oakland Oligarchy");
-		start_window.setSize(1000,400);
+		start_window.setSize(1000,200);
 		start_window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		//add listener to num_players_button
@@ -30,18 +34,28 @@ public class StartFrame{
 		num_players_button.addActionListener(num_listener);
 
 		//set wrapper panels for looks
-
+		//field_panel.setLayout(new BorderLayout());
+		//field_panel.add(num_players_field, BorderLayout.CENTER);
+		field_panel.setLayout(new GridBagLayout());
+		GridBagConstraints center = new GridBagConstraints();
+		center.anchor = GridBagConstraints.CENTER;
+		center.fill = GridBagConstraints.NONE;
+		field_panel.add(num_players_field, center);
+		button_panel.setLayout(new GridBagLayout());
+		button_panel.add(num_players_button, center);
 
 		//set up the jpanel for num players
 		get_num_players_panel.setLayout(new GridLayout(1,4));
 		get_num_players_panel.add(num_players_label);
-		get_num_players_panel.add(num_players_field);
-		get_num_players_panel.add(num_players_button);
+		//get_num_players_panel.add(num_players_field);
+		//get_num_players_panel.add(num_players_button);
+		
+		get_num_players_panel.add(field_panel);
+		get_num_players_panel.add(button_panel);
 		get_num_players_panel.add(num_players_error_label);
 
 		start_window.add(get_num_players_panel);
 		//start_window.add(player_info_panel);
-
 		start_window.setVisible(true);
 	}
 
