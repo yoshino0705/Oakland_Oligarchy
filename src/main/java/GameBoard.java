@@ -3,15 +3,12 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.geom.AffineTransform;
 
 import javax.swing.*;
 
 public class GameBoard extends JPanel{
 	/*
+		1. 
 		usage:
 		new GameBoard (x coordinate, y coordinate, scale of x axis, scale of y axis)
 		
@@ -21,11 +18,21 @@ public class GameBoard extends JPanel{
 		GameBoard gb = new GameBoard(0, 0, 0.63, 0.63);
 		window.add(gb, BorderLayout.CENTER);
 		
+		2.
 		move player:
-		usage:
+		example code:
+		
 		GameBoard gb = new GameBoard(0, 0, 0.63, 0.63);
 		gb.movePlayer(playerNum, 0 to 35);	// playerNum could be substituted by GameBoard.PLAYER_1, GameBoard.PLAYER_2, etc...
 		gb.refreshBoard();
+		
+		3.
+		showTileDetails:
+		example code:
+		
+		MouseEvent e... some way to get the mouse event object
+		GameBoard gb = new GameBoard();
+		showTileDetails(e.getX(), e.getY());
 
 	*/
 
@@ -54,10 +61,14 @@ public class GameBoard extends JPanel{
 	public static final int PLAYER_2 = 1;
 	public static final int PLAYER_3 = 2;
 	public static final int PLAYER_4 = 3;
+	private final int TILE_COUNT = 36;
 	
 	private int playerOnTile[];
 	
-	public GameBoard(int x, int y, double scaleX, double scaleY){
+	private int centerX[];
+	private int centerY[];
+	
+ 	public GameBoard(int x, int y, double scaleX, double scaleY){
 		shiftX = x;
 		shiftY = y;
 		this.scaleX = scaleX;
@@ -83,6 +94,8 @@ public class GameBoard extends JPanel{
 		playerOnTile[1] = 0;
 		playerOnTile[2] = 0;
 		playerOnTile[3] = 0;
+		
+		initCenterArray();
 
 	}
 	
@@ -94,18 +107,6 @@ public class GameBoard extends JPanel{
 	    Font font = new Font("TimesNewRoman", Font.BOLD, 50);
 	    drawText(g, "Oakland Oligarchy", boardWidth/2 - getStringLengthOnBoard(g, "Oakland Oligarchy", font)/2, boardHeight / 2.0, font);
 	    drawPlayersOnBoard(g);
-	    
-//	    Graphics2D g2d = (Graphics2D) g;
-//	    AffineTransform at = new AffineTransform();
-//        at.rotate(- Math.PI / 2);
-//        g2d.setTransform(at);
-//        g2d.setColor(Color.BLACK);
-//        g2d.drawString("Tile Name", -300, 200);
-//        
-//        AffineTransform at2 = AffineTransform.getQuadrantRotateInstance(1);
-//        g2d.setTransform(at2);
-//         
-//        g2d.drawString("Hello World", -100, -280);
 
 	    
 	}
@@ -128,6 +129,123 @@ public class GameBoard extends JPanel{
 		}
 		
 		playerOnTile[playerNum] = toThisTileID;
+	}
+	
+	private void initCenterArray(){
+		centerX = new int[TILE_COUNT];
+		centerY = new int[TILE_COUNT];
+		
+		for(int i = 0; i < TILE_COUNT; i++){
+			switch(getTileCategoryID(i)){
+				// corner : 0
+				// bottom : 1
+				// left   : 2
+				// top    : 3
+				// right  : 4
+			
+				case 0:
+					// four cases for four corners
+					switch(i){
+						case 0:
+							centerX[i] = (int)(boardWidth - cornerWidth/2) + shiftX;
+							centerY[i] = (int)(boardHeight - cornerHeight/2) + shiftY;
+							break;
+							
+						case 9:
+							centerX[i] = (int)(cornerWidth/2) + shiftX;
+							centerY[i] = (int)(boardHeight - cornerHeight/2) + shiftY;
+							break;
+							
+						case 18:
+							centerX[i] = (int)(cornerWidth/2) + shiftX;
+							centerY[i] = (int)(cornerHeight/2) + shiftY;
+							break;
+							
+						case 27:
+							centerX[i] = (int)(boardWidth - cornerWidth/2) + shiftX;
+							centerY[i] = (int)(cornerHeight/2) + shiftY;
+							break;
+					
+					}					
+					
+					break;
+					
+				case 1:
+					// bottom
+					
+					centerX[i] = (int)(boardWidth - cornerWidth - rectWidthVertical * (i - 1 + 0.5)) + shiftX;
+					centerY[i] = (int)(boardHeight - (rectHeightVertical/2)) + shiftY;
+					break;
+					
+				case 2:
+					// left
+					
+					centerX[i] = (int)(rectWidthHorizontal/2) + shiftX;
+					centerY[i] = (int)(boardHeight - cornerHeight - rectHeightHorizontal * (i - 10 + 0.5)) + shiftY;
+					break;
+					
+				case 3:
+					// top
+					
+					centerX[i] = (int)(cornerWidth + rectWidthVertical * (i - 19 + 0.5)) + shiftX;
+					centerY[i] = (int)(rectHeightVertical/2) + shiftY;
+					break;
+					
+				case 4:
+					// right
+					
+					centerX[i] = (int)(boardWidth - rectWidthHorizontal/2) + shiftX;
+					centerY[i] = (int)(cornerHeight + rectHeightHorizontal * (i - 28 + 0.5)) + shiftY;
+					break;
+			
+			}			
+		}	
+	}
+	
+	public int getTileID(int mouseX, int mouseY){
+		// corner : 0
+		// bottom : 1
+		// left   : 2
+		// top    : 3
+		// right  : 4
+		
+		int tileCategory = 0;
+		
+		for(int i = 0; i < TILE_COUNT; i++){
+			tileCategory = getTileCategoryID(i);
+			if(tileCategory == 0){
+				// corners
+				if(isMouseInRange(mouseX, mouseY, centerX[i] - (cornerWidth/2), centerY[i] - (cornerHeight/2), centerX[i] + (cornerWidth/2), centerY[i] + (cornerHeight/2) ))
+					return i;
+				
+			}else if(tileCategory == 1 || tileCategory == 3){
+				// vertical boxes
+				if(isMouseInRange(mouseX, mouseY, centerX[i] - (rectWidthVertical/2), centerY[i] - (rectHeightVertical/2), centerX[i] + (rectWidthVertical/2), centerY[i] + (rectHeightVertical/2) ))
+					return i;
+				
+			}else{
+				// horizontal boxes
+				if(isMouseInRange(mouseX, mouseY, centerX[i] - (rectWidthHorizontal/2), centerY[i] - (rectHeightHorizontal/2), centerX[i] + (rectWidthHorizontal/2), centerY[i] + (rectHeightHorizontal/2) ))
+					return i;
+				
+			}
+			
+			
+		}
+		
+		return -1;
+	}
+	
+	private boolean isMouseInRange(int mouseX, int mouseY, double x1, double y1, double x2, double y2){
+		// (x1, y1) is top left
+		// (x2, y2) is bottom right
+		
+		if(mouseX > x1 && mouseX < x2){
+			if(mouseY > y1 && mouseY < y2)
+				return true;			
+		}
+		
+		return false;
 	}
 	
 	private void drawPlayersOnBoard(Graphics g){
@@ -185,6 +303,15 @@ public class GameBoard extends JPanel{
 		
 	}
 	
+	public void showTileDetails(int mouseX, int mouseY){
+		int tileIndex = getTileID(mouseX, mouseY);
+		System.out.println(tileIndex);
+		
+		if(tileIndex != -1)
+			this.setToolTipText("<html> " + "<br>Property Name: " + "UNKNOWN " + tileIndex + "<br>Property Rent: " + "UNKNOWN" + "<br> </html>");
+		
+	}
+	
 	private int getStringLengthOnBoard(Graphics g, String text, Font font){		
 		FontMetrics metrics = g.getFontMetrics(font);
 		return metrics.stringWidth(text);
@@ -219,7 +346,7 @@ public class GameBoard extends JPanel{
 		g.fillRect( (int) x, (int) y, (int) subRectWidthHorizontal, (int) subRectHeightHorizontal);
 	}
 	
-	private void drawText(Graphics g, String text, double x, double y, Font font){
+	public void drawText(Graphics g, String text, double x, double y, Font font){
 		g.setColor(Color.BLACK);
 		g.setFont(font);
 		g.drawString(text, (int) x + shiftX, (int) y + shiftY);
