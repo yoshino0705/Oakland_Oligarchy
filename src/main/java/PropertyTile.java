@@ -2,18 +2,23 @@
 //property class - subclass of the Tile class
 public class PropertyTile extends Tile{
 
-    //class attributes
-    int rent;
-    boolean isPropertyOwned;
-    Player owner;
+    //class attributes - private for now - change if necessary
+    private int value;
+    private int rent;
+    private boolean isPropertyOwned;
+    private Player owner;
 
-    Property(){
+    PropertyTile(){
+        this.setTileName("");
+        this.value = 0;
         this.rent = 0;
         this.isPropertyOwned = false;
         this.owner = null;
     }
 
-    Property(int newRent){
+    PropertyTile(String newName, int newVal, int newRent){
+        this.setTileName(newName);
+        this.value = newVal;
         this.rent = newRent;
         this.isPropertyOwned = false;
         this.owner = null;

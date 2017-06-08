@@ -2,6 +2,7 @@
 
 public class Tile{
 
+    //private - change if necessary
     private String tileName;
 
     Tile(){
