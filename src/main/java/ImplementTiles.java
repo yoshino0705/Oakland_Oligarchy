@@ -25,6 +25,10 @@ public class ImplementTiles{
         tileArray[3] = new PropertyTile("Market-to-Go", 100, 16);
         tileArray[4] = new PropertyTile("The Perch", 110, 17);
 
+        //action tiles example
+        tileArray[5] = new ActionTile("You lose your wallet on the way to class. Lose 60 dollars");
+        tileArray[6] = new ActionTile("You win a beauty contest. Win 100 dollars");
+
 
         //insert actions maybe? - utility PropertyTile?
 
