@@ -9,7 +9,7 @@ public class TopMenu extends JPanel{
 	JLabel currentTurnPlayerLabel;
 	JButton tradeButton = new JButton("<html>Make<br>Trade</html>");
 	JButton rollButton = new JButton("Roll");
-	JButton newGame = new JButton("New Game");
+	JButton endTurn = new JButton("End Turn");
 	JButton endGame = new JButton("End Game");
 	JButton helpButton  = new JButton("Help");
 	OaklandOligarchy game;
@@ -37,8 +37,10 @@ public class TopMenu extends JPanel{
 		rollButton.addActionListener(rl);
 		this.add(rollButton,0,3);
 		//set font for buttons in menu panel
-		newGame.setFont(new Font("Courier", Font.PLAIN, 20));
-		this.add(newGame, 0, 4);
+		endTurn.setFont(new Font("Courier", Font.PLAIN, 20));
+		EndTurnListener etl = new EndTurnListener();
+		endTurn.addActionListener(etl);
+		this.add(endTurn, 0, 4);
 
 		endGame.setFont(new Font("Courier", Font.PLAIN, 20));
 		this.add(endGame, 0, 5);
@@ -60,10 +62,12 @@ public class TopMenu extends JPanel{
 
 			// move player
 			Player curPlayer = game.currentTurnPlayer;
+			System.out.println("RollListener.curPlayer: " + curPlayer.getName());
 			System.out.println("Current Position: " + curPlayer.getPosition());
 			System.out.println("Roll: " + rollSum);
 			int position = (curPlayer.getPosition() + rollSum) %  36;
 			System.out.println("New position: " + position);
+			System.out.println("game.getIndexCurrentTurnPlayer(): " + game.getIndexCurrentTurnPlayer());
 			game.gb.movePlayer(game.getIndexCurrentTurnPlayer(), position);
 			game.gb.refreshBoard();
 
@@ -76,7 +80,7 @@ public class TopMenu extends JPanel{
 				PropertyTile pTile = (PropertyTile)curTile;
 				if (pTile.isOwned()) {
 					// notify player
-					JOptionPane.showMessageDialog("You landed on a tile owned by " + pTile.getOwner().getName() + 
+					JOptionPane.showMessageDialog(null, "You landed on a tile owned by " + pTile.getOwner().getName() + 
 														". You pay them " + pTile.getRent() + "dollars.");
 					// subtract money from curPlayer and add to owner
 					curPlayer.setMoney(curPlayer.getMoney() - pTile.getRent());
@@ -93,13 +97,27 @@ public class TopMenu extends JPanel{
 					}
 
 				}
+				System.out.println("Player " + curPlayer.getName() + " money: " + curPlayer.getMoney());
 			} else {	// tile is action tile and action is performed
 				//TODO: perform action to player
 				;
 			}
 			// *	*	*	*	*	*	*	
 			//TODO: update side menu!!!!
+			// game.info.update();
 			// *	*	*	*	*	*	*	
+		}
+	}
+
+	class EndTurnListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			game.numTurns = game.numTurns + 1;
+			int nextTurnPlayer = game.getIndexCurrentTurnPlayer();
+			game.currentTurnPlayer = (game.allPlayers.get(nextTurnPlayer));
+
+			System.out.println("nextTurnPlayer: " + nextTurnPlayer);
+			System.out.println("currentTurnPlayer: " + game.getIndexCurrentTurnPlayer());
+			System.out.println("numTurns: " + game.numTurns);
 		}
 	}
 }

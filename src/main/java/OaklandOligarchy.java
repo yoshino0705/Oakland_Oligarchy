@@ -14,6 +14,7 @@ public class OaklandOligarchy{
 	Player currentTurnPlayer = null;//the player whos turn it is
 	GameBoard gb;
 	ImplementTiles tiles;
+	InfoPanel info;
 
 	//list of all the players in this game
 	ArrayList<Player> allPlayers = new ArrayList<Player>();
@@ -29,6 +30,7 @@ public class OaklandOligarchy{
 		for (int i = 0; i < sm.getPlayerCount(); i++) {
 			Player p = new Player(sm.getPlayerName(i), 1000);
 			allPlayers.add(p);
+			numPlayers++;
 		}
 
 		// set window for actual game
@@ -40,7 +42,7 @@ public class OaklandOligarchy{
 		TopMenu tm = new TopMenu(this);
 		window.add(tm, BorderLayout.NORTH);
 		//add info to the left side of the frame
-		InfoPanel info = new InfoPanel(allPlayers);
+		info = new InfoPanel(allPlayers);
 		window.add(info, BorderLayout.WEST);
 
 		gb = new GameBoard(0, 0, .63, .63);
@@ -53,23 +55,28 @@ public class OaklandOligarchy{
 
 /*	*	*	*	*	*	*	*	*	*	*	*	*		
  *	*	THE CODE BELOW ILLUSTRATES ISSUE #2 *	*	
- *	*	*	*	*	*	*	*	*	*	*	*	*
-
-		for (int i = 9; i < 35; i++) {
-			gb.movePlayer(0, i);
+ *	*	*	*	*	*	*	*	*	*	*	*	*	
+		int i = 0;
+		while (true) {
+			gb.movePlayer(0, i % 36);
+			i++;
 			gb.refreshBoard();
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(100);
 			} catch (Exception e) {
 				System.out.println("");
 			}
 		}
-		
+/*
 *	*	*	*	*	*	*	*	*	*	*	*	*/
 	}//end of OaklandOligarchy constructor
 
 	//get index of current turn player to use in all_players
 	int getIndexCurrentTurnPlayer(){
+
+		System.out.println("OO.numTurns: " + numTurns);
+		System.out.println("OO.numPlayers: " + numPlayers);
+
 		if(numTurns == 0){
 			return 0;
 		}else{
