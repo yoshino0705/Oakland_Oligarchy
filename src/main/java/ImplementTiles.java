@@ -79,4 +79,8 @@ public class ImplementTiles{
         tileArray[36] = new PropertyTile("The Cathedral of Learning", 380, 44);
         */
     }
+
+    public Tile getTile(int index) {
+        return tileArray[index];
+    }
 }

@@ -1,0 +1,1 @@
+INDEX VERSION 1.129+/Users/keith/Desktop/Summer_2017/CS1530/OaklandOligarchy/.metadata/.plugins/org.eclipse.jdt.core
