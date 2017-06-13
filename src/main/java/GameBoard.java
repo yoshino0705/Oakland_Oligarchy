@@ -606,7 +606,7 @@ public class GameBoard extends JPanel{
 		
 		int player1RelativePosX = shiftX + fixedValueX;
 		int player1RelativePosY = (int)(rectHeightHorizontal - playerIconHeight + cornerHeight) + shiftY - fixedValueY;
-		int player2RelativePosX = (int)(boardWidth - playerIconWidth) + shiftX - fixedValueX;
+		int player2RelativePosX = (int)(rectWidthHorizontal - subRectWidthHorizontal - playerIconWidth) + shiftX - fixedValueX;
 		int player2RelativePosY = (int)(cornerHeight) + shiftY + fixedValueY;
 		int player3RelativePosX = shiftX + fixedValueX;
 		int player3RelativePosY = (int)(cornerHeight) + shiftY + fixedValueY;
@@ -614,7 +614,7 @@ public class GameBoard extends JPanel{
 		int player4RelativePosY = (int)(rectHeightHorizontal - playerIconHeight + cornerHeight) + shiftY - fixedValueY;
 				
 		// tileID range: 10-17
-		int cornerYShiftDistance = (int)(rectHeightHorizontal * (tileID - 9) * 1);		
+		int cornerYShiftDistance = (int)(rectHeightHorizontal * (17 - tileID) * 1);		
 				
 		switch(playerNum){
 			case 0:
@@ -657,7 +657,7 @@ public class GameBoard extends JPanel{
 		
 		int player1RelativePosX = (int)(boardWidth - rectWidthHorizontal + subRectWidthHorizontal) + shiftX + fixedValueX;
 		int player1RelativePosY = (int)(rectHeightHorizontal - playerIconHeight + cornerHeight) + shiftY - fixedValueY;
-		int player2RelativePosX = (int)(rectWidthHorizontal - subRectWidthHorizontal - playerIconWidth) + shiftX - fixedValueX;
+		int player2RelativePosX = (int)(boardWidth - playerIconWidth) + shiftX - fixedValueX;
 		int player2RelativePosY = (int)(cornerHeight) + shiftY + fixedValueY;
 		int player3RelativePosX = (int)(boardWidth - rectWidthHorizontal + subRectWidthHorizontal) + shiftX + fixedValueX;
 		int player3RelativePosY = (int)(cornerHeight) + shiftY + fixedValueY;
@@ -711,7 +711,10 @@ public class GameBoard extends JPanel{
 		GameBoard gb = new GameBoard(100, 100, 1.5, 1.5);
 		newFrame.add(gb, BorderLayout.CENTER);
 		
-		//gb.movePlayer(0, 35);
+		gb.movePlayer(0, 7);
+		gb.movePlayer(1, 7);
+		gb.movePlayer(2, 7);
+		gb.movePlayer(3, 7);
 		
 		newFrame.setVisible(true);
 		
