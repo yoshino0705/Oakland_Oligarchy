@@ -13,9 +13,10 @@ public class TopMenu extends JPanel{
 	JButton endGame = new JButton("End Game");
 	JButton helpButton  = new JButton("Help");
 	OaklandOligarchy game;
+	private boolean canRoll = true;
 
 	TopMenu(OaklandOligarchy oo) {
-		game = oo;
+		this.game = oo;
 		this.setPreferredSize(new Dimension(1000, 100));
 		this.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.setLayout(new GridLayout(0, 7));
@@ -51,7 +52,15 @@ public class TopMenu extends JPanel{
 	}
 
 	class RollListener implements ActionListener {
+		final int NUM_TILES = 36;
+
 		public void actionPerformed(ActionEvent e) {
+			// if player has already rolled, yell at them if they try to roll again
+			if (!canRoll) {
+				JOptionPane.showMessageDialog(null, "Hey! You already rolled! " + 
+										"End your turn so the next player can go.");
+				return;
+			}
 			// calculate player's roll
 			Random rand = new Random();
 			int min = 1;
@@ -60,28 +69,22 @@ public class TopMenu extends JPanel{
 			int roll2 = rand.nextInt((max - min) + 1) + min;
 			int rollSum = roll1 + roll2;
 
-			// move player
+			// logic to move player
 			Player curPlayer = game.currentTurnPlayer;
-			System.out.println("RollListener.curPlayer: " + curPlayer.getName());
-			System.out.println("Current Position: " + curPlayer.getPosition());
-			System.out.println("Roll: " + rollSum);
-			int position = (curPlayer.getPosition() + rollSum) %  36;
-			System.out.println("New position: " + position);
-			System.out.println("game.getIndexCurrentTurnPlayer(): " + game.getIndexCurrentTurnPlayer());
-			game.gb.movePlayer(game.getIndexCurrentTurnPlayer(), position);
-			game.gb.refreshBoard();
-
+			int newPosition = (curPlayer.getPosition() + rollSum) % NUM_TILES;
+			// move player on board
+			animatedMovePlayer(game.gb, game.getIndexCurrentTurnPlayer(), curPlayer.getPosition(), newPosition);
 			// update Players positiom
-			curPlayer.setPosition(position);
+			curPlayer.setPosition(newPosition);
 
 			// if tile is property, player can either buy or has to pay rent
-			Tile curTile = game.tiles.getTile(position);
+			Tile curTile = game.tiles.getTile(newPosition);
 			if (curTile.isProperty()) {
-				PropertyTile pTile = (PropertyTile)curTile;
+				PropertyTile pTile = (PropertyTile) curTile;
 				if (pTile.isOwned()) {
 					// notify player
 					JOptionPane.showMessageDialog(null, "You landed on a tile owned by " + pTile.getOwner().getName() + 
-														". You pay them " + pTile.getRent() + "dollars.");
+														". You pay them " + pTile.getRent() + " dollars.");
 					// subtract money from curPlayer and add to owner
 					curPlayer.setMoney(curPlayer.getMoney() - pTile.getRent());
 					pTile.getOwner().setMoney(pTile.getOwner().getMoney() + pTile.getRent());
@@ -94,30 +97,47 @@ public class TopMenu extends JPanel{
 						curPlayer.setMoney(curPlayer.getMoney() - pTile.getValue());
 						// set curPlayer as owner of tile
 						pTile.setOwnership(curPlayer);
-					}
-
+					} 
 				}
 				System.out.println("Player " + curPlayer.getName() + " money: " + curPlayer.getMoney());
 			} else {	// tile is action tile and action is performed
+				ActionTile aTile = (ActionTile) curTile;
 				//TODO: perform action to player
 				;
 			}
+			// toggle canRoll to prevent player from being able to roll multiple times per turn
+			canRoll = false;
 			// *	*	*	*	*	*	*	
-			//TODO: update side menu!!!!
+			// TODO: update side menu!!!!
 			// game.info.update();
 			// *	*	*	*	*	*	*	
+		}
+
+		private void animatedMovePlayer(GameBoard gb, int playerNum, int startPos, int endPos) {
+			for (int i = startPos + 1; i < endPos; i++) {
+				gb.movePlayer(playerNum, i);
+				gb.refreshBoard();
+				// sleep so user can see animation
+				try {
+					Thread.sleep(200);
+				} catch (Exception e) {
+					System.out.println("I can't fall asleep!");
+				}
+			}
 		}
 	}
 
 	class EndTurnListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			// increment turn count
 			game.numTurns = game.numTurns + 1;
 			int nextTurnPlayer = game.getIndexCurrentTurnPlayer();
+			// update current player & label
 			game.currentTurnPlayer = (game.allPlayers.get(nextTurnPlayer));
+			currentTurnPlayerLabel.setText("<html>Turn:<br>" + game.currentTurnPlayer.getName() + "</html>");
 
-			System.out.println("nextTurnPlayer: " + nextTurnPlayer);
-			System.out.println("currentTurnPlayer: " + game.getIndexCurrentTurnPlayer());
-			System.out.println("numTurns: " + game.numTurns);
+			// toggle canRoll for new turn
+			canRoll = true;
 		}
 	}
 }

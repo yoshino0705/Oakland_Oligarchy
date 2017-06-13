@@ -52,34 +52,13 @@ public class OaklandOligarchy{
 
 		// initialize tiles
 		tiles = new ImplementTiles();
-
-/*	*	*	*	*	*	*	*	*	*	*	*	*		
- *	*	THE CODE BELOW ILLUSTRATES ISSUE #2 *	*	
- *	*	*	*	*	*	*	*	*	*	*	*	*	
-		int i = 0;
-		while (true) {
-			gb.movePlayer(0, i % 36);
-			i++;
-			gb.refreshBoard();
-			try {
-				Thread.sleep(100);
-			} catch (Exception e) {
-				System.out.println("");
-			}
-		}
-/*
-*	*	*	*	*	*	*	*	*	*	*	*	*/
 	}//end of OaklandOligarchy constructor
 
 	//get index of current turn player to use in all_players
-	int getIndexCurrentTurnPlayer(){
-
-		System.out.println("OO.numTurns: " + numTurns);
-		System.out.println("OO.numPlayers: " + numPlayers);
-
-		if(numTurns == 0){
+	int getIndexCurrentTurnPlayer() {
+		if (numTurns == 0) {
 			return 0;
-		}else{
+		} else {
 			return (numTurns % numPlayers);
 		}
 	}
