@@ -15,6 +15,14 @@ public class TopMenu extends JPanel{
 	OaklandOligarchy game;
 	private boolean canRoll = true;
 
+
+	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+			Function: TopMenu (constructor)
+		~	Parameters: OaklandOligarchy -- reference to OaklandOligarchy 			~
+						instantiation containing this menu
+		~	Returns: None															~				
+			Description: Sets up buttons and action listeners for the top menu
+		~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 	TopMenu(OaklandOligarchy oo) {
 		this.game = oo;
 		this.setPreferredSize(new Dimension(1000, 100));
@@ -54,6 +62,13 @@ public class TopMenu extends JPanel{
 	class RollListener implements ActionListener {
 		final int NUM_TILES = 36;
 
+		/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+			Function: actionPerformed
+		~	Parameters: ActionEvent -- event generated from button click			~
+			Returns: None															
+		~	Description: Moves player, handles buying property/paying rent/action 	~
+						 tiles.
+		~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 		public void actionPerformed(ActionEvent e) {
 			// if player has already rolled, yell at them if they try to roll again
 			if (!canRoll) {
@@ -61,15 +76,13 @@ public class TopMenu extends JPanel{
 										"End your turn so the next player can go.");
 				return;
 			}
-			// calculate player's roll
-			Random rand = new Random();
-			int min = 1;
-			int max = 6;
-			int roll1 = rand.nextInt((max - min) + 1) + min;
-			int roll2 = rand.nextInt((max - min) + 1) + min;
+
+			// calculate player's dice rolls
+			int roll1 = rollDie();
+			int roll2 = rollDie();
 			int rollSum = roll1 + roll2;
 
-			// logic to move player
+			// get current player & calculate their new position
 			Player curPlayer = game.currentTurnPlayer;
 			int newPosition = (curPlayer.getPosition() + rollSum) % NUM_TILES;
 			// move player on board
@@ -103,7 +116,6 @@ public class TopMenu extends JPanel{
 			} else {	// tile is action tile and action is performed
 				ActionTile aTile = (ActionTile) curTile;
 				//TODO: perform action to player
-				;
 			}
 			// toggle canRoll to prevent player from being able to roll multiple times per turn
 			canRoll = false;
@@ -113,6 +125,16 @@ public class TopMenu extends JPanel{
 			// *	*	*	*	*	*	*	
 		}
 
+		/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+			Function: animatedMovePlayer
+		~	Parameters: GameBoard -- reference to OaklandOligarchy's GameBoard		~
+						playerNum -- index of player who's turn it is
+		~				startPos -- current position of player 						~
+						endPos -- destination position of player
+		~	Returns: None															~
+			Description: Moves player from startPos to endPos, hopping through each 
+		~				 tile in between the two.									~
+		~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 		private void animatedMovePlayer(GameBoard gb, int playerNum, int startPos, int endPos) {
 			for (int i = startPos + 1; i < endPos; i++) {
 				gb.movePlayer(playerNum, i);
@@ -125,9 +147,30 @@ public class TopMenu extends JPanel{
 				}
 			}
 		}
+
+		/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+			Function: rollDie
+		~	Parameters: None														~
+			Returns: int with value between 1 and 6													~
+		~	Description: Simulates die roll; returns random number between 1 and 6	~
+		~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
+		private int rollDie() {
+			Random rand = new Random();
+			int min = 1;
+			int max = 6;
+			return rand.nextInt((max - min) + 1) + min;
+		}
 	}
 
 	class EndTurnListener implements ActionListener {
+
+		/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+			Function: actionPerformed
+		~	Parameters: ActionEvent -- event generated from button click			~
+			Returns: None															
+		~	Description: Ends user's turn; increments number of turns and updates	~
+						 player who's turn it currently is.
+		~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 		public void actionPerformed(ActionEvent e) {
 			// increment turn count
 			game.numTurns = game.numTurns + 1;

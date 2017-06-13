@@ -9,20 +9,25 @@ public class OaklandOligarchy{
 	//JLabel currentTurnPlayerLabel;
 	
 
-	int numPlayers = 0;//keep track of how many players there are
-	int numTurns = 0;//keep track of how many turns to mod with the all_players array
-	Player currentTurnPlayer = null;//the player whos turn it is
+	int numPlayers = 0; // keep track of how many players there are
+	int numTurns = 0; // keep track of how many turns to mod with the all_players array
+	Player currentTurnPlayer = null; // the player whos turn it is
 	GameBoard gb;
 	ImplementTiles tiles;
 	InfoPanel info;
-
-	//list of all the players in this game
-	ArrayList<Player> allPlayers = new ArrayList<Player>();
+	ArrayList<Player> allPlayers = new ArrayList<Player>(); // list of all the players in this game
+	
 	public static void main(String[] args){
 		new OaklandOligarchy();
-	}//end of main method
+	}
 
-	//constructor will start the gui
+	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+		Function: OaklandOligarchy (constructor)
+	~	Parameters: None														~
+		Returns: None																			
+	~	Description: Launches start menu. Sets up main GUI window and adds 		~
+					different game components to said window.					
+	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 	OaklandOligarchy(){
 		StartMenu sm = new StartMenu();
 
@@ -52,9 +57,14 @@ public class OaklandOligarchy{
 
 		// initialize tiles
 		tiles = new ImplementTiles();
-	}//end of OaklandOligarchy constructor
+	}
 
-	//get index of current turn player to use in all_players
+	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+		Function: getIndexCurrentTurnPlayer
+	~	Parameters: None														~
+		Returns: int value representing player who's turn it is											~				
+	~	Description: Calculates which player's turn it currently is 			~
+	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 	int getIndexCurrentTurnPlayer() {
 		if (numTurns == 0) {
 			return 0;
