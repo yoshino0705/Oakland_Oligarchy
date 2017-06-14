@@ -8,6 +8,7 @@ public class OaklandOligarchy{
 	JFrame window = new JFrame("OaklandOligarchy");
 	//JLabel currentTurnPlayerLabel;
 	
+	ImplementTiles tiles;
 
 	int numPlayers = 0;//keep track of how many players there are
 	int numTurns = 0;//keep track of how many turns to mod with the all_players array
@@ -41,8 +42,11 @@ public class OaklandOligarchy{
 		currentTurnPlayer = all_players.get(getIndexCurrentTurnPlayer());
 		TopMenu tm = new TopMenu(currentTurnPlayer);
 		window.add(tm, BorderLayout.NORTH);
+
+		tiles = new ImplementTiles();
+
 		//add info to the left side of the frame
-		InfoPanel info = new InfoPanel(all_players);
+		InfoPanel info = new InfoPanel(all_players, tiles);
 		window.add(info, BorderLayout.WEST);
 
 		GameBoard gb = new GameBoard(0, 0, .63, .63);
