@@ -89,11 +89,12 @@ public class GameBoard extends JPanel{
 		boardWidth = cornerWidth * 2 + rectWidthVertical * 8;
 		boardHeight = cornerHeight * 2 + rectHeightHorizontal * 8;
 		
+		// -1 suggests player isn't visible
 		playerOnTile = new int[4];
-		playerOnTile[0] = 0;
-		playerOnTile[1] = 0;
-		playerOnTile[2] = 0;
-		playerOnTile[3] = 0;
+		playerOnTile[0] = -1;
+		playerOnTile[1] = -1;
+		playerOnTile[2] = -1;
+		playerOnTile[3] = -1;
 		
 		initCenterArray();
 
@@ -255,6 +256,7 @@ public class GameBoard extends JPanel{
 		// top    : 3
 		// right  : 4
 		
+		// -1 as not visible
 		for(int playerNum = 0; playerNum < 4; playerNum++){
 			switch(getTileCategoryID(playerOnTile[playerNum])){
 				case 0:
@@ -289,6 +291,10 @@ public class GameBoard extends JPanel{
 		// left   : 2
 		// top    : 3
 		// right  : 4
+		
+		// -1 as not visible
+		if(tileID < 0)
+			return -1;
 		
 		if(tileID >= 1 && tileID <= 8)
 			return 1;
@@ -712,9 +718,9 @@ public class GameBoard extends JPanel{
 		newFrame.add(gb, BorderLayout.CENTER);
 		
 		gb.movePlayer(0, 7);
-		gb.movePlayer(1, 7);
+		//gb.movePlayer(1, 7);
 		gb.movePlayer(2, 7);
-		gb.movePlayer(3, 7);
+		//gb.movePlayer(3, 7);
 		
 		newFrame.setVisible(true);
 		
