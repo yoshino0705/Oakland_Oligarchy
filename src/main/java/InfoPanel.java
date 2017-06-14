@@ -21,7 +21,7 @@ public class InfoPanel extends JPanel{
 		this.setBorder(BorderFactory.createLineBorder(Color.black));
 	}//end of constructor
 
-	
+	//TODO more formatting on text alignment	
 	//this method will refresh the info
 	public void refresh(ArrayList<Player> all_players, ImplementTiles tiles){
 		String str = new String("");//this string will be used to build str for info JLabel
@@ -30,15 +30,15 @@ public class InfoPanel extends JPanel{
 		int player_number = 0;
 		for(Player p : all_players){//loop through all the players and get their info
 			str = str + "<b><u>" + p.getName() + "</u></b> <br>";//get player name
-			String color = "";
+			String color = "Color: ";
 			if(player_number==0){
-				color = "Red";
+				color = color + "Red";
 			}else if(player_number==1){
-				color = "Orange";
+				color = color + "Orange";
 			}else if(player_number==2){
-				color = "Green";
+				color = color + "Green";
 			}else if(player_number==3){
-				color = "Blue";
+				color = color + "Blue";
 			}else{
 				System.out.println("Error in setting color");
 			}
