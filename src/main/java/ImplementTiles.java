@@ -5,12 +5,20 @@ public class ImplementTiles{
     //Array of 36 Tiles
     private Tile tileArray[];
 
+    public void setTile(Tile newTile, int location){
+        this.tileArray[location] = newTile;
+    }
+
+    public Tile getTile(int location){
+        return this.tileArray[location];
+    }
+
     //change PropertyTile names and values if you'd like
     ImplementTiles(){
-        tileArray = new Tile[36];
+        this.tileArray = new Tile[36];
         //for testing purposes for now
         for(int i = 0; i < 36; ++i){
-            tileArray[i] = new PropertyTile("hello", (i + 1) * 10, i);
+            this.tileArray[i] = new PropertyTile("hello", (i + 1) * 10, i);
         }
 
         //Going for 28 properties and 8 action tiles
