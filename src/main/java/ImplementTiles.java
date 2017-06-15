@@ -5,10 +5,15 @@ public class ImplementTiles{
     //Array of 36 Tiles
     private Tile tileArray[];
 
+    //set a Tile at a specific location within the GameBoard (array location)
+    //@param newTile - the tile to be added
+    //@param location - the location in the array to add the new tile
     public void setTile(Tile newTile, int location){
         this.tileArray[location] = newTile;
     }
 
+    //get a Tile at a specific location within the Gameboard/array
+    //@param location - the location of the tile within the tileArray
     public Tile getTile(int location){
         return this.tileArray[location];
     }
