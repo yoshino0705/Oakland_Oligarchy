@@ -3,12 +3,14 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.util.ArrayList;
 
-public class OaklandOligarchy{
+public class OaklandOligarchy implements MouseMotionListener{
 	//main window for the application
 	JFrame window = new JFrame("OaklandOligarchy");
 	//JLabel currentTurnPlayerLabel;
 	
 	ImplementTiles tiles;
+	// in order to show message while hovering on board, GameBoard gb has to be a class object
+	GameBoard gb;
 
 	int numPlayers = 0;//keep track of how many players there are
 	int numTurns = 0;//keep track of how many turns to mod with the all_players array
@@ -49,9 +51,11 @@ public class OaklandOligarchy{
 		InfoPanel info = new InfoPanel(all_players, tiles);
 		window.add(info, BorderLayout.WEST);
 
-		GameBoard gb = new GameBoard(0, 0, .63, .63);
+		gb = new GameBoard(0, 0, .63, .63);
+		gb.addMouseMotionListener(this);
 		gb.movePlayer(1, 23);	// for skeleton purposes
 		gb.movePlayer(2, 14);	// for skeleton purposes
+		
 		window.add(gb, BorderLayout.CENTER);
 		window.setVisible(true);
 	}//end of OaklandOligarchy constructor
@@ -64,6 +68,20 @@ public class OaklandOligarchy{
 			return (numTurns % numPlayers);
 		}
 	}
+
+	@Override
+	public void mouseDragged(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		//System.out.println("MouseX: " + e.getX() + " MouseY: " + e.getY() + " TileID: " + gb.getTileID(e.getX(), e.getY()));
+		gb.showTileDetails(e.getX(), e.getY(), 20);
+		
+	}
+
 
 
 }//end of class OaklandOligarchy
