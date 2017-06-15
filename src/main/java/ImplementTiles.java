@@ -80,7 +80,7 @@ public class ImplementTiles{
         */
     }
 
-    public Tile getTile(int index) {
+	public Tile getTile(int index) {
         return tileArray[index];
     }
 }

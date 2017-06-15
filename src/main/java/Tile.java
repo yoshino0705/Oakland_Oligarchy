@@ -6,6 +6,10 @@ public class Tile{
     private String tileName;
     private boolean isProperty = false;
 
+	//this method stub is needed to call this on an array of all types of tiles
+	//it will be overridden in the proprties tile class
+	public Player getOwner(){return null;};
+
     Tile(){
         this.tileName = "";
     }

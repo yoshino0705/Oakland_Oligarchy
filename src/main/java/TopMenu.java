@@ -119,10 +119,8 @@ public class TopMenu extends JPanel{
 			}
 			// toggle canRoll to prevent player from being able to roll multiple times per turn
 			canRoll = false;
-			// *	*	*	*	*	*	*	
-			// TODO: update side menu!!!!
-			// game.info.update();
-			// *	*	*	*	*	*	*	
+			//update info panel
+			game.info.refresh(game.allPlayers, game.tiles);
 		}
 
 		/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~

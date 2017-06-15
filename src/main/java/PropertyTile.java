@@ -34,6 +34,10 @@ public class PropertyTile extends Tile{
         return this.rent;
     }
 
+	public Player getOwner(){
+		return this.owner;
+	}
+
     //@param pName - takes the player to pass ownership of property to
     //@return - true if property is unowned, false if already owned
     public boolean setOwnership(Player pName){
@@ -60,9 +64,5 @@ public class PropertyTile extends Tile{
 
     public int getValue() {
         return this.value;
-    }
-
-    public Player getOwner() {
-        return this.owner;
     }
 }
