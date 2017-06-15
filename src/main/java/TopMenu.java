@@ -82,37 +82,26 @@ public class TopMenu extends JPanel{
 			int roll2 = rollDie();
 			int rollSum = roll1 + roll2;
 
+			System.out.println("roll: " + rollSum);
+
 			// get current player & calculate their new position
 			Player curPlayer = game.currentTurnPlayer;
 			int newPosition = (curPlayer.getPosition() + rollSum) % NUM_TILES;
 			// move player on board
-			animatedMovePlayer(game.gb, game.getIndexCurrentTurnPlayer(), curPlayer.getPosition(), newPosition);
+			animatedMovePlayer(game.gb, game.getIndexCurrentTurnPlayer(), curPlayer.getPosition(), rollSum);
+			
+			System.out.println("Old pos: " + curPlayer.getPosition());
+
 			// update Players positiom
 			curPlayer.setPosition(newPosition);
+
+			System.out.println("new pos: " + curPlayer.getPosition());
 
 			// if tile is property, player can either buy or has to pay rent
 			Tile curTile = game.tiles.getTile(newPosition);
 			if (curTile.isProperty()) {
 				PropertyTile pTile = (PropertyTile) curTile;
-				if (pTile.isOwned()) {
-					// notify player
-					JOptionPane.showMessageDialog(null, "You landed on a tile owned by " + pTile.getOwner().getName() + 
-														". You pay them " + pTile.getRent() + " dollars.");
-					// subtract money from curPlayer and add to owner
-					curPlayer.setMoney(curPlayer.getMoney() - pTile.getRent());
-					pTile.getOwner().setMoney(pTile.getOwner().getMoney() + pTile.getRent());
-				} else {
-					//give player option to buy tile
-					int result = JOptionPane.showConfirmDialog(null, "Would you like to buy this property for " + pTile.getValue() + " dollars?",
-															"Purchase Property", JOptionPane.YES_NO_OPTION);
-					if (result == JOptionPane.YES_OPTION) {
-						// subtract cost from player
-						curPlayer.setMoney(curPlayer.getMoney() - pTile.getValue());
-						// set curPlayer as owner of tile
-						pTile.setOwnership(curPlayer);
-					} 
-				}
-				System.out.println("Player " + curPlayer.getName() + " money: " + curPlayer.getMoney());
+				doPropertyInteraction(pTile, curPlayer);
 			} else {	// tile is action tile and action is performed
 				ActionTile aTile = (ActionTile) curTile;
 				//TODO: perform action to player
@@ -124,18 +113,58 @@ public class TopMenu extends JPanel{
 		}
 
 		/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+			Function: doPropertyInteraction
+		~	Parameters: PropertyTile -- tile player has landed on 					~
+						curPlayer -- player who's turn it is
+		~	Returns: None															~
+			Description: Handles buying property/paying rent when a player lands on 
+		~				 a property tile.											~
+		~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
+		private void doPropertyInteraction(PropertyTile pTile, Player curPlayer) {
+			if (pTile.isOwned()) {
+				// notify player
+				JOptionPane.showMessageDialog(null, "You landed on " + pTile.getTileName() + " owned by " + 
+													pTile.getOwner().getName() + ". You pay them " + 
+													pTile.getRent() + " dollars.");
+				// subtract money from curPlayer and add to owner
+				curPlayer.setMoney(curPlayer.getMoney() - pTile.getRent());
+				pTile.getOwner().setMoney(pTile.getOwner().getMoney() + pTile.getRent());
+			} else {
+				// check if player has enough money to purchase property
+				if (curPlayer.getMoney() < pTile.getValue()) {
+					JOptionPane.showMessageDialog(null, "You landed on " + pTile.getTileName() + " but you don't have"
+													+ " enough money to purchase it.\n" + pTile.getTileName() + 
+													" costs $" + pTile.getValue() + " but you only have $" + 
+													curPlayer.getMoney() + ". How sad :(");
+					return;
+				}
+				//give player option to buy tile
+				int result = JOptionPane.showConfirmDialog(null, "You landed on " + pTile.getTileName() + 
+																", would you like to buy this property for " + 
+																pTile.getValue() + " dollars?",
+																"Purchase Property", JOptionPane.YES_NO_OPTION);
+				if (result == JOptionPane.YES_OPTION) {
+					// subtract cost from player
+					curPlayer.setMoney(curPlayer.getMoney() - pTile.getValue());
+					// set curPlayer as owner of tile
+					pTile.setOwnership(curPlayer);
+				} 
+			}
+		}
+
+		/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
 			Function: animatedMovePlayer
 		~	Parameters: GameBoard -- reference to OaklandOligarchy's GameBoard		~
 						playerNum -- index of player who's turn it is
 		~				startPos -- current position of player 						~
-						endPos -- destination position of player
+						roll -- value of player's roll
 		~	Returns: None															~
 			Description: Moves player from startPos to endPos, hopping through each 
 		~				 tile in between the two.									~
 		~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
-		private void animatedMovePlayer(GameBoard gb, int playerNum, int startPos, int endPos) {
-			for (int i = startPos + 1; i < endPos; i++) {
-				gb.movePlayer(playerNum, i);
+		private void animatedMovePlayer(GameBoard gb, int playerNum, int startPos, int roll) {
+			for (int i = 1; i <= roll; i++) {
+				gb.movePlayer(playerNum, (i + startPos) % NUM_TILES);
 				gb.refreshBoard();
 				// sleep so user can see animation
 				try {
