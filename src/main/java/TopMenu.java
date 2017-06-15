@@ -3,6 +3,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Random;
+import java.io.*;
 
 public class TopMenu extends JPanel{
 
@@ -53,7 +54,9 @@ public class TopMenu extends JPanel{
 
 		endGame.setFont(new Font("Courier", Font.PLAIN, 20));
 		this.add(endGame, 0, 5);
-
+		
+		HelpListener help_listener = new HelpListener();
+		helpButton.addActionListener(help_listener);
 		helpButton.setFont(new Font("Courier", Font.PLAIN, 20));
 		this.add(helpButton, 0, 6);
 
@@ -210,4 +213,39 @@ public class TopMenu extends JPanel{
 			canRoll = true;
 		}
 	}
+
+
+	//this is the listener for the help button
+	//it will spawn a new window made from a local html file
+	class HelpListener implements ActionListener{
+
+		public void actionPerformed(ActionEvent e){
+			JFrame window = new JFrame("Oakland Oligarchy Help Documentation");
+			JEditorPane editorpane= new JEditorPane();
+			JScrollPane editorScrollPane = new JScrollPane(editorpane);
+			editorScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+			//this is the file path if ran from the root dir like gradle run
+			File file = new File("src/main/java/HelpDocs.html");
+			try {
+				editorpane.setPage(file.toURI().toURL());
+			} catch(Exception ex){
+				//couldnt load that file, try other path
+				try {
+					//this is the file path if you are testing from within src/main/java
+					File file2 = new File("HelpDocs.html");
+					editorpane.setPage(file2.toURI().toURL());
+				} catch(Exception exx){
+					System.out.println("Error: Couldn't find HelpDocs.html");
+				}
+			}
+			editorpane.setEditable(false);
+			window.setSize(600,600);
+			window.add(editorScrollPane);
+			window.setVisible(true);
+	
+		}
+
+	}//end of class HelpListener
+
+
 }
