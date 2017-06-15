@@ -8,6 +8,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 	JFrame window = new JFrame("OaklandOligarchy");
 	//JLabel currentTurnPlayerLabel;
 	
+	ImplementTiles tiles;
 	// in order to show message while hovering on board, GameBoard gb has to be a class object
 	GameBoard gb;
 
@@ -43,8 +44,11 @@ public class OaklandOligarchy implements MouseMotionListener{
 		currentTurnPlayer = all_players.get(getIndexCurrentTurnPlayer());
 		TopMenu tm = new TopMenu(currentTurnPlayer);
 		window.add(tm, BorderLayout.NORTH);
+
+		tiles = new ImplementTiles();
+
 		//add info to the left side of the frame
-		InfoPanel info = new InfoPanel(all_players);
+		InfoPanel info = new InfoPanel(all_players, tiles);
 		window.add(info, BorderLayout.WEST);
 
 		gb = new GameBoard(0, 0, .63, .63);
