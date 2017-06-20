@@ -3,6 +3,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.*;
 
@@ -31,8 +33,8 @@ public class GameBoard extends JPanel{
 		example code:
 		
 		MouseEvent e... some way to get the mouse event object
-		GameBoard gb = new GameBoard();
-		showTileDetails(e.getX(), e.getY(), 20);	// 20 is font size, can be set to any preferrable number
+		GameBoard gb = new GameBoard( ... );
+		gb.showTileDetails(e.getX(), e.getY(), 20);	// 20 is font size, can be set to any preferrable number
 
 	*/
 
@@ -49,10 +51,10 @@ public class GameBoard extends JPanel{
 	private double cornerWidth = 200;
 	private double cornerHeight = 200;
 	
-	private double subRectWidthHorizontal = 30;
-	private double subRectHeightHorizontal = rectHeightHorizontal;
-	private double subRectWidthVertical = rectWidthVertical;
-	private double subRectHeightVertical = 30;
+	private double subRectWidthVertical = 30;
+	private double subRectHeightVertical = rectHeightHorizontal;
+	private double subRectWidthHorizontal = rectWidthVertical;
+	private double subRectHeightHorizontal = 30;
 	
 	private double boardWidth = cornerWidth * 2 + rectWidthVertical * 8;
 	private double boardHeight = cornerHeight * 2 + rectHeightHorizontal * 8;
@@ -68,6 +70,9 @@ public class GameBoard extends JPanel{
 	private int centerX[];
 	private int centerY[];
 	
+	private int subRectCoordX[];
+	private int subRectCoordY[];
+	
  	public GameBoard(int x, int y, double scaleX, double scaleY){
 		shiftX = x;
 		shiftY = y;
@@ -81,10 +86,10 @@ public class GameBoard extends JPanel{
 		cornerWidth = 200 * scaleX;
 		cornerHeight = 200 * scaleY;
 		
-		subRectWidthHorizontal = 30 * scaleX;
-		subRectHeightHorizontal = rectHeightHorizontal;
-		subRectWidthVertical = rectWidthVertical;
-		subRectHeightVertical = 30 * scaleY;
+		subRectWidthVertical = 30 * scaleX;
+		subRectHeightVertical = rectHeightHorizontal;
+		subRectWidthHorizontal = rectWidthVertical;
+		subRectHeightHorizontal = 30 * scaleY;
 		
 		boardWidth = cornerWidth * 2 + rectWidthVertical * 8;
 		boardHeight = cornerHeight * 2 + rectHeightHorizontal * 8;
@@ -97,29 +102,54 @@ public class GameBoard extends JPanel{
 		playerOnTile[3] = -1;
 		
 		initCenterArray();
+		initSubRectCoord();
 
 	}
 	
 	public void paintComponent(Graphics g) {
 	    super.paintComponent(g);
-	    
+	    //System.out.println(this.getGraphics());
 	    drawBasicBoard(g);
-	    drawSubRect(g);
+	    drawSubRect(g);   
 	    Font font = new Font("TimesNewRoman", Font.BOLD, 50);
 	    drawText(g, "Oakland Oligarchy", boardWidth/2 - getStringLengthOnBoard(g, "Oakland Oligarchy", font)/2, boardHeight / 2.0, font);
 	    drawPlayersOnBoard(g);
-
+	    
+	    
 	    
 	}
 	
 	public void refreshBoard(){
+		//System.out.println(this.getGraphics());
 		clearDrawingBoard(this.getGraphics());
 		drawBasicBoard(this.getGraphics());
-		drawSubRect(this.getGraphics());
+		drawSubRect(this.getGraphics());		
 		Font font = new Font("TimesNewRoman", Font.BOLD, 50);
 		drawText(this.getGraphics(), "Oakland Oligarchy", boardWidth/2 - getStringLengthOnBoard(this.getGraphics(), "Oakland Oligarchy", font)/2, boardHeight / 2.0, font);
-		drawPlayersOnBoard(this.getGraphics());
+		drawPlayersOnBoard(this.getGraphics());		
 		
+	}
+	
+	private void fillSubRect(Graphics g, int tileID, Color color, ArrayList<Integer> arr){		
+		//System.out.println(this.getGraphics());
+		if(tileID >= 1 && tileID <= 8){
+			// bottom row
+			drawHorizontalSubBox(g, subRectCoordX[tileID], subRectCoordY[tileID], color);
+		}else if(tileID >= 10 && tileID <= 17){
+			// left row
+			drawVerticalSubBox(g, subRectCoordX[tileID], subRectCoordY[tileID], color);
+		}else if(tileID >= 19 && tileID <= 26){
+			// top row
+			drawHorizontalSubBox(g, subRectCoordX[tileID], subRectCoordY[tileID], color);
+		}else if(tileID >= 28 && tileID <= 35){
+			// right row
+			drawVerticalSubBox(g, subRectCoordX[tileID], subRectCoordY[tileID], color);
+		}else{
+			System.out.println("Error in fillColorIntoSmallBox(): Invalid tileID");
+		}
+		
+		//System.out.println("removed: " + tileID);
+		arr.remove(arr.indexOf(tileID));
 		
 	}
 	
@@ -197,6 +227,51 @@ public class GameBoard extends JPanel{
 					
 					centerX[i] = (int)(boardWidth - rectWidthHorizontal/2) + shiftX;
 					centerY[i] = (int)(cornerHeight + rectHeightHorizontal * (i - 28 + 0.5)) + shiftY;
+					break;
+			
+			}			
+		}	
+	}
+
+	private void initSubRectCoord(){
+		subRectCoordX = new int[TILE_COUNT];
+		subRectCoordY = new int[TILE_COUNT];
+		
+		for(int i = 0; i < TILE_COUNT; i++){
+			switch(getTileCategoryID(i)){
+				// corner : 0
+				// bottom : 1
+				// left   : 2
+				// top    : 3
+				// right  : 4
+			
+				case 0:
+					subRectCoordX[i] = -1;				
+					subRectCoordY[i] = -1;	
+					break;
+					
+				case 1:
+					// bottom
+					subRectCoordX[i] = centerX[i] - (int)(rectWidthVertical/2);				
+					subRectCoordY[i] = centerY[i] - (int)(rectHeightVertical/2);					
+					break;
+					
+				case 2:
+					// left
+					subRectCoordX[i] = centerX[i] + (int)((rectWidthHorizontal/2) - subRectWidthVertical) + 1;	
+					subRectCoordY[i] = centerY[i] - (int)(rectHeightHorizontal/2);					
+					break;
+					
+				case 3:
+					// top
+					subRectCoordX[i] = centerX[i] - (int)(rectWidthVertical/2);				
+					subRectCoordY[i] = centerY[i] + (int)((rectHeightVertical/2) - subRectHeightHorizontal) + 1;					
+					break;
+					
+				case 4:
+					// right
+					subRectCoordX[i] = centerX[i] - (int)(rectWidthHorizontal/2);				
+					subRectCoordY[i] = centerY[i] - (int)(rectHeightHorizontal/2);					
 					break;
 			
 			}			
@@ -292,6 +367,12 @@ public class GameBoard extends JPanel{
 		// top    : 3
 		// right  : 4
 		
+		while(tileID > TILE_COUNT){
+			tileID -= TILE_COUNT;
+		}
+		
+		//System.out.println("TileID: " + tileID);
+		
 		// -1 as not visible
 		if(tileID < 0)
 			return -1;
@@ -311,14 +392,18 @@ public class GameBoard extends JPanel{
 	
 	public void showTileDetails(int mouseX, int mouseY, int fontSize){
 		int tileIndex = getTileID(mouseX, mouseY);
-		String toolTipText = "<html><font size=" + fontSize + "> "
-							+ "Property Name: " + "<b>" + "UNKNOWN " + "</b>" + tileIndex 
-							+ "<br>Property Rent: " + "<b>" + "> $0.00 " + "</b>"
-							+ "<br>Property Owned: " + "<b>" + "MAYBE" + "</b>"
-							+ "</font></html>";
+		ImplementTiles it = new ImplementTiles();
+		String toolTipText;
 		
-		if(tileIndex != -1)
+		if(tileIndex != -1){
+			toolTipText = "<html><font size=" + fontSize + "> "
+					+ "Property Name: " + "<b>" + it.getTile(tileIndex).getTileName() + "</b>" 
+					+ "<br>Property Rent: " + "<b>" + ((PropertyTile)(it.getTile(tileIndex))).getRent() + "</b>"
+					+ "<br>Property Owner: " + "<b>" + it.getTile(tileIndex).getOwner() + "</b>"
+					+ "</font></html>";
 			this.setToolTipText(toolTipText);
+			
+		}
 		else
 			this.setToolTipText("");
 			//this.setToolTipText("<html><font size=20>Nothing to show here. </font></html>");
@@ -341,7 +426,7 @@ public class GameBoard extends JPanel{
 	private void clearDrawingBoard(Graphics g){
 		g.setColor(Color.lightGray);
 		g.fillRect(shiftX, shiftY, (int)boardWidth, (int)boardHeight);
-		
+		this.repaint();
 	}
 	
 	private void drawCorner(Graphics g, double x, double y){
@@ -353,17 +438,27 @@ public class GameBoard extends JPanel{
 	}
 	
 	private void drawHorizontalBox(Graphics g, double x, double y){
+		g.setColor(Color.BLACK);
 		g.drawRect( (int) x, (int) y, (int) rectWidthHorizontal, (int) rectHeightHorizontal);
 	}
 	
-	private void drawVerticalSubBox(Graphics g, double x, double y){
-		g.setColor(Color.CYAN);
-		g.fillRect( (int) x,  (int) y,  (int) subRectWidthVertical, (int) subRectHeightVertical);
+	private void drawHorizontalSubBox(Graphics g, double x, double y, Color color){
+		g.setColor(color);
+		g.fillRect( (int) x,  (int) y,  (int) subRectWidthHorizontal, (int) subRectHeightHorizontal);
 	}
 	
 	private void drawHorizontalSubBox(Graphics g, double x, double y){
-		g.setColor(Color.YELLOW);
-		g.fillRect( (int) x, (int) y, (int) subRectWidthHorizontal, (int) subRectHeightHorizontal);
+		g.setColor(Color.BLACK);
+		g.drawRect( (int) x,  (int) y,  (int) subRectWidthHorizontal, (int) subRectHeightHorizontal);
+	}
+	
+	private void drawVerticalSubBox(Graphics g, double x, double y, Color color){
+		g.setColor(color);
+		g.fillRect( (int) x, (int) y, (int) subRectWidthVertical, (int) subRectHeightVertical);
+	}
+	
+	private void drawVerticalSubBox(Graphics g, double x, double y){
+		g.drawRect( (int) x,  (int) y,  (int) subRectWidthVertical, (int) subRectHeightVertical);
 	}
 	
 	public void drawText(Graphics g, String text, double x, double y, Font font){
@@ -405,22 +500,36 @@ public class GameBoard extends JPanel{
 	}
 	
 	private void drawSubRect(Graphics g){
-		 // top row
-	    for(int i = 0; i < 8; i++)
-	    	drawVerticalSubBox(g, (cornerWidth + i * rectWidthVertical) + shiftX, (rectHeightVertical - subRectHeightVertical) + shiftY);
-	    
-	    // left row
-	    for(int i = 0; i < 8; i++)
-	    	drawHorizontalSubBox(g, (rectWidthHorizontal - subRectWidthHorizontal) + shiftX, (cornerHeight + i * rectHeightHorizontal)+ shiftY);
-	    
-	    // right row
-	    for(int i = 0; i < 8; i++)
-	    	drawHorizontalSubBox(g, (boardWidth - rectWidthHorizontal) + shiftX + 1, (cornerHeight + i * rectHeightHorizontal) + shiftY);
-	    
-	    // bottom row
-	    for(int i = 0; i < 8; i++)
-	    	drawVerticalSubBox(g, (cornerWidth + i * rectWidthVertical) + shiftX, (boardHeight - rectHeightVertical) + shiftY + 1);		
+		ArrayList<Integer> arr = new ArrayList<Integer>();	// to keep track of remaining unpainted sub rectangles (small boxes)
+		for(int i = 0; i < TILE_COUNT; i++){
+			arr.add(i);
+		}
 		
+		// fill in colors for sub rectangles (small boxes)
+		for(int i = 0; i < TILE_COUNT; i++){
+			if(i%9 != 0 && i != 0)
+				fillSubRect(g, i, getRandomColor(), arr);		
+		}		
+		
+		// draw out the remaining boxes
+		for(int i = 0; i < arr.size(); i++){
+			int tileID = arr.get(i);
+			if(tileID >= 1 && tileID <= 8){
+				// bottom row
+				drawHorizontalSubBox(g, subRectCoordX[tileID], subRectCoordY[tileID]);
+			}else if(tileID >= 10 && tileID <= 17){
+				// left row
+				drawVerticalSubBox(g, subRectCoordX[tileID], subRectCoordY[tileID]);
+			}else if(tileID >= 19 && tileID <= 26){
+				// top row
+				drawHorizontalSubBox(g, subRectCoordX[tileID], subRectCoordY[tileID]);
+			}else if(tileID >= 28 && tileID <= 35){
+				// right row
+				drawVerticalSubBox(g, subRectCoordX[tileID], subRectCoordY[tileID]);
+			}
+			
+		}
+
 	}
 	
 	private void drawPlayerOnCorner(Graphics g, int playerNum, int tileID){	
@@ -508,13 +617,13 @@ public class GameBoard extends JPanel{
 		int fixedValueY = 5;
 		
 		int player1RelativePosX = (int)(boardWidth - (rectWidthVertical) - cornerWidth) + shiftX + fixedValueX;
-		int player1RelativePosY = (int)(boardHeight - (rectHeightVertical) + subRectHeightVertical) + shiftY + fixedValueY;
+		int player1RelativePosY = (int)(boardHeight - (rectHeightVertical) + subRectHeightHorizontal) + shiftY + fixedValueY;
 		int player2RelativePosX = (int)(boardWidth - playerIconWidth - cornerWidth) + shiftX - fixedValueX;
 		int player2RelativePosY = (int)(boardHeight - (playerIconHeight)) + shiftY - fixedValueY;
 		int player3RelativePosX = (int)(boardWidth - (rectWidthVertical) - cornerWidth) + shiftX + fixedValueX;
 		int player3RelativePosY = (int)(boardHeight - (playerIconHeight)) + shiftY - fixedValueY;
 		int player4RelativePosX = (int)(boardWidth - playerIconWidth - cornerWidth) + shiftX - fixedValueX;
-		int player4RelativePosY = (int)(boardHeight - (rectHeightVertical) + subRectHeightVertical) + shiftY + fixedValueY;
+		int player4RelativePosY = (int)(boardHeight - (rectHeightVertical) + subRectHeightHorizontal) + shiftY + fixedValueY;
 		
 		// tileID range: 1-8
 		int cornerXShiftDistance = (int)(rectWidthVertical * (tileID - 1) * -1);		
@@ -558,13 +667,13 @@ public class GameBoard extends JPanel{
 		int fixedValueY = 5;
 		
 		int player1RelativePosX = (int)(boardWidth - (rectWidthVertical) - cornerWidth) + shiftX + fixedValueX;
-		int player1RelativePosY = (int)(rectHeightVertical - subRectHeightVertical - playerIconHeight) + shiftY - fixedValueY;
+		int player1RelativePosY = (int)(rectHeightVertical - subRectHeightHorizontal - playerIconHeight) + shiftY - fixedValueY;
 		int player2RelativePosX = (int)(boardWidth - playerIconWidth - cornerWidth) + shiftX - fixedValueX;
 		int player2RelativePosY = shiftY + fixedValueY;
 		int player3RelativePosX = (int)(boardWidth - (rectWidthVertical) - cornerWidth) + shiftX + fixedValueX;
 		int player3RelativePosY = shiftY + fixedValueY;
 		int player4RelativePosX = (int)(boardWidth - playerIconWidth - cornerWidth) + shiftX - fixedValueX;
-		int player4RelativePosY = (int)(rectHeightVertical - subRectHeightVertical - playerIconHeight) + shiftY - fixedValueY;
+		int player4RelativePosY = (int)(rectHeightVertical - subRectHeightHorizontal - playerIconHeight) + shiftY - fixedValueY;
 				
 		// tileID range: 19-26
 		int cornerXShiftDistance = (int)(rectHeightHorizontal * (26 - tileID) * -1);		
@@ -612,11 +721,11 @@ public class GameBoard extends JPanel{
 		
 		int player1RelativePosX = shiftX + fixedValueX;
 		int player1RelativePosY = (int)(rectHeightHorizontal - playerIconHeight + cornerHeight) + shiftY - fixedValueY;
-		int player2RelativePosX = (int)(rectWidthHorizontal - subRectWidthHorizontal - playerIconWidth) + shiftX - fixedValueX;
+		int player2RelativePosX = (int)(rectWidthHorizontal - subRectWidthVertical - playerIconWidth) + shiftX - fixedValueX;
 		int player2RelativePosY = (int)(cornerHeight) + shiftY + fixedValueY;
 		int player3RelativePosX = shiftX + fixedValueX;
 		int player3RelativePosY = (int)(cornerHeight) + shiftY + fixedValueY;
-		int player4RelativePosX = (int)(rectWidthHorizontal - subRectWidthHorizontal - playerIconWidth) + shiftX - fixedValueX;
+		int player4RelativePosX = (int)(rectWidthHorizontal - subRectWidthVertical - playerIconWidth) + shiftX - fixedValueX;
 		int player4RelativePosY = (int)(rectHeightHorizontal - playerIconHeight + cornerHeight) + shiftY - fixedValueY;
 				
 		// tileID range: 10-17
@@ -661,11 +770,11 @@ public class GameBoard extends JPanel{
 		int fixedValueX = 5;
 		int fixedValueY = 5;
 		
-		int player1RelativePosX = (int)(boardWidth - rectWidthHorizontal + subRectWidthHorizontal) + shiftX + fixedValueX;
+		int player1RelativePosX = (int)(boardWidth - rectWidthHorizontal + subRectWidthVertical) + shiftX + fixedValueX;
 		int player1RelativePosY = (int)(rectHeightHorizontal - playerIconHeight + cornerHeight) + shiftY - fixedValueY;
 		int player2RelativePosX = (int)(boardWidth - playerIconWidth) + shiftX - fixedValueX;
 		int player2RelativePosY = (int)(cornerHeight) + shiftY + fixedValueY;
-		int player3RelativePosX = (int)(boardWidth - rectWidthHorizontal + subRectWidthHorizontal) + shiftX + fixedValueX;
+		int player3RelativePosX = (int)(boardWidth - rectWidthHorizontal + subRectWidthVertical) + shiftX + fixedValueX;
 		int player3RelativePosY = (int)(cornerHeight) + shiftY + fixedValueY;
 		int player4RelativePosX = (int)(boardWidth - playerIconWidth) + shiftX - fixedValueX;
 		int player4RelativePosY = (int)(rectHeightHorizontal - playerIconHeight + cornerHeight) + shiftY - fixedValueY;
@@ -707,6 +816,15 @@ public class GameBoard extends JPanel{
 		
 	}
 	
+	public Color getRandomColor(){
+		Random rand = new Random();
+		float r = rand.nextFloat();
+		float g = rand.nextFloat();
+		float b = rand.nextFloat();
+		
+		return new Color(r, g, b);
+	}
+	
 	public static void main(String args[]){
 		// for testing
 		
@@ -717,10 +835,10 @@ public class GameBoard extends JPanel{
 		GameBoard gb = new GameBoard(100, 100, 1.5, 1.5);
 		newFrame.add(gb, BorderLayout.CENTER);
 		
-		gb.movePlayer(0, 7);
-		//gb.movePlayer(1, 7);
-		gb.movePlayer(2, 7);
-		//gb.movePlayer(3, 7);
+		gb.movePlayer(0, 30);
+		gb.movePlayer(1, 30);
+		gb.movePlayer(2, 30);
+		gb.movePlayer(3, 30);
 		
 		newFrame.setVisible(true);
 		
