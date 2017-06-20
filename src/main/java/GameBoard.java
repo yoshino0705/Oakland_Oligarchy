@@ -393,12 +393,17 @@ public class GameBoard extends JPanel{
 	public void showTileDetails(int mouseX, int mouseY, int fontSize, ImplementTiles it){
 		int tileIndex = getTileID(mouseX, mouseY);
 		String toolTipText;
+
+		String owner = "Unowned";
 		
 		if(tileIndex != -1){
+			if (it.getTile(tileIndex).getOwner() != null)
+				owner = it.getTile(tileIndex).getOwner().getName();
+
 			toolTipText = "<html><font size=" + fontSize + "> "
 					+ "Property Name: " + "<b>" + it.getTile(tileIndex).getTileName() + "</b>" 
 					+ "<br>Property Rent: " + "<b>" + ((PropertyTile)(it.getTile(tileIndex))).getRent() + "</b>"
-					+ "<br>Property Owner: " + "<b>" + it.getTile(tileIndex).getOwner().getName() + "</b>"
+					+ "<br>Property Owner: " + "<b>" + owner + "</b>"
 					+ "</font></html>";
 			this.setToolTipText(toolTipText);
 			
