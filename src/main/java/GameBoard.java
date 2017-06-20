@@ -390,9 +390,8 @@ public class GameBoard extends JPanel{
 		
 	}
 	
-	public void showTileDetails(int mouseX, int mouseY, int fontSize){
+	public void showTileDetails(int mouseX, int mouseY, int fontSize, ImplementTiles it){
 		int tileIndex = getTileID(mouseX, mouseY);
-		ImplementTiles it = new ImplementTiles();
 		String toolTipText;
 		
 		if(tileIndex != -1){
