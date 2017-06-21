@@ -10,7 +10,7 @@ public class TopMenuTest {
 
 	@Test
 	public void testTopMenuButtons() {
-		OaklandOligarchy oo = new OaklandOligarchy();
+		OaklandOligarchy oo = new OaklandOligarchy("test");
 		TopMenu tm = new TopMenu(oo);
 		assertNotNull(tm.tradeButton);
 		assertNotNull(tm.rollButton);
@@ -21,7 +21,7 @@ public class TopMenuTest {
 
 	@Test
 	public void testToggleJBUttonEnabled() {
-		OaklandOligarchy oo = new OaklandOligarchy();
+		OaklandOligarchy oo = new OaklandOligarchy("test");
 		TopMenu tm = new TopMenu(oo);
 		assertTrue(tm.rollButton.isEnabled());
 		tm.toggleRollButton();
