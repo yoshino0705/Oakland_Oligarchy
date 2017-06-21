@@ -14,7 +14,6 @@ public class TopMenu extends JPanel{
 	JButton endGame = new JButton("End Game");
 	JButton helpButton  = new JButton("Help");
 	OaklandOligarchy game;
-	private boolean canRoll = true;
 
 
 	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
@@ -50,6 +49,7 @@ public class TopMenu extends JPanel{
 		endTurn.setFont(new Font("Courier", Font.PLAIN, 20));
 		EndTurnListener etl = new EndTurnListener();
 		endTurn.addActionListener(etl);
+		toggleJButtonEnabled(endTurn);
 		this.add(endTurn, 0, 4);
 
 		endGame.setFont(new Font("Courier", Font.PLAIN, 20));
@@ -60,6 +60,28 @@ public class TopMenu extends JPanel{
 		helpButton.setFont(new Font("Courier", Font.PLAIN, 20));
 		this.add(helpButton, 0, 6);
 
+	}
+
+	public void toggleRollButton() {
+		toggleJButtonEnabled(rollButton);
+	}
+
+	public void toggleEndTurnButton() {
+		toggleJButtonEnabled(endTurn);
+	}
+
+	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	
+		Function: toggleJButtonEnabled
+	~	Parameters: JButton -- Button to toggle 								~
+	~	Returns: None															~				
+		Description: Toggles enabled state of given JButton
+	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
+	private void toggleJButtonEnabled(JButton b) {
+		if (b.isEnabled()) {
+			b.setEnabled(false);
+		} else {
+			b.setEnabled(true);
+		}
 	}
 
 	class RollListener implements ActionListener {
@@ -73,13 +95,6 @@ public class TopMenu extends JPanel{
 						 tiles.
 		~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 		public void actionPerformed(ActionEvent e) {
-			// if player has already rolled, yell at them if they try to roll again
-			if (!canRoll) {
-				JOptionPane.showMessageDialog(null, "Hey! You already rolled! " + 
-										"End your turn so the next player can go.");
-				return;
-			}
-
 			// calculate player's dice rolls
 			int roll1 = rollDie();
 			int roll2 = rollDie();
@@ -109,8 +124,9 @@ public class TopMenu extends JPanel{
 				ActionTile aTile = (ActionTile) curTile;
 				//TODO: perform action to player
 			}
-			// toggle canRoll to prevent player from being able to roll multiple times per turn
-			canRoll = false;
+			// toggle turn buttons
+			toggleJButtonEnabled(rollButton);
+			toggleJButtonEnabled(endTurn);
 			//update info panel
 			game.info.refresh(game.allPlayers, game.tiles);
 		}
@@ -209,8 +225,9 @@ public class TopMenu extends JPanel{
 			game.currentTurnPlayer = (game.allPlayers.get(nextTurnPlayer));
 			currentTurnPlayerLabel.setText("<html>Turn:<br>" + game.currentTurnPlayer.getName() + "</html>");
 
-			// toggle canRoll for new turn
-			canRoll = true;
+			// toggle turn buttons
+			toggleJButtonEnabled(rollButton);
+			toggleJButtonEnabled(endTurn);
 		}
 	}
 

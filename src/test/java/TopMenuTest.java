@@ -9,20 +9,22 @@ import static org.junit.Assert.*;
 public class TopMenuTest {
 
 	@Test
-	public void testTopMenuPlayerLabel() {
-		Player p = new Player("pname", 100);
-		TopMenu tm = new TopMenu(p);
-		assertEquals(tm.currentTurnPlayerLabel.getText(), "<html>Turn:<br>" + p.getName() + "</html>");
+	public void testTopMenuButtons() {
+		OaklandOligarchy oo = new OaklandOligarchy();
+		TopMenu tm = new TopMenu(oo);
+		assertNotNull(tm.tradeButton);
+		assertNotNull(tm.rollButton);
+		assertNotNull(tm.endTurn);
+		assertNotNull(tm.endGame);
+		assertNotNull(tm.helpButton);
 	}
 
 	@Test
-	public void testTopMenuButtons() {
-		Player p = new Player("pname", 100);
-		TopMenu tm = new TopMenu(p);
-		assertNotNull(tm.tradeButton);
-		assertNotNull(tm.rollButton);
-		assertNotNull(tm.newGame);
-		assertNotNull(tm.endGame);
-		assertNotNull(tm.helpButton);
+	public void testToggleJBUttonEnabled() {
+		OaklandOligarchy oo = new OaklandOligarchy();
+		TopMenu tm = new TopMenu(oo);
+		assertTrue(tm.rollButton.isEnabled());
+		tm.toggleRollButton();
+		assertFalse(tm.rollButton.isEnabled());
 	}
 }
