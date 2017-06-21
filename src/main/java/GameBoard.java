@@ -402,6 +402,7 @@ public class GameBoard extends JPanel{
 
 			toolTipText = "<html><font size=" + fontSize + "> "
 					+ "Property Name: " + "<b>" + it.getTile(tileIndex).getTileName() + "</b>" 
+					+ "<br>Property Cost: " + "<b>" + ((PropertyTile)(it.getTile(tileIndex))).getValue() + "</b>"
 					+ "<br>Property Rent: " + "<b>" + ((PropertyTile)(it.getTile(tileIndex))).getRent() + "</b>"
 					+ "<br>Property Owner: " + "<b>" + owner + "</b>"
 					+ "</font></html>";
