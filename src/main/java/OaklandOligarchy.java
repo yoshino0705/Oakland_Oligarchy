@@ -68,6 +68,22 @@ public class OaklandOligarchy implements MouseMotionListener{
 		tiles = new ImplementTiles();
 	}
 
+	// An Oakland Oligarchy constructor used for testing purposes
+	OaklandOligarchy(String s) {
+		if (s.equals("test")) {
+			for (int i = 0; i < 4; i++) {
+				Player p = new Player("p" + i, 1000);
+				allPlayers.add(p);
+				numPlayers++;
+			}	
+
+			//initial globals
+			tiles = new ImplementTiles();
+			info = new InfoPanel(allPlayers, tiles);
+			gb = new GameBoard(0, 0, .63, .63);
+			currentTurnPlayer = allPlayers.get(getIndexCurrentTurnPlayer());
+		} else throw new IllegalArgumentException("Incorrect usage of Oakland Oligarchy class.");
+	}
 	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
 		Function: getIndexCurrentTurnPlayer
 	~	Parameters: None														~

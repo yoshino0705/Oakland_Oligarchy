@@ -5,10 +5,10 @@ import java.util.ArrayList;
 
 public class InfoPanel extends JPanel{
 	JLabel infoLabel = new JLabel("", SwingConstants.LEFT);//this is the label with all of the info
-
+	int numPlayers;
 	//constructor for InfoPanel class
 	InfoPanel(ArrayList<Player> all_players, ImplementTiles tiles){
-		
+		numPlayers = all_players.size();
 		refresh(all_players, tiles);
 
 		infoLabel.setFont(new Font("Times", Font.PLAIN, 14));
