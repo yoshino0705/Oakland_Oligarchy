@@ -9,13 +9,14 @@ import static org.junit.Assert.*;
 public class InfoPanelTest {
 
 	@Test
-	public void testInfoPanelJLabels() {
+	public void testInfoPanelPlayers() {
 		ArrayList<Player> list = generatePlayerList();
-		InfoPanel ip = new InfoPanel(list);
-		assertEquals(ip.all_labels.size(), 20);
+		ImplementTiles it = new ImplementTiles();
+		InfoPanel ip = new InfoPanel(list, it);
+		assertEquals(ip.numPlayers, 4);
 		list.remove(list.size() - 1);
-		ip = new InfoPanel(list);
-		assertEquals(ip.all_labels.size(), 15);
+		ip = new InfoPanel(list, it);
+		assertEquals(ip.numPlayers, 3);
 	}
 
 	private ArrayList<Player> generatePlayerList() {
