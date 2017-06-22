@@ -5,7 +5,12 @@ public class ActionTile extends Tile{
 	//represent the output on the board in tileInfo String
     private String tileInfo;
 
-    ActionTile(String description){
-        this.tileInfo = description;
+    //flags correlate to specific Actions in the class
+    ActionTile(int flag){
+        this.tileInfo = "description";
+    }
+
+    public void scenario1(Player p){
+
     }
 }
