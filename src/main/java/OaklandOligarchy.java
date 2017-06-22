@@ -66,6 +66,15 @@ public class OaklandOligarchy implements MouseMotionListener{
 
 		// initialize tiles
 		tiles = new ImplementTiles();
+
+		//set clock
+		Clock time_clock = new Clock(0,0,0);
+		Thread clock_thread = new Thread(time_clock);
+		//JPanel clock_panel = new JPanel();
+		//clock_panel.add(time_clock, BorderLayout.WEST);
+		//window.add(clock_panel, BorderLayout.SOUTH);
+		window.add(time_clock, BorderLayout.SOUTH);
+		clock_thread.start();//start clock
 	}
 
 	// An Oakland Oligarchy constructor used for testing purposes
