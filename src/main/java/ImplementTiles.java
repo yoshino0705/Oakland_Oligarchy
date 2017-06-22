@@ -24,8 +24,11 @@ public class ImplementTiles{
         //for testing purposes for now
         for(int i = 0; i < 36; ++i){
 
+            tileArray[i] = new ActionTile(3);
+            /*
 			String num_str = Integer.toString(i);
             tileArray[i] = new PropertyTile("Property"+num_str, (i + 1) * 10, i);
+            */
 
         }
 
@@ -96,7 +99,4 @@ public class ImplementTiles{
         */
     }
 
-	public Tile getTile(int index) {
-        return tileArray[index];
-    }
 }

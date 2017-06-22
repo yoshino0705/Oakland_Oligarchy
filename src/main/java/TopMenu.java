@@ -20,7 +20,7 @@ public class TopMenu extends JPanel{
 			Function: TopMenu (constructor)
 		~	Parameters: OaklandOligarchy -- reference to OaklandOligarchy 			~
 						instantiation containing this menu
-		~	Returns: None															~				
+		~	Returns: None															~
 			Description: Sets up buttons and action listeners for the top menu
 		~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 	TopMenu(OaklandOligarchy oo) {
@@ -33,7 +33,7 @@ public class TopMenu extends JPanel{
 		JLabel title = new JLabel("<html>Oakland<br>Oligarchy</html>");
 		title.setFont(new Font("Times", Font.PLAIN, 30));
 		this.add(title, 0, 0);
-		
+
 		// current player
 		currentTurnPlayerLabel = new JLabel("<html>Turn:<br>" + game.currentTurnPlayer.getName() + "</html>", SwingConstants.CENTER);
 		currentTurnPlayerLabel.setFont(new Font("Courier", Font.PLAIN, 20));
@@ -54,7 +54,7 @@ public class TopMenu extends JPanel{
 
 		endGame.setFont(new Font("Courier", Font.PLAIN, 20));
 		this.add(endGame, 0, 5);
-		
+
 		HelpListener help_listener = new HelpListener();
 		helpButton.addActionListener(help_listener);
 		helpButton.setFont(new Font("Courier", Font.PLAIN, 20));
@@ -70,10 +70,10 @@ public class TopMenu extends JPanel{
 		toggleJButtonEnabled(endTurn);
 	}
 
-	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	
+	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
 		Function: toggleJButtonEnabled
 	~	Parameters: JButton -- Button to toggle 								~
-	~	Returns: None															~				
+	~	Returns: None															~
 		Description: Toggles enabled state of given JButton
 	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 	private void toggleJButtonEnabled(JButton b) {
@@ -90,7 +90,7 @@ public class TopMenu extends JPanel{
 		/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
 			Function: actionPerformed
 		~	Parameters: ActionEvent -- event generated from button click			~
-			Returns: None															
+			Returns: None
 		~	Description: Moves player, handles buying property/paying rent/action 	~
 						 tiles.
 		~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
@@ -107,7 +107,7 @@ public class TopMenu extends JPanel{
 			int newPosition = (curPlayer.getPosition() + rollSum) % NUM_TILES;
 			// move player on board
 			animatedMovePlayer(game.gb, game.getIndexCurrentTurnPlayer(), curPlayer.getPosition(), rollSum);
-			
+
 			System.out.println("Old pos: " + curPlayer.getPosition());
 
 			// update Players positiom
@@ -115,6 +115,7 @@ public class TopMenu extends JPanel{
 
 			System.out.println("new pos: " + curPlayer.getPosition());
 
+			//access players by game.allPlayers();
 			// if tile is property, player can either buy or has to pay rent
 			Tile curTile = game.tiles.getTile(newPosition);
 			if (curTile.isProperty()) {
@@ -122,7 +123,16 @@ public class TopMenu extends JPanel{
 				doPropertyInteraction(pTile, curPlayer);
 			} else {	// tile is action tile and action is performed
 				ActionTile aTile = (ActionTile) curTile;
-				//TODO: perform action to player
+				if(aTile.performAction(curPlayer, game.allPlayers)){
+					JOptionPane.showMessageDialog(null, aTile.getTileInfo());
+				}
+
+				//check to make sure scenario 3 re - renders player location on board
+				if(aTile.getTileFlag() == 3){
+					newPosition = (curPlayer.getPosition() + 3) % NUM_TILES;
+					// move player on board
+					animatedMovePlayer(game.gb, game.getIndexCurrentTurnPlayer(), curPlayer.getPosition(), 3);
+				}
 			}
 			// toggle turn buttons
 			toggleJButtonEnabled(rollButton);
@@ -136,14 +146,14 @@ public class TopMenu extends JPanel{
 		~	Parameters: PropertyTile -- tile player has landed on 					~
 						curPlayer -- player who's turn it is
 		~	Returns: None															~
-			Description: Handles buying property/paying rent when a player lands on 
+			Description: Handles buying property/paying rent when a player lands on
 		~				 a property tile.											~
 		~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 		private void doPropertyInteraction(PropertyTile pTile, Player curPlayer) {
 			if (pTile.isOwned()) {
 				// notify player
-				JOptionPane.showMessageDialog(null, "You landed on " + pTile.getTileName() + " owned by " + 
-													pTile.getOwner().getName() + ". You pay them " + 
+				JOptionPane.showMessageDialog(null, "You landed on " + pTile.getTileName() + " owned by " +
+													pTile.getOwner().getName() + ". You pay them " +
 													pTile.getRent() + " dollars.");
 				// subtract money from curPlayer and add to owner
 				curPlayer.setMoney(curPlayer.getMoney() - pTile.getRent());
@@ -152,14 +162,14 @@ public class TopMenu extends JPanel{
 				// check if player has enough money to purchase property
 				if (curPlayer.getMoney() < pTile.getValue()) {
 					JOptionPane.showMessageDialog(null, "You landed on " + pTile.getTileName() + " but you don't have"
-													+ " enough money to purchase it.\n" + pTile.getTileName() + 
-													" costs $" + pTile.getValue() + " but you only have $" + 
+													+ " enough money to purchase it.\n" + pTile.getTileName() +
+													" costs $" + pTile.getValue() + " but you only have $" +
 													curPlayer.getMoney() + ". How sad :(");
 					return;
 				}
 				//give player option to buy tile
-				int result = JOptionPane.showConfirmDialog(null, "You landed on " + pTile.getTileName() + 
-																", would you like to buy this property for " + 
+				int result = JOptionPane.showConfirmDialog(null, "You landed on " + pTile.getTileName() +
+																", would you like to buy this property for " +
 																pTile.getValue() + " dollars?",
 																"Purchase Property", JOptionPane.YES_NO_OPTION);
 				if (result == JOptionPane.YES_OPTION) {
@@ -167,7 +177,7 @@ public class TopMenu extends JPanel{
 					curPlayer.setMoney(curPlayer.getMoney() - pTile.getValue());
 					// set curPlayer as owner of tile
 					pTile.setOwnership(curPlayer);
-				} 
+				}
 			}
 		}
 
@@ -178,10 +188,10 @@ public class TopMenu extends JPanel{
 		~				startPos -- current position of player 						~
 						roll -- value of player's roll
 		~	Returns: None															~
-			Description: Moves player from startPos to endPos, hopping through each 
+			Description: Moves player from startPos to endPos, hopping through each
 		~				 tile in between the two.									~
 		~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
-		private void animatedMovePlayer(GameBoard gb, int playerNum, int startPos, int roll) {
+		public void animatedMovePlayer(GameBoard gb, int playerNum, int startPos, int roll) {
 			for (int i = 1; i <= roll; i++) {
 				gb.movePlayer(playerNum, (i + startPos) % NUM_TILES);
 				gb.refreshBoard();
@@ -213,7 +223,7 @@ public class TopMenu extends JPanel{
 		/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
 			Function: actionPerformed
 		~	Parameters: ActionEvent -- event generated from button click			~
-			Returns: None															
+			Returns: None
 		~	Description: Ends user's turn; increments number of turns and updates	~
 						 player who's turn it currently is.
 		~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
@@ -259,7 +269,7 @@ public class TopMenu extends JPanel{
 			window.setSize(600,600);
 			window.add(editorScrollPane);
 			window.setVisible(true);
-	
+
 		}
 
 	}//end of class HelpListener
