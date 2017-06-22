@@ -23,7 +23,10 @@ public class ImplementTiles{
         this.tileArray = new Tile[36];
         //for testing purposes for now
         for(int i = 0; i < 36; ++i){
-            this.tileArray[i] = new PropertyTile("hello", (i + 1) * 10, i);
+
+			String num_str = Integer.toString(i);
+            tileArray[i] = new PropertyTile("Property"+num_str, (i + 1) * 10, i);
+
         }
 
         //Going for 28 properties and 8 action tiles
@@ -91,5 +94,9 @@ public class ImplementTiles{
         //space for another action?
         tileArray[36] = new PropertyTile("The Cathedral of Learning", 380, 44);
         */
+    }
+
+	public Tile getTile(int index) {
+        return tileArray[index];
     }
 }

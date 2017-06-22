@@ -1,10 +1,12 @@
 public class Player{
 	String name;
 	int money;
+	int position;
 
 	Player(String name, int money){
 		this.name = name;
 		this.setMoney(money);
+		this.position = 0;
 	}
 
 	public int getMoney(){
@@ -17,6 +19,14 @@ public class Player{
 	}
 	public String getName(){
 		return this.name;
+	}
+
+	public void setPosition(int p) {
+		this.position = p;
+	}
+
+	public int getPosition() {
+		return this.position;
 	}
 
 }//end of class Player

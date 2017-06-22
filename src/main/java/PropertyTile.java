@@ -14,6 +14,7 @@ public class PropertyTile extends Tile{
         this.rent = 0;
         this.isPropertyOwned = false;
         this.owner = null;
+        this.setProperty(true);
     }
 
     PropertyTile(String newName, int newVal, int newRent){
@@ -22,6 +23,7 @@ public class PropertyTile extends Tile{
         this.rent = newRent;
         this.isPropertyOwned = false;
         this.owner = null;
+        this.setProperty(true);
     }
 
     public void setRent(int newRent){
@@ -31,6 +33,10 @@ public class PropertyTile extends Tile{
     public int getRent(){
         return this.rent;
     }
+
+	public Player getOwner(){
+		return this.owner;
+	}
 
     //@param pName - takes the player to pass ownership of property to
     //@return - true if property is unowned, false if already owned
@@ -54,5 +60,9 @@ public class PropertyTile extends Tile{
     //@return - true if the property is owned, false if the property is not owned
     public boolean isOwned(){
         return this.isPropertyOwned;
+    }
+
+    public int getValue() {
+        return this.value;
     }
 }
