@@ -129,9 +129,9 @@ public class TopMenu extends JPanel{
 
 				//check to make sure scenario 3 re - renders player location on board
 				if(aTile.getTileFlag() == 3){
-					newPosition = (curPlayer.getPosition() + 3) % NUM_TILES;
+					//newPosition = (curPlayer.getPosition() + 3) % NUM_TILES;
 					// move player on board
-					animatedMovePlayer(game.gb, game.getIndexCurrentTurnPlayer(), curPlayer.getPosition(), 3);
+					//animatedMovePlayer(game.gb, game.getIndexCurrentTurnPlayer(), curPlayer.getPosition(), 3);
 				}
 			}
 			// toggle turn buttons

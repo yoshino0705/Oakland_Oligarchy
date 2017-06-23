@@ -21,19 +21,16 @@ public class ImplementTiles{
     //change PropertyTile names and values if you'd like
     ImplementTiles(){
         this.tileArray = new Tile[36];
-        //for testing purposes for now
+        //for testing purposes
+        /*
         for(int i = 0; i < 36; ++i){
-
             tileArray[i] = new ActionTile(3);
-            /*
 			String num_str = Integer.toString(i);
             tileArray[i] = new PropertyTile("Property"+num_str, (i + 1) * 10, i);
-            */
-
         }
-
+        */
         //Going for 28 properties and 8 action tiles
-        /*
+
         //cheap properties to start - Friday night favorites
         tileArray[0] = new PropertyTile("Antoons Pizza", 50, 8);
         tileArray[1] = new PropertyTile("Peter's Pub", 60, 12);
@@ -45,9 +42,9 @@ public class ImplementTiles{
         tileArray[4] = new PropertyTile("The Perch", 110, 17);
 
         //action tiles example
-        tileArray[5] = new ActionTile("You lose your wallet on the way to class. Lose 60 dollars");
-        tileArray[6] = new ActionTile("You win a beauty contest. Win 100 dollars");
-
+        tileArray[5] = new ActionTile(1);
+        tileArray[6] = new ActionTile(2);
+        tileArray[7] = new ActionTile(1);
 
         //insert actions maybe? - utility PropertyTile?
 
@@ -55,21 +52,25 @@ public class ImplementTiles{
         tileArray[8] = new PropertyTile("Qudoba", 150, 20);
         tileArray[9] = new PropertyTile("Las Palmas Tacos", 160, 21);
         //space for another action?
+        tileArray[10] = new ActionTile(3);
         tileArray[11] = new PropertyTile("Chipotle", 160, 22);
         //insert actions?
-
+        tileArray[12] = new ActionTile(4);
 
         //monopoly block - Schenly Plaza
         tileArray[13] = new PropertyTile("Schenly Lawn", 180, 23); //cant really own this? change it?
         //space for another action?
+        tileArray[14] = new ActionTile(5);
         tileArray[15] = new PropertyTile("The Porch Restaurant", 200, 25);
         tileArray[16] = new PropertyTile("Asia Tea House", 210, 25);
         //actions?
-
+        tileArray[17] = new ActionTile(5);
+        //tileArray[18] = new ActionTile(1);
 
         //monopoly block - Union Dining
         tileArray[18] = new PropertyTile("Pizza Hut", 220, 27);
         //space for another action?
+        tileArray[19] = new ActionTile(1);
         tileArray[20] = new PropertyTile("Taco Bell", 230, 29);
         tileArray[21] = new PropertyTile("Sub Connection", 230, 30);
 
@@ -79,24 +80,26 @@ public class ImplementTiles{
         tileArray[22] = new PropertyTile("Larry and Carol's Pizza", 250, 30);
         tileArray[23] = new PropertyTile("Bootleggers", 250, 32);
         //space for another action?
+        tileArray[24] = new ActionTile(2);
         tileArray[25] = new PropertyTile("Campus Deli", 260, 32);
-
+        tileArray[26] = new ActionTile(5);
 
         //monopoly block - Academic Buildings
         tileArray[27] = new PropertyTile("Posvar Hall", 260, 34);
         tileArray[28] = new PropertyTile("Lawrence Hall", 280, 35);
         //space for another action?
+        tileArray[29] = new ActionTile(3);
         tileArray[30] = new PropertyTile("Sennot Square", 280, 36);
         //3 spaces for actions?
-
-
+        tileArray[31] = new ActionTile(4);
+        tileArray[32] = new ActionTile(2);
+        tileArray[33] = new ActionTile(3);
         //monopoly block - The big properties of Pitt
-        tileArray[34] = new PropertyTile("Heinz Chapel", 320, 38);
         //space
         tileArray[34] = new PropertyTile("Professor Laboon's Office", 340, 40);
         //space for another action?
-        tileArray[36] = new PropertyTile("The Cathedral of Learning", 380, 44);
-        */
+        tileArray[35] = new PropertyTile("The Cathedral of Learning", 380, 44);
+
     }
 
 }

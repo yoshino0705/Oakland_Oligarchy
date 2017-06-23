@@ -12,18 +12,18 @@ public class ActionTile extends Tile{
     ActionTile(int flag){
 
         this.tileFlag = flag;
-
+        this.setTileName("Action Tile");
         switch(flag){
             case 1:
-                this.tileInfo = "Wow, you found $100 on the sidewalk" +
+                this.tileInfo = "Wow, you found $100 on the sidewalk " +
                     "on your way to class. Nice find!";
                 break;
             case 2:
-                this.tileInfo = "The IRS showed up out of nowhere! You've been fined $250" +
+                this.tileInfo = "The IRS showed up out of nowhere! You've been fined $250 " +
                     "for tax evasion! Bummer.";
                 break;
             case 3:
-                this.tileInfo = "Don't stay for long, move 3 more spaces forward.";
+                this.tileInfo = "Congratulations you won a beauty contest! Collect $300.";
                 break;
             case 4:
                 this.tileInfo = "Bank robbery successful! Congrats you got $500!";
@@ -87,26 +87,26 @@ public class ActionTile extends Tile{
         p.setMoney(p.getMoney() - 250);
     }
 
-    //In this scenario the player is moved 3 spaces forward
-    private void scenario3(Player p){
-        p.setPosition((p.getPosition() + 3) % 36);
-    }
-
     //In this scenario you rob a bank and get 500 dollars
     private void scenario4(Player p){
         p.setMoney(p.getMoney() + 500);
     }
 
     //In this scenario you pay all other players 50 dollars
+    //Note: this code will break if two players share the same name
     //@ pList - list of all players so they they may be awarded money
     private void scenario5(Player p, ArrayList<Player> pList){
         for(int i = 0; i < pList.size(); ++i){
-
             if(!pList.get(i).getName().equals(p.getName())){
-
                 pList.get(i).setMoney(pList.get(i).getMoney() + 50);
                 p.setMoney(p.getMoney() - 50);
             }
         }
+    }
+
+    //Basic action to win money
+    //@param p - the current player to apply action to
+    private void scenario3(Player p){
+        p.setMoney(p.getMoney() + 300);
     }
 }
