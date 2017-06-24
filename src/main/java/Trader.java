@@ -2,10 +2,14 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class Trader extends JPanel{
 	public final int width = 500;
@@ -14,12 +18,18 @@ public class Trader extends JPanel{
 	private final int cellHeight = 50;
 	private final int contentX = 50;
 	
-	private JList<Object> propertyOwned;
-	private JLabel balance;
+	protected JList<Object> propertyOwned;
+	protected JLabel balance;
 	private JLabel playerName;
 	private final int TILE_COUNT = 36;
 	
+	private Player player;
+	private DefaultListModel<String> listModel;
+	
 	public Trader(Player p, ImplementTiles it){		
+		// assign player
+		player = p;
+		
 		//this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.setPreferredSize(new Dimension(this.width, this.height));
 		this.setLayout(null);
@@ -39,12 +49,19 @@ public class Trader extends JPanel{
 			
 		}
 		
+		listModel = new DefaultListModel<String>();
+		
 		// initialize JList
 		try{
-			propertyOwned = new JList<Object>(prop.toArray());
+			for(String tileName: prop){
+				listModel.addElement(tileName);
+				
+			}
+			propertyOwned = new JList(listModel);
 			
 		}catch(Exception e){
-			propertyOwned = new JList<Object>();
+			System.out.println("propertyOwned somehow couldn't initialize properly");
+			propertyOwned = new JList();
 			
 		}
 		
@@ -54,11 +71,11 @@ public class Trader extends JPanel{
 		propertyOwned.setAutoscrolls(true);
 		propertyOwned.setFixedCellWidth(this.cellWidth);
 		propertyOwned.setFixedCellHeight(this.cellHeight);
+		propertyOwned.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
-		JScrollPane scrollPane = new JScrollPane(propertyOwned);
-		scrollPane.setMaximumSize(new Dimension(300, 250));
-		scrollPane.setMinimumSize (new Dimension (300, 250));
-		scrollPane.setAlignmentX(LEFT_ALIGNMENT);
+		JScrollPane listScroller = new JScrollPane();
+        listScroller.setViewportView(propertyOwned);
+        propertyOwned.setLayoutOrientation(JList.VERTICAL);
 		
 		// add to the panel
 		playerName.setBounds(this.contentX, 10, this.width, playerName.getFont().getSize()*2);
@@ -67,9 +84,30 @@ public class Trader extends JPanel{
 		balance.setBounds(this.contentX, 80, this.width, balance.getFont().getSize()*2);
 		this.add(balance);
 		
-		scrollPane.setBounds(this.contentX, 150, 300, 250);
-		this.add(scrollPane);
+		listScroller.setBounds(this.contentX, 150, 300, 250);
+		this.add(listScroller);
 		
 	}
 	
+	public Player getPlayer(){
+		return player;
+		
+	}
+	
+	public void removeItem(int index){
+		((DefaultListModel)propertyOwned.getModel()).remove(index);
+		
+	}
+	
+	public void removeSelectedItem(){
+		((DefaultListModel)propertyOwned.getModel()).remove(propertyOwned.getSelectedIndex());
+		
+	}
+	
+	public void addItem(Object item){
+		((DefaultListModel)propertyOwned.getModel()).addElement(item);
+		
+	}
+
+
 }
