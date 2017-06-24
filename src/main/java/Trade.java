@@ -22,7 +22,7 @@ public class Trade extends JFrame{
 	private final int buttonY = 800;
 	private Font buttonFont = new Font("TimesNewRoman", Font.BOLD, 30);
 	
-	public Trade(Player curPlayer, ArrayList<Player> otherPlayers, ImplementTiles tiles){
+	public Trade(Player curPlayer, ArrayList<Player> otherPlayers, OaklandOligarchy game){
 		// error checking
 		if(otherPlayers.size() > 4 || otherPlayers.size() < 1){
 			System.out.println("Error in Trade Constructor: too few or too many guests (" + otherPlayers.size() + " guests)");
@@ -31,19 +31,19 @@ public class Trade extends JFrame{
 		
 		// JFrame settings
 		this.setTitle("Trade Menu");
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setSize(1500, 1500);
 		this.setLayout(null);
 		this.setResizable(false);
 		
 		// add in traders (other players) and host (curPlayer)
-		Trader host = new Trader(curPlayer, tiles);
+		Trader host = new Trader(curPlayer, game.tiles);
 		host.setBounds((this.getWidth() - host.width)/2, this.getHeight() - 500, host.width, host.height);
 		this.add(host);
 		
 		// first trading button for the current player
 		if(otherPlayers.size() > 0){
-			Trader guest1 = new Trader(otherPlayers.get(0), tiles);
+			Trader guest1 = new Trader(otherPlayers.get(0), game.tiles);
 			guest1.setBounds(50, 50, guest1.width, guest1.height);
 			this.add(guest1);
 			
@@ -54,7 +54,7 @@ public class Trade extends JFrame{
 			    public void actionPerformed(ActionEvent e) {
 			        if(!host.propertyOwned.isSelectionEmpty()){
 			        	// has selected something
-			        	changeOwnership(host, guest1, tiles, getSelectedPropertyIndex(host.propertyOwned, tiles));
+			        	changeOwnership(host, guest1, game, getSelectedPropertyIndex(host.propertyOwned, game.tiles));
 			        	
 			        }
 			    }
@@ -72,7 +72,7 @@ public class Trade extends JFrame{
 			    public void actionPerformed(ActionEvent e) {
 			        if(!guest1.propertyOwned.isSelectionEmpty()){
 			        	// has selected something
-			        	changeOwnership(guest1, host, tiles, getSelectedPropertyIndex(guest1.propertyOwned, tiles));
+			        	changeOwnership(guest1, host, game, getSelectedPropertyIndex(guest1.propertyOwned, game.tiles));
 			        	
 			        }
 			    }
@@ -86,7 +86,7 @@ public class Trade extends JFrame{
 		
 		// second trading button for the current player
 		if(otherPlayers.size() >= 2){
-			Trader guest2 = new Trader(otherPlayers.get(1), tiles);
+			Trader guest2 = new Trader(otherPlayers.get(1), game.tiles);
 			guest2.setBounds(50 + 500, 50, guest2.width, guest2.height);
 			this.add(guest2);
 			
@@ -97,7 +97,7 @@ public class Trade extends JFrame{
 			    public void actionPerformed(ActionEvent e) {
 			    	if(!host.propertyOwned.isSelectionEmpty()){
 			        	// has selected something
-			        	changeOwnership(host, guest2, tiles, getSelectedPropertyIndex(host.propertyOwned, tiles));
+			        	changeOwnership(host, guest2, game, getSelectedPropertyIndex(host.propertyOwned, game.tiles));
 			        	
 			        }
 			    }
@@ -115,7 +115,7 @@ public class Trade extends JFrame{
 			    public void actionPerformed(ActionEvent e) {
 			        if(!guest2.propertyOwned.isSelectionEmpty()){
 			        	// has selected something
-			        	changeOwnership(guest2, host, tiles, getSelectedPropertyIndex(guest2.propertyOwned, tiles));
+			        	changeOwnership(guest2, host, game, getSelectedPropertyIndex(guest2.propertyOwned, game.tiles));
 			        	
 			        }
 			    }
@@ -129,7 +129,7 @@ public class Trade extends JFrame{
 		
 		// third trading button for the current player
 		if(otherPlayers.size() >= 3){
-			Trader guest3 = new Trader(otherPlayers.get(2), tiles);	
+			Trader guest3 = new Trader(otherPlayers.get(2), game.tiles);	
 			guest3.setBounds(50 + 1000, 50, guest3.width, guest3.height);
 			this.add(guest3);
 			
@@ -140,7 +140,7 @@ public class Trade extends JFrame{
 			    public void actionPerformed(ActionEvent e) {
 			    	if(!host.propertyOwned.isSelectionEmpty()){
 			        	// has selected something
-			        	changeOwnership(host, guest3, tiles, getSelectedPropertyIndex(host.propertyOwned, tiles));
+			        	changeOwnership(host, guest3, game, getSelectedPropertyIndex(host.propertyOwned, game.tiles));
 			        	
 			        }
 			    }
@@ -158,7 +158,7 @@ public class Trade extends JFrame{
 			    public void actionPerformed(ActionEvent e) {
 			        if(!guest3.propertyOwned.isSelectionEmpty()){
 			        	// has selected something
-			        	changeOwnership(guest3, host, tiles, getSelectedPropertyIndex(guest3.propertyOwned, tiles));
+			        	changeOwnership(guest3, host, game, getSelectedPropertyIndex(guest3.propertyOwned, game.tiles));
 			        	
 			        }
 			    }
@@ -185,50 +185,14 @@ public class Trade extends JFrame{
 	}
 	
 	// change ownership of a property
-	private void changeOwnership(Trader originalOwner, Trader newOwner, ImplementTiles tiles, int propertyIndex){
-		PropertyTile curTile = (PropertyTile)tiles.getTile(propertyIndex);
+	private void changeOwnership(Trader originalOwner, Trader newOwner, OaklandOligarchy game, int propertyIndex){
+		PropertyTile curTile = (PropertyTile)game.tiles.getTile(propertyIndex);
 		originalOwner.removeSelectedItem();
 		newOwner.addItem(curTile.getTileName());
 		curTile.setOwnership(newOwner.getPlayer());
 		
+		System.out.println("new owner of " + curTile.getTileName() + " is " + game.tiles.getTile(propertyIndex).getOwner().getName());
+
 	}
-	
-	// testing main method
-	public static void main(String args[]){
-		Player GM = new Player("Current Player", 999999); 		// for testing purpose
-		
-		Player p = new Player("Yoshino", 1000); 		// for testing purpose
-		Player p2 = new Player("Hibiki", 30000); 		// for testing purpose
-		Player p3 = new Player("Chino", 500000); 		// for testing purpose
-		
-		ArrayList<Player> players = new ArrayList<Player>();
-		players.add(p);
-		players.add(p2);
-		players.add(p3);
-		
-		ImplementTiles tiles = new ImplementTiles();
-		
-		for(int i = 1; i < 10; i++){
-			((PropertyTile)tiles.getTile(i)).setOwnership(p);
-			
-		}
-		
-		for(int i = 10; i < 21; i++){
-			((PropertyTile)tiles.getTile(i)).setOwnership(p2);
-			
-		}
-		
-		for(int i = 21; i < 30; i++){
-			((PropertyTile)tiles.getTile(i)).setOwnership(p3);
-			
-		}
-		
-		for(int i = 30; i < 36; i++){
-			((PropertyTile)tiles.getTile(i)).setOwnership(GM);
-			
-		}
-		
-		new Trade(GM, players, tiles);
-		
-	}
+
 }
