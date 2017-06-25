@@ -189,6 +189,7 @@ public class Trade extends JFrame{
 		PropertyTile curTile = (PropertyTile)game.tiles.getTile(propertyIndex);
 		originalOwner.removeSelectedItem();
 		newOwner.addItem(curTile.getTileName());
+		curTile.removeOwnership();
 		curTile.setOwnership(newOwner.getPlayer());
 		
 		System.out.println("new owner of " + curTile.getTileName() + " is " + game.tiles.getTile(propertyIndex).getOwner().getName());
