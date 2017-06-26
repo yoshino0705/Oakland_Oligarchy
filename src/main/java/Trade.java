@@ -5,11 +5,12 @@ import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 
-public class Trade extends JFrame{
+public class Trade extends JDialog{
 	// host = current player, player 123 = the other players
 	
 	private JButton tradeWithPlayerButton_1;
@@ -48,6 +49,8 @@ public class Trade extends JFrame{
 		this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
 		this.setLayout(null);				// swing layouts are so hard to adjust
 		this.setResizable(false);
+		this.toFront();
+		this.setModal(true);
 		
 		// add in traders (other players) and host (curPlayer)
 		Trader host = new Trader(curPlayer, game.tiles);
