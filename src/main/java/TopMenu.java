@@ -123,9 +123,7 @@ public class TopMenu extends JPanel{
 				doPropertyInteraction(pTile, curPlayer);
 			} else {	// tile is action tile and action is performed
 				ActionTile aTile = (ActionTile) curTile;
-				JOptionPane.showMessageDialog(null, aTile.getTileInfo());
 				aTile.performAction(curPlayer, game.allPlayers, game, this);
-
 			}
 			// toggle turn buttons
 			toggleJButtonEnabled(rollButton);
@@ -185,8 +183,17 @@ public class TopMenu extends JPanel{
 		~				 tile in between the two.									~
 		~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 		public void animatedMovePlayer(GameBoard gb, int playerNum, int startPos, int roll) {
+			boolean back = false;
+			if(roll < 0){
+				roll *= -1;
+				back = true;
+			}
 			for (int i = 1; i <= roll; i++) {
-				gb.movePlayer(playerNum, (i + startPos) % NUM_TILES);
+				if(back == false){
+					gb.movePlayer(playerNum, (i + startPos) % NUM_TILES);
+				}else{
+					gb.movePlayer(playerNum, (startPos - i) % NUM_TILES);
+				}
 				gb.refreshBoard();
 				// sleep so user can see animation
 				try {

@@ -1,6 +1,8 @@
 
 import java.util.ArrayList;
 import java.util.Random;
+import javax.swing.*;
+
 //representing an action tile on the gameboard
 //actions can be positive or negative outcomes (hence conflicting attributes types)
 public class ActionTile extends Tile{
@@ -33,7 +35,7 @@ public class ActionTile extends Tile{
                 this.tileInfo = "Pay each player $50 for being quality friends!";
                 break;
             case 6:
-                this.tileInfo = "Move 3 more spaces!";
+                this.tileInfo = "Redirect!";
                 break;
             default:
                 this.tileInfo = "invalid flage error";
@@ -86,22 +88,26 @@ public class ActionTile extends Tile{
 
     //In this scenario the player finds a hundred dollar bill on the sidewalk
     private void scenario1(Player p){
+        JOptionPane.showMessageDialog(null, this.getTileInfo());
         p.setMoney(p.getMoney() + 100);
     }
 
     //In this scenario the IRS shows up and sees you havent been paying taxes. fined 250.
     private void scenario2(Player p){
+        JOptionPane.showMessageDialog(null, this.getTileInfo());
         p.setMoney(p.getMoney() - 250);
     }
 
     //Basic action to win money
     //@param p - the current player to apply action to
     private void scenario3(Player p){
+        JOptionPane.showMessageDialog(null, this.getTileInfo());
         p.setMoney(p.getMoney() + 300);
     }
 
     //In this scenario you rob a bank and get 500 dollars
     private void scenario4(Player p){
+        JOptionPane.showMessageDialog(null, this.getTileInfo());
         p.setMoney(p.getMoney() + 500);
     }
 
@@ -109,6 +115,7 @@ public class ActionTile extends Tile{
     //Note: this code will break if two players share the same name
     //@ pList - list of all players so they they may be awarded money
     private void scenario5(Player p, ArrayList<Player> pList){
+        JOptionPane.showMessageDialog(null, this.getTileInfo());
         for(int i = 0; i < pList.size(); ++i){
             if(!pList.get(i).getName().equals(p.getName())){
                 pList.get(i).setMoney(pList.get(i).getMoney() + 50);
@@ -117,7 +124,7 @@ public class ActionTile extends Tile{
         }
     }
 
-    //may not be able to move backward 
+    //may not be able to move backward
     //In this scenario the player is pushed a random amount of spaces forward or backward
     private void scenario6(Player p, OaklandOligarchy game, TopMenu.RollListener rl){
         Random rand = new Random();
@@ -126,6 +133,9 @@ public class ActionTile extends Tile{
         //if direction = 0 -- backward
         if(direction == 0){
             distance *= -1;
+            JOptionPane.showMessageDialog(null, "Move " + distance * -1 + " spaces backward!");
+        }else{
+            JOptionPane.showMessageDialog(null, "Move " + distance + " spaces forward!");
         }
         rl.animatedMovePlayer(game.gb, game.getIndexCurrentTurnPlayer(), p.getPosition(), distance);
         p.setPosition((p.getPosition() + distance) % 36);
