@@ -22,15 +22,17 @@ public class ImplementTiles{
     ImplementTiles(){
         this.tileArray = new Tile[36];
         //for testing purposes
-        /*
+
         for(int i = 0; i < 36; ++i){
-            tileArray[i] = new ActionTile(3);
+            tileArray[i] = new ActionTile(6);
+            /*
 			String num_str = Integer.toString(i);
             tileArray[i] = new PropertyTile("Property"+num_str, (i + 1) * 10, i);
+            */
         }
-        */
-        //Going for 28 properties and 8 action tiles
 
+        //Going for 28 properties and 8 action tiles
+        /*
         //cheap properties to start - Friday night favorites
         tileArray[0] = new PropertyTile("Antoons Pizza", 50, 8);
         tileArray[1] = new PropertyTile("Peter's Pub", 60, 12);
@@ -99,7 +101,7 @@ public class ImplementTiles{
         tileArray[34] = new PropertyTile("Professor Laboon's Office", 340, 40);
         //space for another action?
         tileArray[35] = new PropertyTile("The Cathedral of Learning", 380, 44);
-
+        */
     }
 
 }

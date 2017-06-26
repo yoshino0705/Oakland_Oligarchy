@@ -84,7 +84,7 @@ public class TopMenu extends JPanel{
 		}
 	}
 
-	class RollListener implements ActionListener {
+	public class RollListener implements ActionListener {
 		final int NUM_TILES = 36;
 
 		/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
@@ -123,16 +123,9 @@ public class TopMenu extends JPanel{
 				doPropertyInteraction(pTile, curPlayer);
 			} else {	// tile is action tile and action is performed
 				ActionTile aTile = (ActionTile) curTile;
-				if(aTile.performAction(curPlayer, game.allPlayers)){
-					JOptionPane.showMessageDialog(null, aTile.getTileInfo());
-				}
+				JOptionPane.showMessageDialog(null, aTile.getTileInfo());
+				aTile.performAction(curPlayer, game.allPlayers, game, this);
 
-				//check to make sure scenario 3 re - renders player location on board
-				if(aTile.getTileFlag() == 3){
-					//newPosition = (curPlayer.getPosition() + 3) % NUM_TILES;
-					// move player on board
-					//animatedMovePlayer(game.gb, game.getIndexCurrentTurnPlayer(), curPlayer.getPosition(), 3);
-				}
 			}
 			// toggle turn buttons
 			toggleJButtonEnabled(rollButton);

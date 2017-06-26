@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.Random;
 //representing an action tile on the gameboard
 //actions can be positive or negative outcomes (hence conflicting attributes types)
 public class ActionTile extends Tile{
@@ -31,6 +32,9 @@ public class ActionTile extends Tile{
             case 5:
                 this.tileInfo = "Pay each player $50 for being quality friends!";
                 break;
+            case 6:
+                this.tileInfo = "Move 3 more spaces!";
+                break;
             default:
                 this.tileInfo = "invalid flage error";
         }
@@ -54,7 +58,7 @@ public class ActionTile extends Tile{
     @return boolean - true if the action has taken place - false the flag is incorrect
         for some reason
     */
-    public boolean performAction(Player p, ArrayList<Player> pList){
+    public boolean performAction(Player p, ArrayList<Player> pList, OaklandOligarchy game, TopMenu.RollListener rl){
         switch(this.tileFlag){
             case 1:
                 this.scenario1(p);
@@ -71,6 +75,9 @@ public class ActionTile extends Tile{
             case 5:
                 this.scenario5(p, pList);
                 break;
+            case 6:
+                this.scenario6(p, game, rl);
+                break;
             default:
                 return false;
         }
@@ -85,6 +92,12 @@ public class ActionTile extends Tile{
     //In this scenario the IRS shows up and sees you havent been paying taxes. fined 250.
     private void scenario2(Player p){
         p.setMoney(p.getMoney() - 250);
+    }
+
+    //Basic action to win money
+    //@param p - the current player to apply action to
+    private void scenario3(Player p){
+        p.setMoney(p.getMoney() + 300);
     }
 
     //In this scenario you rob a bank and get 500 dollars
@@ -104,9 +117,17 @@ public class ActionTile extends Tile{
         }
     }
 
-    //Basic action to win money
-    //@param p - the current player to apply action to
-    private void scenario3(Player p){
-        p.setMoney(p.getMoney() + 300);
+    //may not be able to move backward 
+    //In this scenario the player is pushed a random amount of spaces forward or backward
+    private void scenario6(Player p, OaklandOligarchy game, TopMenu.RollListener rl){
+        Random rand = new Random();
+        int distance = rand.nextInt(10) + 1;
+        int direction = rand.nextInt(2);
+        //if direction = 0 -- backward
+        if(direction == 0){
+            distance *= -1;
+        }
+        rl.animatedMovePlayer(game.gb, game.getIndexCurrentTurnPlayer(), p.getPosition(), distance);
+        p.setPosition((p.getPosition() + distance) % 36);
     }
 }
