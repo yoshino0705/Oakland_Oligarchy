@@ -272,7 +272,8 @@ public class TopMenu extends JPanel{
 		public void actionPerformed(ActionEvent e){
 			ArrayList<Player> otherPlayers = new ArrayList<Player>(game.allPlayers);
 			otherPlayers.remove(game.currentTurnPlayer);	// this arraylist should only contain players excluding current turn player			
-			new Trade(game.currentTurnPlayer, otherPlayers, game);
+			new Trade(game.currentTurnPlayer, otherPlayers, game, 0.63, 0.63);
+
 		}
 	}
 
