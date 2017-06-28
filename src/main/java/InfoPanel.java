@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class InfoPanel extends JPanel{
 	JLabel infoLabel = new JLabel("", SwingConstants.LEFT);//this is the label with all of the info
 	int numPlayers;
+	JPanel subPanel = new JPanel();
 	//constructor for InfoPanel class
 	InfoPanel(ArrayList<Player> all_players, ImplementTiles tiles){
 		numPlayers = all_players.size();
@@ -15,11 +16,19 @@ public class InfoPanel extends JPanel{
 
 		infoLabel.setHorizontalTextPosition(SwingConstants.LEFT);
 		infoLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		this.setLayout(new FlowLayout(FlowLayout.LEFT));
-		this.add(infoLabel); 
+		subPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		this.setLayout(new BorderLayout());
+		subPanel.add(infoLabel);
+		this.add(subPanel); 
+		
 		//set formatting for the panel
 		this.setPreferredSize(new Dimension(200,1000));
 		this.setBorder(BorderFactory.createLineBorder(Color.black));
+
+		Clock info_clock = new Clock(0,0,0);
+		Thread clock_thread = new Thread(info_clock);
+		this.add(info_clock, BorderLayout.SOUTH);
+		clock_thread.start();
 	}//end of constructor
 
 	/*This method will refresh the game info in the InfoPanel object
