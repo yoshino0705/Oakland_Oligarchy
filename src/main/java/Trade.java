@@ -105,7 +105,7 @@ public class Trade extends JDialog{
 			payHostButton_1.addActionListener(new ActionListener() {
 			    @Override
 			    public void actionPerformed(ActionEvent e) {
-			        makePayment(guest1, host);
+			        makePayment(guest1, host, game);
 			    }
 			});
 			this.add(payHostButton_1);
@@ -117,7 +117,7 @@ public class Trade extends JDialog{
 			payPlayerButton_1.addActionListener(new ActionListener() {
 			    @Override
 			    public void actionPerformed(ActionEvent e) {
-			        makePayment(host, guest1);
+			        makePayment(host, guest1, game);
 			    }
 			});
 			this.add(payPlayerButton_1);
@@ -172,7 +172,7 @@ public class Trade extends JDialog{
 			payHostButton_2.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					makePayment(guest2, host);
+					makePayment(guest2, host, game);
 				}
 			});
 			
@@ -185,7 +185,7 @@ public class Trade extends JDialog{
 			payPlayerButton_2.addActionListener(new ActionListener() {
 			    @Override
 			    public void actionPerformed(ActionEvent e) {
-			        makePayment(host, guest2);
+			        makePayment(host, guest2, game);
 			    }
 			});
 			this.add(payPlayerButton_2);
@@ -240,7 +240,7 @@ public class Trade extends JDialog{
 			payHostButton_3.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					makePayment(guest3, host);
+					makePayment(guest3, host, game);
 				}
 			});
 						
@@ -253,7 +253,7 @@ public class Trade extends JDialog{
 			payPlayerButton_3.addActionListener(new ActionListener() {
 			    @Override
 			    public void actionPerformed(ActionEvent e) {
-			        makePayment(host, guest3);
+			        makePayment(host, guest3, game);
 			    }
 			});
 			this.add(payPlayerButton_3);
@@ -284,10 +284,11 @@ public class Trade extends JDialog{
 		
 		System.out.println("new owner of " + curTile.getTileName() + " is " + game.tiles.getTile(propertyIndex).getOwner().getName());
 
+		game.refreshInfoPanel();
 	}
 	
 	// give money to a player
-	private void makePayment(Trader sender, Trader receiver){
+	private void makePayment(Trader sender, Trader receiver, OaklandOligarchy game){
 		int amount = 0;
 		
 		try{
@@ -318,7 +319,7 @@ public class Trade extends JDialog{
 			JOptionPane.showMessageDialog(null, "Done transfer!");
 		}			
 
-		
+		game.refreshInfoPanel();
 	}
 	
 	// initializes general settings of a button and returns it
