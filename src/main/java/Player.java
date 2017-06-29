@@ -5,7 +5,7 @@ public class Player{
 	String color;
 
 	Player(String name, int money, int player_number){
-		this.name = name;
+		this.name = name.toUpperCase();
 		this.setMoney(money);
 		this.position = 0;
 		this.color = makeColor(player_number);

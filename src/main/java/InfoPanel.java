@@ -44,7 +44,7 @@ public class InfoPanel extends JPanel{
 		str = str + "<html><br>";//begin the opening html tag
 		int player_number = 0;
 		for(Player p : all_players){//loop through all the players and get their info
-			str = str + "<div style='font-size:16'><b><u>" + p.getName() + "</u></b></div> <br>";//get player name
+			str = str + "<div style='font-size:16;color:"+p.getColor() +"'><b><u>" + p.getName() + "</u></b></div> <br>";//get player name
 			str = str + "Color: " + p.getColor() + "<br>";//get color
 			str = str + "Money: " + p.getMoney() + " <br>";//get the money
 			str = str + "Properties: <br>";//now list all properties owned
