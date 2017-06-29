@@ -29,14 +29,32 @@ public class Trade extends JDialog{
 	private JButton payHostButton_2;
 	private JButton payHostButton_3;
 	
-	private final int FRAME_WIDTH = 2500;
-	private final int FRAME_HEIGHT = 1800;
-	private final int BUTTON_WIDTH = 300;
-	private final int BUTTON_HEIGHT = 150;
-	private final int DEFAULT_BUTTON_Y = 800;
-	private Font BUTTON_FONT = new Font("TimesNewRoman", Font.BOLD, 30);
+	private double scaleX;
+	private double scaleY;
 	
-	public Trade(Player curPlayer, ArrayList<Player> otherPlayers, OaklandOligarchy game){
+	// used to be constant, but in order to be adjustable, had to make them variables
+	private double frameWidth = 2500;
+	private double frameHeight = 1800;
+	private double buttonWidth = 300;
+	private double buttonHeight = 150;
+	private Font defaultButtonFont = new Font("TimesNewRoman", Font.BOLD, 30);
+
+	private Player currentPlayer;
+	
+	public Trade(Player curPlayer, ArrayList<Player> otherPlayers, OaklandOligarchy game, double scaleInX, double scaleInY){
+		// set and apply scales
+		this.scaleX = scaleInX;
+		this.scaleY = scaleInY;
+		this.buttonWidth *= this.scaleX;
+		this.buttonHeight *= this.scaleY;
+		this.defaultButtonFont = new Font("TimesNewRoman", Font.BOLD, (int)(30 * this.scaleX));
+		this.currentPlayer = curPlayer;
+		
+		//Trader temp = new Trader();
+		//this.frameWidth = temp.getScaledWidth(this.scaleX)*3 + 100;
+		this.frameWidth *= this.scaleX;
+		this.frameHeight *= this.scaleY;
+		
 		// error checking
 		if(otherPlayers.size() > 4 || otherPlayers.size() < 1){
 			System.out.println("Error in Trade Constructor: too few or too many guests (" + otherPlayers.size() + " guests)");
@@ -46,27 +64,25 @@ public class Trade extends JDialog{
 		// JFrame settings
 		this.setTitle("Trade Menu");
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+		this.setSize((int)frameWidth, (int)frameHeight);
 		this.setLayout(null);				// swing layouts are so hard to adjust
 		this.setResizable(false);
 		this.toFront();
 		this.setModal(true);
 		
 		// add in traders (other players) and host (curPlayer)
-		Trader host = new Trader(curPlayer, game.tiles);
-		host.setBounds((this.getWidth() - host.width)/2, this.getHeight() - 500, host.width, host.height);
+		Trader host = new Trader(curPlayer, game.tiles, this.scaleX, this.scaleY);
+		host.setBounds((int)(this.scaleX * (this.frameWidth - host.width)/2), (int)(this.frameHeight - host.height - 100), (int)(host.width), (int)(host.height));
 		this.add(host);
 		
 		// first trading button for the current player
 		if(otherPlayers.size() > 0){
-			Trader guest1 = new Trader(otherPlayers.get(0), game.tiles);
-			guest1.setBounds(50, 50, guest1.width, guest1.height);
+			Trader guest1 = new Trader(otherPlayers.get(0), game.tiles, this.scaleX, this.scaleY);
+			guest1.setBounds((int)(50 * this.scaleX), (int)(50 * this.scaleY), (int)(guest1.width), (int)(guest1.height));
 			this.add(guest1);
 			
 			// add in buttons for doing trading
-			tradeWithPlayerButton_1 = initButton("<html>Give Selected to <br> <center>" + otherPlayers.get(0).name + "</center></html>",
-					100, DEFAULT_BUTTON_Y + 300, BUTTON_WIDTH, BUTTON_HEIGHT);
-					
+			tradeWithPlayerButton_1 = initTradePropertyButton(host, guest1);				
 			tradeWithPlayerButton_1.addActionListener(new ActionListener() {
 			    @Override
 			    public void actionPerformed(ActionEvent e) {
@@ -82,9 +98,7 @@ public class Trade extends JDialog{
 			
 			// --------------------------------------------------------------------------
 			// add in buttons for doing trading from the other players to current player
-			tradeWithHostButton_1 = initButton("<html>Give Selected to <br> <center>" + curPlayer.name + "<br>" + "as " + otherPlayers.get(0).name + "</center></html>",
-					100, DEFAULT_BUTTON_Y - 300, BUTTON_WIDTH, BUTTON_HEIGHT + 50);
-					
+			tradeWithHostButton_1 = this.initTradePropertyButton(guest1, host);				
 			tradeWithHostButton_1.addActionListener(new ActionListener() {
 			    @Override
 			    public void actionPerformed(ActionEvent e) {
@@ -100,8 +114,7 @@ public class Trade extends JDialog{
 			
 			// --------------------------------------------------------------------------
 			// add in buttons for doing payments from the other players to current player
-			payHostButton_1 = initButton("<html><center>Pay <br>" + host.getPlayer().getName() + "</center></html>", 
-					tradeWithHostButton_1.getX() + (BUTTON_WIDTH + 50), tradeWithHostButton_1.getY(), BUTTON_WIDTH, BUTTON_HEIGHT);
+			payHostButton_1 = this.initExchangeBalanceButton(guest1, host);
 			payHostButton_1.addActionListener(new ActionListener() {
 			    @Override
 			    public void actionPerformed(ActionEvent e) {
@@ -111,9 +124,8 @@ public class Trade extends JDialog{
 			this.add(payHostButton_1);
 			
 			// --------------------------------------------------------------------------
-			// add in buttons for doing payments from the other players to current player
-			payPlayerButton_1 = initButton("<html><center>Pay <br>" + guest1.getPlayer().getName() + "</center></html>", 
-					tradeWithPlayerButton_1.getX() + (BUTTON_WIDTH + 50), tradeWithPlayerButton_1.getY(), BUTTON_WIDTH, BUTTON_HEIGHT);
+			// add in buttons for doing payments from the current player to another player
+			payPlayerButton_1 = this.initExchangeBalanceButton(host, guest1);
 			payPlayerButton_1.addActionListener(new ActionListener() {
 			    @Override
 			    public void actionPerformed(ActionEvent e) {
@@ -126,14 +138,12 @@ public class Trade extends JDialog{
 		
 		// second trading button for the current player
 		if(otherPlayers.size() >= 2){
-			Trader guest2 = new Trader(otherPlayers.get(1), game.tiles);
-			guest2.setBounds(50 + 500 + (BUTTON_WIDTH + 50), 50, guest2.width, guest2.height);
+			Trader guest2 = new Trader(otherPlayers.get(1), game.tiles, this.scaleX, this.scaleY);
+			guest2.setBounds((int)((50 + 500 + (buttonWidth + 50)) * this.scaleX), (int)(50 * this.scaleY), (int)(guest2.width), (int)(guest2.height));
 			this.add(guest2);
 			
 			// add in buttons for doing trading
-			tradeWithPlayerButton_2 = initButton("<html>Give Selected to <br><center>" + otherPlayers.get(1).name + "</center></html>",
-					100 + 500 + (BUTTON_WIDTH + 50), DEFAULT_BUTTON_Y + 300, BUTTON_WIDTH, BUTTON_HEIGHT);
-
+			tradeWithPlayerButton_2 = this.initTradePropertyButton(host, guest2);
 			tradeWithPlayerButton_2.addActionListener(new ActionListener() {
 			    @Override
 			    public void actionPerformed(ActionEvent e) {
@@ -149,9 +159,7 @@ public class Trade extends JDialog{
 			
 			// --------------------------------------------------------------------------
 			// add in buttons for doing trading from the other players to current player
-			tradeWithHostButton_2 = initButton("<html>Give Selected to <br> <center>" + curPlayer.name + "<br>" + "as " + otherPlayers.get(1).name + "</center></html>",
-					100 + 500 + (BUTTON_WIDTH + 50), DEFAULT_BUTTON_Y - 300, BUTTON_WIDTH, BUTTON_HEIGHT + 50);
-
+			tradeWithHostButton_2 = this.initTradePropertyButton(guest2, host);
 			tradeWithHostButton_2.addActionListener(new ActionListener() {
 			    @Override
 			    public void actionPerformed(ActionEvent e) {
@@ -167,8 +175,7 @@ public class Trade extends JDialog{
 			
 			// --------------------------------------------------------------------------
 			// add in buttons for doing payments from the other players to current player
-			payHostButton_2 = initButton("<html><center>Pay <br>" + host.getPlayer().getName() + "</center></html>", 
-					tradeWithHostButton_2.getX() + (BUTTON_WIDTH + 50), tradeWithHostButton_2.getY(), BUTTON_WIDTH, BUTTON_HEIGHT);
+			payHostButton_2 = this.initExchangeBalanceButton(guest2, host);
 			payHostButton_2.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -180,8 +187,7 @@ public class Trade extends JDialog{
 			
 			// --------------------------------------------------------------------------
 			// add in buttons for doing payments from the other players to current player
-			payPlayerButton_2 = initButton("<html><center>Pay <br>" + guest2.getPlayer().getName() + "</center></html>", 
-					tradeWithPlayerButton_2.getX() + (BUTTON_WIDTH + 50), tradeWithPlayerButton_2.getY(), BUTTON_WIDTH, BUTTON_HEIGHT);
+			payPlayerButton_2 = this.initExchangeBalanceButton(host, guest2);
 			payPlayerButton_2.addActionListener(new ActionListener() {
 			    @Override
 			    public void actionPerformed(ActionEvent e) {
@@ -194,14 +200,12 @@ public class Trade extends JDialog{
 		
 		// third trading button for the current player
 		if(otherPlayers.size() >= 3){
-			Trader guest3 = new Trader(otherPlayers.get(2), game.tiles);	
-			guest3.setBounds(50 + 1000 + (BUTTON_WIDTH + 50)*2, 50, guest3.width, guest3.height);
+			Trader guest3 = new Trader(otherPlayers.get(2), game.tiles, this.scaleX, this.scaleY);	
+			guest3.setBounds((int)((50 + 1000 + (buttonWidth + 50)*2) * this.scaleX), (int)(50 * this.scaleY), (int)(guest3.width), (int)(guest3.height));
 			this.add(guest3);
 			
 			// add in buttons for doing trading
-			tradeWithPlayerButton_3 = initButton("<html>Give Selected to <br><center>" + otherPlayers.get(2).name + "</center></html>",
-					100 + 1000 + (BUTTON_WIDTH + 50)*2, DEFAULT_BUTTON_Y + 300, BUTTON_WIDTH, BUTTON_HEIGHT);
-			
+			tradeWithPlayerButton_3 = this.initTradePropertyButton(host, guest3);			
 			tradeWithPlayerButton_3.addActionListener(new ActionListener() {
 			    @Override
 			    public void actionPerformed(ActionEvent e) {
@@ -217,9 +221,7 @@ public class Trade extends JDialog{
 			
 			// --------------------------------------------------------------------------
 			// add in buttons for doing trading from the other players to current player
-			tradeWithHostButton_3 = initButton("<html>Give Selected to <br> <center>" + curPlayer.name + "<br>" + "as " + otherPlayers.get(2).name + "</center></html>",
-					100 + 1000 + (BUTTON_WIDTH + 50)*2, DEFAULT_BUTTON_Y - 300, BUTTON_WIDTH, BUTTON_HEIGHT + 50);
-					
+			tradeWithHostButton_3 = this.initTradePropertyButton(guest3, host);					
 			tradeWithHostButton_3.addActionListener(new ActionListener() {
 			    @Override
 			    public void actionPerformed(ActionEvent e) {
@@ -235,8 +237,7 @@ public class Trade extends JDialog{
 			
 			// --------------------------------------------------------------------------
 			// add in buttons for doing payments from the other players to current player
-			payHostButton_3 = initButton("<html><center>Pay <br>" + host.getPlayer().getName() + "</center></html>", 
-				tradeWithHostButton_3.getX() + (BUTTON_WIDTH + 50), tradeWithHostButton_3.getY(), BUTTON_WIDTH, BUTTON_HEIGHT);
+			payHostButton_3 = this.initExchangeBalanceButton(guest3, host);
 			payHostButton_3.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -248,8 +249,7 @@ public class Trade extends JDialog{
 			
 			// --------------------------------------------------------------------------
 			// add in buttons for doing payments from the other players to current player
-			payPlayerButton_3 = initButton("<html><center>Pay <br>" + guest3.getPlayer().getName() + "</center></html>", 
-					tradeWithPlayerButton_3.getX() + (BUTTON_WIDTH + 50), tradeWithPlayerButton_3.getY(), BUTTON_WIDTH, BUTTON_HEIGHT);
+			payPlayerButton_3 = this.initExchangeBalanceButton(host, guest3);
 			payPlayerButton_3.addActionListener(new ActionListener() {
 			    @Override
 			    public void actionPerformed(ActionEvent e) {
@@ -322,13 +322,40 @@ public class Trade extends JDialog{
 		game.refreshInfoPanel();
 	}
 	
-	// initializes general settings of a button and returns it
-	private JButton initButton(String buttonTitle, int buttonX, int buttonY, int buttonWidth, int buttonHeight){
-		JButton aButton = new JButton(buttonTitle);
-		aButton.setBounds(buttonX, buttonY, buttonWidth, buttonHeight);
-		aButton.setFont(BUTTON_FONT);
-		return aButton;
+	// initializes general settings of a button based on values from Trader class
+	private JButton initTradePropertyButton(Trader sender, Trader receiver){
+		JButton aButton = new JButton("<html><center>Give Selected to <br>" + receiver.getPlayer().name + "</center></html>");
+		aButton.setFont(defaultButtonFont);
 		
+		if(sender.getPlayer() == this.currentPlayer)
+			aButton.setBounds(sender.getX(), (int)(sender.getY() - buttonHeight - 10), (int)buttonWidth, (int)buttonHeight);
+		else
+			aButton.setBounds(sender.getX(), (int)(sender.getY() + sender.height + 10), (int)buttonWidth, (int)buttonHeight);
+		
+		//printButtonInfo(aButton);
+		
+		return aButton;
 	}
+	
+	// initializes general settings of a button based on values from Trader class
+	private JButton initExchangeBalanceButton(Trader sender, Trader receiver){
+		JButton aButton = new JButton("<html><center>Pay <br>" + receiver.getPlayer().getName() + "</center></html>");
+		aButton.setFont(defaultButtonFont);
+		
+		if(sender.getPlayer() == this.currentPlayer)
+			aButton.setBounds((int)(sender.getX() + this.buttonWidth + 10), (int)(sender.getY() - buttonHeight - 10), (int)buttonWidth, (int)buttonHeight);
+		else
+			aButton.setBounds((int)(sender.getX() + this.buttonWidth + 10), (int)(sender.getY() + sender.height + 10), (int)buttonWidth, (int)buttonHeight);
+		
+		//printButtonInfo(aButton);
+		
+		return aButton;
+	}
+	
+	public void printButtonInfo(JButton aButton){
+		System.out.println(aButton.getText() + " X " + aButton.getX() + " Y " + aButton.getY() + " Width " + aButton.getWidth() + " Height " + aButton.getHeight());
+
+	}
+	
 
 }

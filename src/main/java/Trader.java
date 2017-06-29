@@ -8,37 +8,49 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 public class Trader extends JPanel{
-	public final int width = 500;
-	public final int height = 400;
-	private final int cellWidth = 200;
-	private final int cellHeight = 50;
-	private final int contentX = 50;
+	public int width = 500;
+	public int height = 400;
+	private int cellWidth = 200;
+	private int cellHeight = 50;
+	private int contentX = 50;
+	
+	private double scaleX = 1;
+	private double scaleY = 1;
 	
 	protected JList<Object> propertyOwned;
 	protected JLabel balance;
 	private JLabel playerName;
 	private final int TILE_COUNT = 36;
+	private Font defaultButtonFont = new Font("TimesNewRoman", Font.BOLD, 30);
 	
 	private Player player;
 	private DefaultListModel<String> listModel;
 	
-	public Trader(Player p, ImplementTiles it){		
+	public Trader(Player p, ImplementTiles it, double newScaleX, double newScaleY){		
 		// assign player
 		player = p;
 		
+		// set and apply scales
+		this.scaleX = newScaleX;
+		this.scaleY = newScaleY;
+		this.width *= this.scaleX;
+		this.height *= this.scaleY;
+		this.cellWidth *= this.scaleX;
+		this.cellHeight *= this.scaleY;
+		this.contentX *= this.scaleX;
+		this.defaultButtonFont = new Font("TimesNewRoman", Font.BOLD, (int)(30 * this.scaleX));
+		
 		//this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		this.setPreferredSize(new Dimension(this.width, this.height));
+		this.setPreferredSize(new Dimension((int)(this.width), (int)(this.height)));
 		this.setLayout(null);
 		
 		// class variables settings
 		playerName = new JLabel(p.getName());
-		playerName.setFont(new Font("TimesNewRoman", Font.BOLD, 30));
+		playerName.setFont(defaultButtonFont);
 		balance = new JLabel("$ " + Integer.toString(p.getMoney()));
-		balance.setFont(new Font("TimesNewRoman", Font.BOLD, 30));
+		balance.setFont(defaultButtonFont);
 		
 		// initialize propertyOwned content
 		ArrayList<String> prop = new ArrayList<String>();
@@ -66,11 +78,11 @@ public class Trader extends JPanel{
 		}
 		
 		// propertyOwned boundaries settings
-		propertyOwned.setFont(new Font("TimesNewRoman", Font.BOLD, 30));
+		propertyOwned.setFont(defaultButtonFont);
 		propertyOwned.setVisibleRowCount(5);
 		propertyOwned.setAutoscrolls(true);
-		propertyOwned.setFixedCellWidth(this.cellWidth);
-		propertyOwned.setFixedCellHeight(this.cellHeight);
+		propertyOwned.setFixedCellWidth((int)(this.cellWidth));
+		propertyOwned.setFixedCellHeight((int)(this.cellHeight));
 		propertyOwned.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		JScrollPane listScroller = new JScrollPane();
@@ -78,14 +90,20 @@ public class Trader extends JPanel{
         propertyOwned.setLayoutOrientation(JList.VERTICAL);
 		
 		// add to the panel
-		playerName.setBounds(this.contentX, 10, this.width, playerName.getFont().getSize()*2);
+		playerName.setBounds((int)(this.contentX), (int)(10 * this.scaleY), (int)(this.width * this.scaleX), (int)(playerName.getFont().getSize()*2 * this.scaleY));
 		this.add(playerName);
 		
-		balance.setBounds(this.contentX, 80, this.width, balance.getFont().getSize()*2);
+		balance.setBounds((int)(this.contentX), (int)(80 * this.scaleY), (int)(this.width * this.scaleX), (int)(balance.getFont().getSize()*2 * this.scaleY));
 		this.add(balance);
 		
-		listScroller.setBounds(this.contentX, 150, 300, 250);
+		listScroller.setBounds((int)(this.contentX), (int)(150 * this.scaleY), (int)(300 * this.scaleX), (int)(250 * this.scaleY));
 		this.add(listScroller);
+		
+	}
+	
+	// does nothing
+	public Trader(){
+		
 		
 	}
 	
@@ -107,6 +125,14 @@ public class Trader extends JPanel{
 	public void addItem(Object item){
 		((DefaultListModel)propertyOwned.getModel()).addElement(item);
 		
+	}
+	
+	public int getScaledWidth(double scaleX){
+		return (int) (this.width * scaleX);
+	}
+	
+	public int getScaledHeight(double scaleY){
+		return (int) (this.height * scaleY);
 	}
 
 
