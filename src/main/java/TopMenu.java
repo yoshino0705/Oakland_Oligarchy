@@ -35,7 +35,7 @@ public class TopMenu extends JPanel{
 		this.add(title, 0, 0);
 
 		// current player
-		currentTurnPlayerLabel = new JLabel("<html>Turn:<br>" + game.currentTurnPlayer.getName() + "</html>", SwingConstants.CENTER);
+		currentTurnPlayerLabel = new JLabel("<html>Turn:<br>" + game.getCurrentTurnPlayer().getName() + "</html>", SwingConstants.CENTER);
 		currentTurnPlayerLabel.setFont(new Font("Courier", Font.PLAIN, 20));
 		this.add(currentTurnPlayerLabel,0,1);
 
@@ -107,10 +107,10 @@ public class TopMenu extends JPanel{
 			System.out.println("roll: " + rollSum);
 
 			// get current player & calculate their new position
-			Player curPlayer = game.currentTurnPlayer;
+			Player curPlayer = game.getCurrentTurnPlayer();
 			int newPosition = (curPlayer.getPosition() + rollSum) % NUM_TILES;
 			// move player on board
-			animatedMovePlayer(game.gb, game.getIndexCurrentTurnPlayer(), curPlayer.getPosition(), rollSum);
+			animatedMovePlayer(game.getGameBoard(), game.getIndexCurrentTurnPlayer(), curPlayer.getPosition(), rollSum);
 
 			System.out.println("Old pos: " + curPlayer.getPosition());
 
@@ -132,7 +132,7 @@ public class TopMenu extends JPanel{
 			toggleJButtonEnabled(rollButton);
 			toggleJButtonEnabled(endTurn);
 			//update info panel
-			game.info.refresh(game.allPlayers, game.tiles);
+			game.refreshInfoPanel();
 		}
 
 		/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
@@ -226,8 +226,8 @@ public class TopMenu extends JPanel{
 			game.numTurns = game.numTurns + 1;
 			int nextTurnPlayer = game.getIndexCurrentTurnPlayer();
 			// update current player & label
-			game.currentTurnPlayer = (game.allPlayers.get(nextTurnPlayer));
-			currentTurnPlayerLabel.setText("<html>Turn:<br>" + game.currentTurnPlayer.getName() + "</html>");
+			game.setCurrentTurnPlayer(nextTurnPlayer);
+			currentTurnPlayerLabel.setText("<html>Turn:<br>" + game.getCurrentTurnPlayer().getName() + "</html>");
 
 			// toggle turn buttons
 			toggleJButtonEnabled(rollButton);
@@ -271,8 +271,8 @@ public class TopMenu extends JPanel{
 	class TradeListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			ArrayList<Player> otherPlayers = new ArrayList<Player>(game.allPlayers);
-			otherPlayers.remove(game.currentTurnPlayer);	// this arraylist should only contain players excluding current turn player			
-			new Trade(game.currentTurnPlayer, otherPlayers, game, 0.63, 0.63);
+			otherPlayers.remove(game.getCurrentTurnPlayer());	// this arraylist should only contain players excluding current turn player			
+			new Trade(game.getCurrentTurnPlayer(), otherPlayers, game, 0.63, 0.63);
 
 		}
 	}

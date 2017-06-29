@@ -10,12 +10,12 @@ public class OaklandOligarchy implements MouseMotionListener{
 	
 	ImplementTiles tiles;
 	// in order to show message while hovering on board, GameBoard gb has to be a class object
-	GameBoard gb;
+	private GameBoard gb;
 
 	int numPlayers = 0; // keep track of how many players there are
 	int numTurns = 0; // keep track of how many turns to mod with the all_players array
-	Player currentTurnPlayer = null; // the player whos turn it is
-	InfoPanel info;
+	private Player currentTurnPlayer = null; // the player whos turn it is
+	private InfoPanel info;
 	ArrayList<Player> allPlayers = new ArrayList<Player>(); // list of all the players in this game
 	
 	public static void main(String[] args){
@@ -90,12 +90,28 @@ public class OaklandOligarchy implements MouseMotionListener{
 		Returns: int value representing player who's turn it is											~				
 	~	Description: Calculates which player's turn it currently is 			~
 	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
-	int getIndexCurrentTurnPlayer() {
+	public int getIndexCurrentTurnPlayer() {
 		if (numTurns == 0) {
 			return 0;
 		} else {
 			return (numTurns % numPlayers);
 		}
+	}
+
+	public GameBoard getGameBoard() {
+		return this.gb;
+	}
+
+	public Player getCurrentTurnPlayer() {
+		return this.currentTurnPlayer;
+	}
+
+	public void setCurrentTurnPlayer(int index) {
+		this.currentTurnPlayer = allPlayers.get(index);
+	}
+
+	public void refreshInfoPanel() {
+		info.refresh(this.allPlayers, this.tiles);
 	}
 
 	@Override
