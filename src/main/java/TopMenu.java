@@ -288,6 +288,7 @@ public class TopMenu extends JPanel{
 	class AuctionListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			System.out.println("Auction Started");
+			new Auction2(game);
 		}
 	}//end of class AuctionListener
 
