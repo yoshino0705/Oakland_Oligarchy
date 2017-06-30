@@ -8,10 +8,11 @@ import java.io.*;
 public class TopMenu extends JPanel{
 
 	JLabel currentTurnPlayerLabel;
+	JButton auctionButton = new JButton("Auction");
 	JButton tradeButton = new JButton("<html>Make<br>Trade</html>");
 	JButton rollButton = new JButton("Roll");
-	JButton endTurn = new JButton("End Turn");
-	JButton endGame = new JButton("End Game");
+	JButton endTurn = new JButton("<html>End<br>Turn</html>");
+	JButton endGame = new JButton("<html>End<br>Game</html>");
 	JButton helpButton  = new JButton("Help");
 	OaklandOligarchy game;
 
@@ -27,7 +28,7 @@ public class TopMenu extends JPanel{
 		this.game = oo;
 		this.setPreferredSize(new Dimension(1000, 100));
 		this.setBorder(BorderFactory.createLineBorder(Color.black));
-		this.setLayout(new GridLayout(0, 7));
+		this.setLayout(new GridLayout(0, 8));
 
 		// title label
 		JLabel title = new JLabel("<html>Oakland<br>Oligarchy</html>");
@@ -44,24 +45,29 @@ public class TopMenu extends JPanel{
 		tradeButton.setFont(new Font("Courier", Font.PLAIN, 20));
 		this.add(tradeButton, 0, 2);
 
+		AuctionListener auction_listener = new AuctionListener();
+		auctionButton.addActionListener(auction_listener);
+		auctionButton.setFont(new Font("Courier", Font.PLAIN, 20));
+		this.add(auctionButton,0,3);
+
 		rollButton.setFont(new Font("Courier", Font.PLAIN, 20));
 		RollListener rl = new RollListener();
 		rollButton.addActionListener(rl);
-		this.add(rollButton,0,3);
+		this.add(rollButton,0,4);
 		//set font for buttons in menu panel
 		endTurn.setFont(new Font("Courier", Font.PLAIN, 20));
 		EndTurnListener etl = new EndTurnListener();
 		endTurn.addActionListener(etl);
 		toggleJButtonEnabled(endTurn);
-		this.add(endTurn, 0, 4);
+		this.add(endTurn, 0, 5);
 
 		endGame.setFont(new Font("Courier", Font.PLAIN, 20));
-		this.add(endGame, 0, 5);
+		this.add(endGame, 0, 6);
 
 		HelpListener help_listener = new HelpListener();
 		helpButton.addActionListener(help_listener);
 		helpButton.setFont(new Font("Courier", Font.PLAIN, 20));
-		this.add(helpButton, 0, 6);
+		this.add(helpButton, 0, 7);
 
 
 	}
@@ -275,7 +281,15 @@ public class TopMenu extends JPanel{
 			new Trade(game.getCurrentTurnPlayer(), otherPlayers, game, 0.63, 0.63);
 
 		}
-	}
+	}//end of class TradeListener
+
+
+
+	class AuctionListener implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			System.out.println("Auction Started");
+		}
+	}//end of class AuctionListener
 
 
 }
