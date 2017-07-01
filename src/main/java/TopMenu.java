@@ -32,7 +32,7 @@ public class TopMenu extends JPanel{
 
 		// title label
 		JLabel title = new JLabel("<html>Oakland<br>Oligarchy</html>");
-		title.setFont(new Font("Times", Font.PLAIN, 30));
+		title.setFont(new Font("Times", Font.PLAIN, 25));
 		this.add(title, 0, 0);
 
 		// current player
