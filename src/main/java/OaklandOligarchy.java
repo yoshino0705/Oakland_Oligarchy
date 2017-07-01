@@ -34,7 +34,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 
 		// load players from StartMenu into allPlayers array
 		for (int i = 0; i < sm.getPlayerCount(); i++) {
-			Player p = new Player(sm.getPlayerName(i), 1000);
+			Player p = new Player(sm.getPlayerName(i), 1000, i);
 			allPlayers.add(p);
 			numPlayers++;
 		}
@@ -66,13 +66,14 @@ public class OaklandOligarchy implements MouseMotionListener{
 
 		// initialize tiles
 		tiles = new ImplementTiles();
+
 	}
 
 	// An Oakland Oligarchy constructor used for testing purposes
 	OaklandOligarchy(String s) {
 		if (s.equals("test")) {
 			for (int i = 0; i < 4; i++) {
-				Player p = new Player("p" + i, 1000);
+				Player p = new Player("p" + i, 1000, i);
 				allPlayers.add(p);
 				numPlayers++;
 			}	

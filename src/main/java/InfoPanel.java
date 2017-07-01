@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class InfoPanel extends JPanel{
 	JLabel infoLabel = new JLabel("", SwingConstants.LEFT);//this is the label with all of the info
 	int numPlayers;
+	JPanel subPanel = new JPanel();
 	//constructor for InfoPanel class
 	InfoPanel(ArrayList<Player> all_players, ImplementTiles tiles){
 		numPlayers = all_players.size();
@@ -15,11 +16,19 @@ public class InfoPanel extends JPanel{
 
 		infoLabel.setHorizontalTextPosition(SwingConstants.LEFT);
 		infoLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		this.setLayout(new FlowLayout(FlowLayout.LEFT));
-		this.add(infoLabel); 
+		subPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		this.setLayout(new BorderLayout());
+		subPanel.add(infoLabel);
+		this.add(subPanel); 
+		
 		//set formatting for the panel
 		this.setPreferredSize(new Dimension(200,1000));
 		this.setBorder(BorderFactory.createLineBorder(Color.black));
+
+		Clock info_clock = new Clock(0,0,0);
+		Thread clock_thread = new Thread(info_clock);
+		this.add(info_clock, BorderLayout.SOUTH);
+		clock_thread.start();
 	}//end of constructor
 
 	/*This method will refresh the game info in the InfoPanel object
@@ -35,20 +44,8 @@ public class InfoPanel extends JPanel{
 		str = str + "<html><br>";//begin the opening html tag
 		int player_number = 0;
 		for(Player p : all_players){//loop through all the players and get their info
-			str = str + "<div style='font-size:16'><b><u>" + p.getName() + "</u></b></div> <br>";//get player name
-			String color = "Color: ";
-			if(player_number==0){
-				color = color + "Red";
-			}else if(player_number==1){
-				color = color + "Orange";
-			}else if(player_number==2){
-				color = color + "Green";
-			}else if(player_number==3){
-				color = color + "Blue";
-			}else{
-				System.out.println("Error in setting color");
-			}
-			str = str + color + "<br>";
+			str = str + "<div style='font-size:16;color:"+p.getColor() +"'><b><u>" + p.getName() + "</u></b></div> <br>";//get player name
+			str = str + "Color: " + p.getColor() + "<br>";//get color
 			str = str + "Money: " + p.getMoney() + " <br>";//get the money
 			str = str + "Properties: <br>";//now list all properties owned
 			

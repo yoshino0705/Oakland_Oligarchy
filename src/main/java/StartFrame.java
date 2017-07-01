@@ -142,8 +142,10 @@ public class StartFrame{
 
 	class Name_listener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
+			int i = 0;
 			for(JTextField tf: name_fields){
-				all_players.add(new Player(tf.getText(),10000));
+				all_players.add(new Player(tf.getText(),10000, i));
+				i++;
 			}
 			//debug prints
 			//for(Player p: all_players){
