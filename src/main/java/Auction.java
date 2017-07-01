@@ -34,13 +34,13 @@ public class Auction extends JDialog {
 		} catch (Exception e) {
 			try {
 				aProp = pChoices[0];
-			} catch(Exception ex){
+			} catch(Exception ex){//player has no properties to auction
 				System.out.println("no properties to auction");
 				this.hasProperties = false;
 				JOptionPane.showMessageDialog(game.window, "You have no properties to auction");
 			}
 		}
-
+		//player has properties and selected one to auction
 		if(hasProperties){
 			//set up our window
 			this.setTitle(aProp + " Auction");
@@ -48,7 +48,7 @@ public class Auction extends JDialog {
 			this.setResizable(false);
 			this.setSize(600,200);	
 			this.setLayout(new GridLayout(3,1));
-
+			//topPanel holds current bid and current leader
 			topPanel = new JPanel();
 			topPanel.setLayout(new BorderLayout());
 
@@ -62,11 +62,11 @@ public class Auction extends JDialog {
 			//add buttons for each player that can bid
 			ArrayList<Player> otherPlayers = getOtherPlayers(game);
 			bidButtons = new JButton[otherPlayers.size()];
-
+			//middle panel holds bid buttons for each player
 			middlePanel = new JPanel();
 			middlePanel.setLayout(new GridLayout(1,otherPlayers.size()));
 
-			// auction the selected property
+			//add action listeners to each bid button
 			for (int i = 0; i < otherPlayers.size(); i++) {
 				Player thisPlayer = otherPlayers.get(i);
 				bidButtons[i] = new JButton(otherPlayers.get(i).getName() + " bid +$10");
@@ -79,7 +79,7 @@ public class Auction extends JDialog {
 				middlePanel.add(bidButtons[i]);
 			}//end for
 			this.add(middlePanel);
-
+			//this button will end the auction and if a bid was made the prop goes to high bidder
 			conclude_button = new JButton("Conclude The Auction");
 			ConcludeListener conclude_listener = new ConcludeListener();
 			conclude_button.addActionListener(conclude_listener);
@@ -89,6 +89,7 @@ public class Auction extends JDialog {
 		}
 	}//end of constructor
 
+	//make current high bid currentBid + 10 by player
 	private void makeBid(Player p){
 		curPrice += 10;
 		lastBid = p;
@@ -96,6 +97,8 @@ public class Auction extends JDialog {
 		lblCurLeader.setText("Leader: " + p.getName());
 	}//end makeBid()
 
+	//get all the players who are not the one auctioning the property
+	//return these players in an ArrayList
 	private ArrayList<Player> getOtherPlayers(OaklandOligarchy game) {
 		ArrayList<Player> retList = new ArrayList<Player>();
 		retList.addAll(game.allPlayers);
@@ -109,6 +112,7 @@ public class Auction extends JDialog {
 		return retList;
 	}//end getOtherPlayers()
 
+	//get all properties owned by player and return them in an ArrayList
 	private ArrayList<String> getPlayerPropertyNames(Player p, OaklandOligarchy game) {
 		ArrayList<String> retList = new ArrayList<String>();
 		for (int i = 0; i < TILE_COUNT; i++) {
@@ -125,6 +129,8 @@ public class Auction extends JDialog {
 	}//end playerOwnsProperty()
 
 
+	//listener for the conclude button
+	//ends the auction, transfers property to high bidder if a bid was made
 	class ConcludeListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			remove(topPanel);
@@ -150,6 +156,9 @@ public class Auction extends JDialog {
 						curTile.setOwnership(lastBid);
 					}
 				}//end for loop
+				lastBid.setMoney(lastBid.getMoney()-curPrice);
+				Player owner = game.getCurrentTurnPlayer();	//getCurrentTurnPlayer();
+				owner.setMoney(owner.getMoney()+curPrice);
 				game.refreshInfoPanel();
 			}
 
