@@ -6,13 +6,13 @@ public class CustomFrameScaleTest {
 	@Test
 	public void testGetTradeMenuScaleX() {
 		CustomFrameScale cfs = new CustomFrameScale();
-		assertEquals(cfs.getTradeMenuScaleX(0), 0);
+		assertEquals(Double.toString(cfs.getTradeMenuScaleX(0)), Double.toString(0));
 		
 	}
 
 	@Test
 	public void testGetTradeMenuScaleY() {
 		CustomFrameScale cfs = new CustomFrameScale();
-		assertEquals(cfs.getTradeMenuScaleY(0), 0);
+		assertEquals(Double.toString(cfs.getTradeMenuScaleY(0)), Double.toString(0));
 	}
 }
