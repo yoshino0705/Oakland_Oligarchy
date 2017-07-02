@@ -8,11 +8,10 @@ import java.io.*;
 public class TopMenu extends JPanel{
 
 	JLabel currentTurnPlayerLabel;
-	JButton auctionButton = new JButton("Auction");
 	JButton tradeButton = new JButton("<html>Make<br>Trade</html>");
 	JButton rollButton = new JButton("Roll");
-	JButton endTurn = new JButton("<html>End<br>Turn</html>");
-	JButton endGame = new JButton("<html>End<br>Game</html>");
+	JButton endTurn = new JButton("End Turn");
+	JButton endGame = new JButton("End Game");
 	JButton helpButton  = new JButton("Help");
 	OaklandOligarchy game;
 
@@ -28,15 +27,15 @@ public class TopMenu extends JPanel{
 		this.game = oo;
 		this.setPreferredSize(new Dimension(1000, 100));
 		this.setBorder(BorderFactory.createLineBorder(Color.black));
-		this.setLayout(new GridLayout(0, 8));
+		this.setLayout(new GridLayout(0, 7));
 
 		// title label
 		JLabel title = new JLabel("<html>Oakland<br>Oligarchy</html>");
-		title.setFont(new Font("Times", Font.PLAIN, 25));
+		title.setFont(new Font("Times", Font.PLAIN, 30));
 		this.add(title, 0, 0);
 
 		// current player
-		currentTurnPlayerLabel = new JLabel("<html>Turn:<br>" + game.getCurrentTurnPlayer().getName() + "</html>", SwingConstants.CENTER);
+		currentTurnPlayerLabel = new JLabel("<html>Turn:<br>" + game.currentTurnPlayer.getName() + "</html>", SwingConstants.CENTER);
 		currentTurnPlayerLabel.setFont(new Font("Courier", Font.PLAIN, 20));
 		this.add(currentTurnPlayerLabel,0,1);
 
@@ -45,29 +44,24 @@ public class TopMenu extends JPanel{
 		tradeButton.setFont(new Font("Courier", Font.PLAIN, 20));
 		this.add(tradeButton, 0, 2);
 
-		AuctionListener auction_listener = new AuctionListener();
-		auctionButton.addActionListener(auction_listener);
-		auctionButton.setFont(new Font("Courier", Font.PLAIN, 20));
-		this.add(auctionButton,0,3);
-
 		rollButton.setFont(new Font("Courier", Font.PLAIN, 20));
 		RollListener rl = new RollListener();
 		rollButton.addActionListener(rl);
-		this.add(rollButton,0,4);
+		this.add(rollButton,0,3);
 		//set font for buttons in menu panel
 		endTurn.setFont(new Font("Courier", Font.PLAIN, 20));
 		EndTurnListener etl = new EndTurnListener();
 		endTurn.addActionListener(etl);
 		toggleJButtonEnabled(endTurn);
-		this.add(endTurn, 0, 5);
+		this.add(endTurn, 0, 4);
 
 		endGame.setFont(new Font("Courier", Font.PLAIN, 20));
-		this.add(endGame, 0, 6);
+		this.add(endGame, 0, 5);
 
 		HelpListener help_listener = new HelpListener();
 		helpButton.addActionListener(help_listener);
 		helpButton.setFont(new Font("Courier", Font.PLAIN, 20));
-		this.add(helpButton, 0, 7);
+		this.add(helpButton, 0, 6);
 
 
 	}
@@ -113,10 +107,10 @@ public class TopMenu extends JPanel{
 			System.out.println("roll: " + rollSum);
 
 			// get current player & calculate their new position
-			Player curPlayer = game.getCurrentTurnPlayer();
+			Player curPlayer = game.currentTurnPlayer;
 			int newPosition = (curPlayer.getPosition() + rollSum) % NUM_TILES;
 			// move player on board
-			animatedMovePlayer(game.getGameBoard(), game.getIndexCurrentTurnPlayer(), curPlayer.getPosition(), rollSum);
+			animatedMovePlayer(game.gb, game.getIndexCurrentTurnPlayer(), curPlayer.getPosition(), rollSum);
 
 			System.out.println("Old pos: " + curPlayer.getPosition());
 
@@ -138,7 +132,7 @@ public class TopMenu extends JPanel{
 			toggleJButtonEnabled(rollButton);
 			toggleJButtonEnabled(endTurn);
 			//update info panel
-			game.refreshInfoPanel();
+			game.info.refresh(game.allPlayers, game.tiles);
 		}
 
 		/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
@@ -232,8 +226,8 @@ public class TopMenu extends JPanel{
 			game.numTurns = game.numTurns + 1;
 			int nextTurnPlayer = game.getIndexCurrentTurnPlayer();
 			// update current player & label
-			game.setCurrentTurnPlayer(nextTurnPlayer);
-			currentTurnPlayerLabel.setText("<html>Turn:<br>" + game.getCurrentTurnPlayer().getName() + "</html>");
+			game.currentTurnPlayer = (game.allPlayers.get(nextTurnPlayer));
+			currentTurnPlayerLabel.setText("<html>Turn:<br>" + game.currentTurnPlayer.getName() + "</html>");
 
 			// toggle turn buttons
 			toggleJButtonEnabled(rollButton);
@@ -277,20 +271,14 @@ public class TopMenu extends JPanel{
 	class TradeListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			ArrayList<Player> otherPlayers = new ArrayList<Player>(game.allPlayers);
-			otherPlayers.remove(game.getCurrentTurnPlayer());	// this arraylist should only contain players excluding current turn player			
-			new Trade(game.getCurrentTurnPlayer(), otherPlayers, game, 0.63, 0.63);
-
+			otherPlayers.remove(game.currentTurnPlayer);	// this array list should only contain players excluding current turn player			
+			
+			CustomFrameScale cfs = new CustomFrameScale();
+			
+			new Trade(game.currentTurnPlayer, otherPlayers, game, cfs.getTradeMenuScaleX(), cfs.getTradeMenuScaleY());
+			
 		}
-	}//end of class TradeListener
-
-
-
-	class AuctionListener implements ActionListener{
-		public void actionPerformed(ActionEvent e){
-			System.out.println("Auction Started");
-			new Auction(game);
-		}
-	}//end of class AuctionListener
+	}
 
 
 }
