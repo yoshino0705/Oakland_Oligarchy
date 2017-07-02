@@ -1,4 +1,6 @@
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -118,7 +120,7 @@ public class Trade extends JDialog{
 			payHostButton_1.addActionListener(new ActionListener() {
 			    @Override
 			    public void actionPerformed(ActionEvent e) {
-			        makePayment(guest1, host, game);
+			        makePayment(guest1, host);
 			    }
 			});
 			this.add(payHostButton_1);
@@ -129,7 +131,7 @@ public class Trade extends JDialog{
 			payPlayerButton_1.addActionListener(new ActionListener() {
 			    @Override
 			    public void actionPerformed(ActionEvent e) {
-			        makePayment(host, guest1, game);
+			        makePayment(host, guest1);
 			    }
 			});
 			this.add(payPlayerButton_1);
@@ -179,7 +181,7 @@ public class Trade extends JDialog{
 			payHostButton_2.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					makePayment(guest2, host, game);
+					makePayment(guest2, host);
 				}
 			});
 			
@@ -191,7 +193,7 @@ public class Trade extends JDialog{
 			payPlayerButton_2.addActionListener(new ActionListener() {
 			    @Override
 			    public void actionPerformed(ActionEvent e) {
-			        makePayment(host, guest2, game);
+			        makePayment(host, guest2);
 			    }
 			});
 			this.add(payPlayerButton_2);
@@ -241,7 +243,7 @@ public class Trade extends JDialog{
 			payHostButton_3.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					makePayment(guest3, host, game);
+					makePayment(guest3, host);
 				}
 			});
 						
@@ -253,13 +255,19 @@ public class Trade extends JDialog{
 			payPlayerButton_3.addActionListener(new ActionListener() {
 			    @Override
 			    public void actionPerformed(ActionEvent e) {
-			        makePayment(host, guest3, game);
+			        makePayment(host, guest3);
 			    }
 			});
 			this.add(payPlayerButton_3);
 		}		
 		
 		this.setVisible(true);		
+		
+	}
+	
+	// uses scale based on monitor screen size
+	public Trade(Player curPlayer, ArrayList<Player> otherPlayers, OaklandOligarchy game){
+		new Trade(curPlayer, otherPlayers, game, 1.0, 1.0);
 		
 	}
 	
@@ -284,11 +292,10 @@ public class Trade extends JDialog{
 		
 		System.out.println("new owner of " + curTile.getTileName() + " is " + game.tiles.getTile(propertyIndex).getOwner().getName());
 
-		game.refreshInfoPanel();
 	}
 	
 	// give money to a player
-	private void makePayment(Trader sender, Trader receiver, OaklandOligarchy game){
+	private void makePayment(Trader sender, Trader receiver){
 		int amount = 0;
 		
 		try{
@@ -319,7 +326,7 @@ public class Trade extends JDialog{
 			JOptionPane.showMessageDialog(null, "Done transfer!");
 		}			
 
-		game.refreshInfoPanel();
+		
 	}
 	
 	// initializes general settings of a button based on values from Trader class
@@ -328,7 +335,7 @@ public class Trade extends JDialog{
 		aButton.setFont(defaultButtonFont);
 		
 		if(sender.getPlayer() == this.currentPlayer)
-			aButton.setBounds(sender.getX(), (int)(sender.getY() - buttonHeight - 10), (int)buttonWidth, (int)buttonHeight);
+			aButton.setBounds(receiver.getX(), (int)(sender.getY() - buttonHeight - 10), (int)buttonWidth, (int)buttonHeight);
 		else
 			aButton.setBounds(sender.getX(), (int)(sender.getY() + sender.height + 10), (int)buttonWidth, (int)buttonHeight);
 		
@@ -343,7 +350,7 @@ public class Trade extends JDialog{
 		aButton.setFont(defaultButtonFont);
 		
 		if(sender.getPlayer() == this.currentPlayer)
-			aButton.setBounds((int)(sender.getX() + this.buttonWidth + 10), (int)(sender.getY() - buttonHeight - 10), (int)buttonWidth, (int)buttonHeight);
+			aButton.setBounds((int)(receiver.getX() + this.buttonWidth + 10), (int)(sender.getY() - buttonHeight - 10), (int)buttonWidth, (int)buttonHeight);
 		else
 			aButton.setBounds((int)(sender.getX() + this.buttonWidth + 10), (int)(sender.getY() + sender.height + 10), (int)buttonWidth, (int)buttonHeight);
 		
@@ -356,6 +363,6 @@ public class Trade extends JDialog{
 		System.out.println(aButton.getText() + " X " + aButton.getX() + " Y " + aButton.getY() + " Width " + aButton.getWidth() + " Height " + aButton.getHeight());
 
 	}
-	
+
 
 }
