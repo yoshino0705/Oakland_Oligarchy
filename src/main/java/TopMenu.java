@@ -280,7 +280,7 @@ public class TopMenu extends JPanel{
 			otherPlayers.remove(game.getCurrentTurnPlayer());	// this arraylist should only contain players excluding current turn player			
 			CustomFrameScale cfs = new CustomFrameScale();
 			
-			new Trade(game.currentTurnPlayer, otherPlayers, game, cfs.getTradeMenuScaleX(), cfs.getTradeMenuScaleY());
+			new Trade(game.getCurrentTurnPlayer(), otherPlayers, game, cfs.getTradeMenuScaleX(), cfs.getTradeMenuScaleY());
 		}
 	}//end of class TradeListener
 
