@@ -62,6 +62,7 @@ public class TopMenu extends JPanel{
 		this.add(endTurn, 0, 5);
 
 		endGame.setFont(new Font("Courier", Font.PLAIN, 20));
+		//TODO: remove this -- it is for testing purposes
 		EndListener el = new EndListener();
 		endGame.addActionListener(el);
 		this.add(endGame, 0, 6);
@@ -323,6 +324,7 @@ public class TopMenu extends JPanel{
 	}//end of class AuctionListener
 
 	class EndListener implements ActionListener {
+		//TODO: remove this - it is for testing purposes
 		public void actionPerformed(ActionEvent e) {
 			game.playerLose(game.getCurrentTurnPlayer());
 			game.refreshInfoPanel();

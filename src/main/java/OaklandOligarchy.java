@@ -138,6 +138,12 @@ public class OaklandOligarchy implements MouseMotionListener{
 		return null;
 	}
 
+	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+		Function: playerLose
+	~	Parameters: player who has lost											~
+		Returns: None				
+	~	Description: executes logic for player who has lost game 				~
+	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 	public void playerLose(Player p) {
 		// remove any owned properties from player
 		for (int i = 0; i < TILE_COUNT; i++) {
@@ -168,6 +174,12 @@ public class OaklandOligarchy implements MouseMotionListener{
 		refreshInfoPanel();
 	}
 
+	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+		Function: endTurn
+	~	Parameters: None 														~
+		Returns: None				
+	~	Description: executes logic to end one player's turn and begin the next	~
+	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 	public void endTurn() {
 		do {
 			numTurns++;
@@ -178,6 +190,12 @@ public class OaklandOligarchy implements MouseMotionListener{
 		tm.updateCurrentTurnLabel(currentTurnPlayer);
 	}
 
+	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+		Function: getOwnedProperties
+	~	Parameters: Player who's owned properties we wish to find				~
+		Returns: list of properties owned by given player			
+	~	Description: generates list of properties owned by a given player 		~
+	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 	public ArrayList<PropertyTile> getOwnedProperties(Player p) {
 		ArrayList<PropertyTile> retList = new ArrayList<PropertyTile>();
 		for (int i = 0; i < TILE_COUNT; i++) {

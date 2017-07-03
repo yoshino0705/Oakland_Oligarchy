@@ -391,7 +391,6 @@ public class GameBoard extends JPanel{
 	}
 	
 	public void showTileDetails(int mouseX, int mouseY, int fontSize, ImplementTiles it){
-		System.out.println("showing tile details");
 		int tileIndex = getTileID(mouseX, mouseY);
 		String toolTipText;
 
