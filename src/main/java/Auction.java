@@ -19,7 +19,8 @@ public class Auction extends JDialog {
 	JButton conclude_button;
 	OaklandOligarchy game;
 	String aProp = "";
-	
+	ArrayList<Player> otherPlayers;
+
 	public Auction(OaklandOligarchy game){
 		this.game = game;
 		Player owner = game.getCurrentTurnPlayer();	//getCurrentTurnPlayer();
@@ -60,7 +61,7 @@ public class Auction extends JDialog {
 			this.add(topPanel);
 			
 			//add buttons for each player that can bid
-			ArrayList<Player> otherPlayers = getOtherPlayers(game);
+			otherPlayers = getOtherPlayers(game);
 			bidButtons = new JButton[otherPlayers.size()];
 			//middle panel holds bid buttons for each player
 			middlePanel = new JPanel();
@@ -84,6 +85,8 @@ public class Auction extends JDialog {
 			ConcludeListener conclude_listener = new ConcludeListener();
 			conclude_button.addActionListener(conclude_listener);
 			this.add(conclude_button);
+			
+			validateButtons();
 
 			this.setVisible(true);
 		}
@@ -95,6 +98,7 @@ public class Auction extends JDialog {
 		lastBid = p;
 		lblCurPrice.setText("Current Price: " + curPrice);
 		lblCurLeader.setText("Leader: " + p.getName());
+		validateButtons();
 	}//end makeBid()
 
 	//get all the players who are not the one auctioning the property
@@ -127,6 +131,15 @@ public class Auction extends JDialog {
 	private boolean playerOwnsProperty(PropertyTile prop, Player p) {
 		return prop.getOwner() == p;
 	}//end playerOwnsProperty()
+
+
+	private void validateButtons(){
+		for(int i = 0; i < otherPlayers.size(); i++){
+			if(otherPlayers.get(i).getMoney() <= curPrice){
+				bidButtons[i].setEnabled(false);
+			}
+		}
+	}
 
 
 	//listener for the conclude button
