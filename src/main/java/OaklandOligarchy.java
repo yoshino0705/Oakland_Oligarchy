@@ -85,6 +85,14 @@ public class OaklandOligarchy implements MouseMotionListener{
 			info = new InfoPanel(allPlayers, tiles);
 			gb = new GameBoard(0, 0, .63, .63);
 			currentTurnPlayer = allPlayers.get(getIndexCurrentTurnPlayer());
+			tm = new TopMenu(this);
+
+			// give player0 some properties for testing
+			Player p = allPlayers.get(0);
+			PropertyTile prop = (PropertyTile) tiles.getTile(1);
+			prop.setOwnership(p);
+			prop = (PropertyTile) tiles.getTile(3);
+			prop.setOwnership(p);
 		} else throw new IllegalArgumentException("Incorrect usage of Oakland Oligarchy class.");
 	}
 
@@ -161,14 +169,10 @@ public class OaklandOligarchy implements MouseMotionListener{
 
 		// remove token from board
 		gb.movePlayer(getIndexCurrentTurnPlayer(), -1);
-		gb.refreshBoard();
 
 		// update player name
 		p.setName(p.getName() + " - LOSER");
 		p.lose();
-
-		// tell the player they lost
-		JOptionPane.showMessageDialog(null, "You ran out of money and properties. You lose!");
 
 		endTurn();
 		refreshInfoPanel();

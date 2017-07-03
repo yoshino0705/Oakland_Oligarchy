@@ -172,6 +172,9 @@ public class TopMenu extends JPanel{
 					// if after auctioning all properties, they still cant pay rent
 					// then the player loses
 					if (curPlayer.getMoney() < pTile.getRent()) {
+						// tell the player they lost
+						JOptionPane.showMessageDialog(null, "You ran out of money and properties. You lose!");
+						
 						game.playerLose(curPlayer);
 						game.endTurn();
 
@@ -179,7 +182,9 @@ public class TopMenu extends JPanel{
 						if (game.checkWon()) {
 							Player winner = game.getWinner();
 							JOptionPane.showMessageDialog(null, winner.getName() + " has won the game!");
-						} 
+						}
+
+						game.getGameBoard().refreshBoard();
 						return;
 					}
 				}
