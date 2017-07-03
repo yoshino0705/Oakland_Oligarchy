@@ -3,12 +3,14 @@ public class Player{
 	int money;
 	int position;
 	String color;
+	boolean hasLost;
 
 	Player(String name, int money, int player_number){
 		this.name = name.toUpperCase();
 		this.setMoney(money);
 		this.position = 0;
 		this.color = makeColor(player_number);
+		this.hasLost = false;
 	}
 
 	public int getMoney(){
@@ -18,6 +20,10 @@ public class Player{
 		if (money < 0)
 			money = 0;
 		this.money = money;
+	}
+
+	public void setName(String s) {
+		this.name = s;
 	}
 	public String getName(){
 		return this.name;
@@ -29,6 +35,14 @@ public class Player{
 
 	public int getPosition() {
 		return this.position;
+	}
+
+	public boolean hasLost() {
+		return hasLost;
+	}
+	
+	public void lose(){
+		this.hasLost = true;
 	}
 
 	public String makeColor(int player_number){

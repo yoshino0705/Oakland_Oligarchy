@@ -62,6 +62,8 @@ public class TopMenu extends JPanel{
 		this.add(endTurn, 0, 5);
 
 		endGame.setFont(new Font("Courier", Font.PLAIN, 20));
+		EndListener el = new EndListener();
+		endGame.addActionListener(el);
 		this.add(endGame, 0, 6);
 
 		HelpListener help_listener = new HelpListener();
@@ -78,6 +80,10 @@ public class TopMenu extends JPanel{
 
 	public void toggleEndTurnButton() {
 		toggleJButtonEnabled(endTurn);
+	}
+
+	public void updateCurrentTurnLabel(Player p) {
+		currentTurnPlayerLabel.setText("<html>Turn:<br>" + p.getName() + "</html>");
 	}
 
 	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
@@ -151,10 +157,37 @@ public class TopMenu extends JPanel{
 		~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 		private void doPropertyInteraction(PropertyTile pTile, Player curPlayer) {
 			if (pTile.isOwned()) {
-				// notify player
+				//if player doesn't have enough money to pay, but they have properties,
+				// they must auction properties until they can pay.
+				if (curPlayer.getMoney() < pTile.getRent()) {
+					ArrayList<PropertyTile> ownedProps = game.getOwnedProperties(curPlayer);
+					// auction until player can afford rent
+					while (curPlayer.getMoney() < pTile.getRent() && ownedProps.size() > 0) {
+						Auction a = new Auction(game);
+						// TODO: wait for auction to end before starting new one
+						ownedProps = game.getOwnedProperties(curPlayer);		
+					} 
+
+					// if after auctioning all properties, they still cant pay rent
+					// then the player loses
+					if (curPlayer.getMoney() < pTile.getRent()) {
+						game.playerLose(curPlayer);
+						game.endTurn();
+
+						//check to see if a player has won and if so notify them
+						if (game.checkWon()) {
+							Player winner = game.getWinner();
+							JOptionPane.showMessageDialog(null, winner.getName() + " has won the game!");
+						} 
+						return;
+					}
+				}
+
+				// notify player that they owe someone rent
 				JOptionPane.showMessageDialog(null, "You landed on " + pTile.getTileName() + " owned by " +
 													pTile.getOwner().getName() + ". You pay them " +
 													pTile.getRent() + " dollars.");
+
 				// subtract money from curPlayer and add to owner
 				curPlayer.setMoney(curPlayer.getMoney() - pTile.getRent());
 				pTile.getOwner().setMoney(pTile.getOwner().getMoney() + pTile.getRent());
@@ -229,11 +262,7 @@ public class TopMenu extends JPanel{
 		~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 		public void actionPerformed(ActionEvent e) {
 			// increment turn count
-			game.numTurns = game.numTurns + 1;
-			int nextTurnPlayer = game.getIndexCurrentTurnPlayer();
-			// update current player & label
-			game.setCurrentTurnPlayer(nextTurnPlayer);
-			currentTurnPlayerLabel.setText("<html>Turn:<br>" + game.getCurrentTurnPlayer().getName() + "</html>");
+			game.endTurn();
 
 			// toggle turn buttons
 			toggleJButtonEnabled(rollButton);
@@ -293,5 +322,10 @@ public class TopMenu extends JPanel{
 		}
 	}//end of class AuctionListener
 
-
+	class EndListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			game.playerLose(game.getCurrentTurnPlayer());
+			game.refreshInfoPanel();
+		}
+	}
 }

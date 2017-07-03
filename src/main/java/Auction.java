@@ -121,17 +121,12 @@ public class Auction extends JDialog {
 		ArrayList<String> retList = new ArrayList<String>();
 		for (int i = 0; i < TILE_COUNT; i++) {
 			Tile curTile = game.tiles.getTile(i);	//game.getTiles().getTile(i)
-			if (curTile.isProperty() && playerOwnsProperty((PropertyTile) curTile, p))
+			if (curTile.isProperty() && game.playerOwnsProperty((PropertyTile) curTile, p))
 				retList.add(curTile.getTileName());
 		}
 
 		return retList;
 	}//end getPlayerpropertyNames()
-
-	private boolean playerOwnsProperty(PropertyTile prop, Player p) {
-		return prop.getOwner() == p;
-	}//end playerOwnsProperty()
-
 
 	private void validateButtons(){
 		for(int i = 0; i < otherPlayers.size(); i++){

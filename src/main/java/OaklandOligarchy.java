@@ -16,8 +16,11 @@ public class OaklandOligarchy implements MouseMotionListener{
 	int numTurns = 0; // keep track of how many turns to mod with the all_players array
 	private Player currentTurnPlayer = null; // the player whos turn it is
 	private InfoPanel info;
+	private TopMenu tm;
 	ArrayList<Player> allPlayers = new ArrayList<Player>(); // list of all the players in this game
 	
+	private final int TILE_COUNT = 36;
+
 	public static void main(String[] args){
 		new OaklandOligarchy();
 	}
@@ -45,7 +48,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 
 		//add top menu
 		currentTurnPlayer = allPlayers.get(getIndexCurrentTurnPlayer());
-		TopMenu tm = new TopMenu(this);
+		tm = new TopMenu(this);
 		window.add(tm, BorderLayout.NORTH);
 
 		tiles = new ImplementTiles();
@@ -66,7 +69,6 @@ public class OaklandOligarchy implements MouseMotionListener{
 
 		// initialize tiles
 		tiles = new ImplementTiles();
-
 	}
 
 	// An Oakland Oligarchy constructor used for testing purposes
@@ -85,6 +87,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 			currentTurnPlayer = allPlayers.get(getIndexCurrentTurnPlayer());
 		} else throw new IllegalArgumentException("Incorrect usage of Oakland Oligarchy class.");
 	}
+
 	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
 		Function: getIndexCurrentTurnPlayer
 	~	Parameters: None														~
@@ -97,6 +100,96 @@ public class OaklandOligarchy implements MouseMotionListener{
 		} else {
 			return (numTurns % numPlayers);
 		}
+	}
+
+	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+		Function: checkWon
+	~	Parameters: None														~
+		Returns: boolean indicating whether game has been won									
+	~	Description: determines whether the game has been won or not 			~
+	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
+	public boolean checkWon() {
+		int numLost = 0;
+		for (int i = 0; i < allPlayers.size(); i++) {
+			if (allPlayers.get(i).hasLost())
+				numLost++;
+		}
+
+		if (allPlayers.size() - numLost == 1)
+			return true;
+		else
+			return false;
+	}
+
+	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+		Function: getWinner
+	~	Parameters: None														~
+		Returns: player who has won the game				
+	~	Description: finds the player who has won the game and returns it		~
+	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
+	public Player getWinner() {
+		if (!checkWon())
+			return null;
+
+		for (int i = 0; i < allPlayers.size(); i++) {
+			if (!allPlayers.get(i).hasLost())
+				return allPlayers.get(i);
+		}
+		return null;
+	}
+
+	public void playerLose(Player p) {
+		// remove any owned properties from player
+		for (int i = 0; i < TILE_COUNT; i++) {
+			PropertyTile pTile;
+			Tile curTile = tiles.getTile(i);
+			if (curTile.isProperty())
+				pTile = (PropertyTile) curTile;
+			else
+				continue;
+
+			if (pTile.isOwned() && pTile.getOwner() == p) {
+				pTile.removeOwnership();
+			}
+		}
+
+		// remove token from board
+		gb.movePlayer(getIndexCurrentTurnPlayer(), -1);
+		gb.refreshBoard();
+
+		// update player name
+		p.setName(p.getName() + " - LOSER");
+		p.lose();
+
+		// tell the player they lost
+		JOptionPane.showMessageDialog(null, "You ran out of money and properties. You lose!");
+
+		endTurn();
+		refreshInfoPanel();
+	}
+
+	public void endTurn() {
+		do {
+			numTurns++;
+			int nextTurnPlayer = getIndexCurrentTurnPlayer();
+			setCurrentTurnPlayer(nextTurnPlayer);
+		} while (currentTurnPlayer.hasLost());
+
+		tm.updateCurrentTurnLabel(currentTurnPlayer);
+	}
+
+	public ArrayList<PropertyTile> getOwnedProperties(Player p) {
+		ArrayList<PropertyTile> retList = new ArrayList<PropertyTile>();
+		for (int i = 0; i < TILE_COUNT; i++) {
+			Tile curTile = tiles.getTile(i);	//game.getTiles().getTile(i)
+			if (curTile.isProperty() && playerOwnsProperty((PropertyTile) curTile, p))
+				retList.add((PropertyTile) curTile);
+		}
+		return retList;
+	}
+
+	public boolean playerOwnsProperty(PropertyTile prop, Player p) {
+		return prop.getOwner() == p;
 	}
 
 	public GameBoard getGameBoard() {
@@ -118,16 +211,14 @@ public class OaklandOligarchy implements MouseMotionListener{
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		//System.out.println("MouseX: " + e.getX() + " MouseY: " + e.getY() + " TileID: " + gb.getTileID(e.getX(), e.getY()));
 		gb.showTileDetails(e.getX(), e.getY(), 20, tiles);
+
 		
 	}
-
-
 
 }//end of class OaklandOligarchy
