@@ -14,7 +14,7 @@ public class PropertyTileTest {
 	@Test
 	public void testSetOwner() {
 		PropertyTile t = new PropertyTile("Prop", 1000, 100);
-		Player p = new Player("pname", 100);
+		Player p = new Player("pname", 100, 0);
 		assertEquals(t.isOwned(), false);
 		t.setOwnership(p);
 		assertEquals(t.getOwner(), p);
@@ -23,8 +23,8 @@ public class PropertyTileTest {
 	@Test
 	public void testSetOwnerWhenOwned() {
 		PropertyTile t = new PropertyTile("Prop", 1000, 100);
-		Player p = new Player("pname", 100);
-		Player q = new Player("qname", 100);
+		Player p = new Player("pname", 100, 0);
+		Player q = new Player("qname", 100, 0);
 		t.setOwnership(p);
 		assertEquals(t.setOwnership(q), false);
 		assertEquals(t.getOwner(), p);
@@ -33,7 +33,7 @@ public class PropertyTileTest {
 	@Test
 	public void testRemoveOwner() {
 		PropertyTile t = new PropertyTile("Prop", 1000, 100);
-		Player p = new Player("pname", 100);
+		Player p = new Player("pname", 100, 0);
 		t.setOwnership(p);
 		assertEquals(t.getOwner(), p);
 		t.removeOwnership();
