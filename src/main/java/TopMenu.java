@@ -8,7 +8,7 @@ import java.io.*;
 public class TopMenu extends JPanel{
 
 	JLabel currentTurnPlayerLabel;
-	JButton auctionButton = new JButton("Auction");
+	JButton auctionButton = new JButton("<html>Sell<br>Property</html>");
 	JButton tradeButton = new JButton("<html>Make<br>Trade</html>");
 	JButton rollButton = new JButton("Roll");
 	JButton endTurn = new JButton("<html>End<br>Turn</html>");

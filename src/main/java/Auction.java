@@ -17,10 +17,11 @@ public class Auction extends JDialog {
 	JPanel topPanel;
 	JPanel middlePanel;
 	JButton conclude_button;
+	JButton banker_button;
 	OaklandOligarchy game;
 	String aProp = "";
 	ArrayList<Player> otherPlayers;
-
+	int prop_price;
 	public Auction(OaklandOligarchy game){
 		this.game = game;
 		Player owner = game.getCurrentTurnPlayer();	//getCurrentTurnPlayer();
@@ -48,7 +49,7 @@ public class Auction extends JDialog {
 			this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			this.setResizable(false);
 			this.setSize(600,200);	
-			this.setLayout(new GridLayout(3,1));
+			this.setLayout(new GridLayout(4,1));
 			//topPanel holds current bid and current leader
 			topPanel = new JPanel();
 			topPanel.setLayout(new BorderLayout());
@@ -81,11 +82,27 @@ public class Auction extends JDialog {
 			}//end for
 			this.add(middlePanel);
 			//this button will end the auction and if a bid was made the prop goes to high bidder
-			conclude_button = new JButton("Conclude The Auction");
+			conclude_button = new JButton("Conclude The auction, selling property to high bidder");
 			ConcludeListener conclude_listener = new ConcludeListener();
 			conclude_button.addActionListener(conclude_listener);
 			this.add(conclude_button);
-			
+		
+			//find current tile price
+			 
+			for(int i = 0; i < TILE_COUNT; i++){
+				Tile curTile = game.tiles.getTile(i);
+				if(curTile.isProperty() && curTile.getTileName().equals(aProp)){
+					PropertyTile the_tile = (PropertyTile) curTile;
+					prop_price = the_tile.getValue();
+				}
+			}//end for loop
+
+
+			banker_button = new JButton("Sell half-priced to bank for $" + prop_price/2);
+			BankerListener banker_listener = new BankerListener();
+			banker_button.addActionListener(banker_listener);
+			this.add(banker_button);
+
 			validateButtons();
 
 			this.setVisible(true);
@@ -132,7 +149,7 @@ public class Auction extends JDialog {
 		return prop.getOwner() == p;
 	}//end playerOwnsProperty()
 
-
+	//disable buttons of players who do not have enough money to bid
 	private void validateButtons(){
 		for(int i = 0; i < otherPlayers.size(); i++){
 			if(otherPlayers.get(i).getMoney() <= curPrice){
@@ -186,9 +203,37 @@ public class Auction extends JDialog {
 
 
 
+	//sell the propety to the bank for half the buying cost
+	class BankerListener implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			//find property and remove ownership	
+			for(int i = 0; i < TILE_COUNT; i++){
+				Tile curTile = game.tiles.getTile(i);
+				if(curTile.isProperty() && curTile.getTileName().equals(aProp)){
+					System.out.println("selling to bank:  " + curTile.getTileName());
+					curTile.removeOwnership();
+				}
+			}//end for loop
+		
+				//give money to player
+				Player owner = game.getCurrentTurnPlayer();
+				owner.setMoney(owner.getMoney()+prop_price/2);
 
-
-
+				//show msg to user
+				remove(topPanel);
+				remove(middlePanel);
+				remove(conclude_button);
+				remove(banker_button);
+				setLayout(new GridLayout(1,1));
+				JLabel msg = new JLabel("You sold the property to the bank for $" + prop_price/2);
+				add(msg);	
+				//update InfoPanel
+				game.refreshInfoPanel();
+				validate();
+				repaint();
+				setVisible(true);
+			}//end of actionPerformed
+	}//end of class BankerListener
 
 
 
