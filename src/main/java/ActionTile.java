@@ -37,6 +37,9 @@ public class ActionTile extends Tile{
             case 6:
                 this.tileInfo = "Redirect!";
                 break;
+            case 7:
+                this.tileInfo = "Lucky Day";
+                break;
             default:
                 this.tileInfo = "invalid flage error";
         }
@@ -79,6 +82,9 @@ public class ActionTile extends Tile{
                 break;
             case 6:
                 this.scenario6(p, game, rl);
+                break;
+            case 7:
+                this.scenario7(p, pList);
                 break;
             default:
                 return false;
@@ -140,4 +146,28 @@ public class ActionTile extends Tile{
         rl.animatedMovePlayer(game.gb, game.getIndexCurrentTurnPlayer(), p.getPosition(), distance);
         p.setPosition((p.getPosition() + distance) % 36);
     }
+
+    //select a specific player to take 100 dollars from
+    //@param p - current player
+    //@param pList - list of players
+    private void scenario7(Player p, ArrayList<Player> pList){
+        boolean found = false;
+        do{
+            String playerName = JOptionPane.showInputDialog("Your lucky day! Pick a player to take $100 from!");
+            found = false;
+
+            for(int i = 0; i < pList.size(); ++i){
+                if(pList.get(i).getName().equals(playerName)){
+                    found = true;
+                    pList.get(i).setMoney(pList.get(i).getMoney() - 100);
+                    p.setMoney(p.getMoney() + 100);
+                    break;
+                }
+            }
+            if(found == false){
+                JOptionPane.showMessageDialog(null, "That name does not exist! Please re-enter a valid name.");
+            }
+        }while(found == false);
+    }
+
 }

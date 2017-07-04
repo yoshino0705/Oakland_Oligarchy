@@ -23,16 +23,17 @@ public class ImplementTiles{
         this.tileArray = new Tile[36];
         //for testing purposes
 
+        /*
         for(int i = 0; i < 36; ++i){
-            tileArray[i] = new ActionTile(6);
-            /*
+            tileArray[i] = new ActionTile(7);
+
 			String num_str = Integer.toString(i);
             tileArray[i] = new PropertyTile("Property"+num_str, (i + 1) * 10, i);
-            */
-        }
 
+        }
+        */
         //Going for 28 properties and 8 action tiles
-        /*
+
         //cheap properties to start - Friday night favorites
         tileArray[0] = new PropertyTile("Antoons Pizza", 50, 8);
         tileArray[1] = new PropertyTile("Peter's Pub", 60, 12);
@@ -46,7 +47,7 @@ public class ImplementTiles{
         //action tiles example
         tileArray[5] = new ActionTile(1);
         tileArray[6] = new ActionTile(2);
-        tileArray[7] = new ActionTile(1);
+        tileArray[7] = new ActionTile(7);
 
         //insert actions maybe? - utility PropertyTile?
 
@@ -66,7 +67,7 @@ public class ImplementTiles{
         tileArray[15] = new PropertyTile("The Porch Restaurant", 200, 25);
         tileArray[16] = new PropertyTile("Asia Tea House", 210, 25);
         //actions?
-        tileArray[17] = new ActionTile(5);
+        tileArray[17] = new ActionTile(6);
         //tileArray[18] = new ActionTile(1);
 
         //monopoly block - Union Dining
@@ -94,14 +95,14 @@ public class ImplementTiles{
         tileArray[30] = new PropertyTile("Sennot Square", 280, 36);
         //3 spaces for actions?
         tileArray[31] = new ActionTile(4);
-        tileArray[32] = new ActionTile(2);
-        tileArray[33] = new ActionTile(3);
+        tileArray[32] = new ActionTile(7);
+        tileArray[33] = new ActionTile(6);
         //monopoly block - The big properties of Pitt
         //space
         tileArray[34] = new PropertyTile("Professor Laboon's Office", 340, 40);
         //space for another action?
         tileArray[35] = new PropertyTile("The Cathedral of Learning", 380, 44);
-        */
+
     }
 
 }

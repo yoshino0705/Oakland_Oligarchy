@@ -117,14 +117,23 @@ public class TopMenu extends JPanel{
 
 			//access players by game.allPlayers();
 			// if tile is property, player can either buy or has to pay rent
-			Tile curTile = game.tiles.getTile(newPosition);
-			if (curTile.isProperty()) {
-				PropertyTile pTile = (PropertyTile) curTile;
-				doPropertyInteraction(pTile, curPlayer);
-			} else {	// tile is action tile and action is performed
-				ActionTile aTile = (ActionTile) curTile;
-				aTile.performAction(curPlayer, game.allPlayers, game, this);
-			}
+			boolean positionChange = false;
+			do{
+				Tile curTile = game.tiles.getTile(curPlayer.getPosition());
+				positionChange = false;
+				if (curTile.isProperty()) {
+					PropertyTile pTile = (PropertyTile) curTile;
+					doPropertyInteraction(pTile, curPlayer);
+				} else {	// tile is action tile and action is performed
+					ActionTile aTile = (ActionTile) curTile;
+					aTile.performAction(curPlayer, game.allPlayers, game, this);
+
+					//action tile 6 causes player to move again
+					if(aTile.getTileFlag() == 6){
+						positionChange = true;
+					}
+				}
+			}while(positionChange == true);
 			// toggle turn buttons
 			toggleJButtonEnabled(rollButton);
 			toggleJButtonEnabled(endTurn);
