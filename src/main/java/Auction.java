@@ -166,6 +166,7 @@ public class Auction extends JDialog {
 			remove(topPanel);
 			remove(middlePanel);
 			remove(conclude_button);
+			remove(banker_button);
 
 			setLayout(new GridLayout(1,1));
 			JLabel msg = new JLabel("");
