@@ -19,8 +19,8 @@ public class InfoPanel extends JPanel{
 		subPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		this.setLayout(new BorderLayout());
 		subPanel.add(infoLabel);
-		this.add(subPanel); 
-		
+		this.add(subPanel);
+
 		//set formatting for the panel
 		this.setPreferredSize(new Dimension(200,1000));
 		this.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -38,7 +38,7 @@ public class InfoPanel extends JPanel{
 	 */
 	public void refresh(ArrayList<Player> all_players, ImplementTiles tiles){
 		String str = new String("");//this string will be used to build str for info JLabel
-		
+
 		final int NUM_TILES = 36;//make final int to avoid magic number, this is num tiles in tile array
 
 		str = str + "<html><br>";//begin the opening html tag
@@ -48,10 +48,10 @@ public class InfoPanel extends JPanel{
 			str = str + "Color: " + p.getColor() + "<br>";//get color
 			str = str + "Money: " + p.getMoney() + " <br>";//get the money
 			str = str + "Properties: <br>";//now list all properties owned
-			
+
 			int num_props = 0;//keep track of number of owned props
 			for(int i = 0; i < NUM_TILES; i++){//loop through all props and find ones that this player owns
-				if(tiles.getTile(i).getOwner() == p){
+				if(tiles.getTile(i).isProperty() && tiles.getTile(i).getOwner() == p){
 					str = str + tiles.getTile(i).getTileName() + "<br>";
 					num_props++;
 				}
@@ -60,11 +60,11 @@ public class InfoPanel extends JPanel{
 			if(num_props == 0){
 				str = str + "None";
 			}
-			
+
 			str = str + "<br><br>";//extra break for spacing between players
 			player_number++;//increment as we switch to next player
 		}
-		
+
 
 		str = str + "</html>";//close to html tag
 
