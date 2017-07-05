@@ -18,30 +18,28 @@ public class ActionTile extends Tile{
         this.setTileName("Action Tile");
         switch(flag){
             case 1:
-                this.tileInfo = "Wow, you found $100 on the sidewalk " +
-                    "on your way to class. Nice find!";
+                this.tileInfo = "Look Down!";
                 break;
             case 2:
-                this.tileInfo = "The IRS showed up out of nowhere! You've been fined $250 " +
-                    "for tax evasion! Bummer.";
+                this.tileInfo = "Tax Evasion Penalty";
                 break;
             case 3:
-                this.tileInfo = "Congratulations you won a beauty contest! Collect $300.";
+                this.tileInfo = "Beauty Contest";
                 break;
             case 4:
-                this.tileInfo = "Bank robbery successful! Congrats you got $500!";
+                this.tileInfo = "Bank Robbery";
                 break;
             case 5:
-                this.tileInfo = "Pay each player $50 for being quality friends!";
+                this.tileInfo = "Good Friends";
                 break;
             case 6:
-                this.tileInfo = "Redirect!";
+                this.tileInfo = "Redirect";
                 break;
             case 7:
                 this.tileInfo = "Lucky Day";
                 break;
             case 8:
-                this.tileInfo = "Donate to Charity!";
+                this.tileInfo = "Charity";
                 break;
             default:
                 this.tileInfo = "invalid flage error";
@@ -100,26 +98,28 @@ public class ActionTile extends Tile{
 
     //In this scenario the player finds a hundred dollar bill on the sidewalk
     private void scenario1(Player p){
-        JOptionPane.showMessageDialog(null, this.getTileInfo());
+        JOptionPane.showMessageDialog(null, "Wow, you found $100 on the sidewalk " +
+            "on your way to class. Nice find!");
         p.setMoney(p.getMoney() + 100);
     }
 
     //In this scenario the IRS shows up and sees you havent been paying taxes. fined 250.
     private void scenario2(Player p){
-        JOptionPane.showMessageDialog(null, this.getTileInfo());
+        JOptionPane.showMessageDialog(null, "The IRS showed up out of nowhere! You've been fined $250 " +
+            "for tax evasion! Bummer.");
         p.setMoney(p.getMoney() - 250);
     }
 
     //Basic action to win money
     //@param p - the current player to apply action to
     private void scenario3(Player p){
-        JOptionPane.showMessageDialog(null, this.getTileInfo());
+        JOptionPane.showMessageDialog(null, "Congratulations you won a beauty contest! Collect $300.");
         p.setMoney(p.getMoney() + 300);
     }
 
     //In this scenario you rob a bank and get 500 dollars
     private void scenario4(Player p){
-        JOptionPane.showMessageDialog(null, this.getTileInfo());
+        JOptionPane.showMessageDialog(null, "Bank robbery successful! Congrats you got $500!");
         p.setMoney(p.getMoney() + 500);
     }
 
@@ -127,7 +127,7 @@ public class ActionTile extends Tile{
     //Note: this code will break if two players share the same name
     //@ pList - list of all players so they they may be awarded money
     private void scenario5(Player p, ArrayList<Player> pList){
-        JOptionPane.showMessageDialog(null, this.getTileInfo());
+        JOptionPane.showMessageDialog(null, "Pay each player $50 for being quality friends!");
         for(int i = 0; i < pList.size(); ++i){
             if(!pList.get(i).getName().equals(p.getName())){
                 pList.get(i).setMoney(pList.get(i).getMoney() + 50);
