@@ -8,7 +8,7 @@ import java.io.*;
 public class TopMenu extends JPanel{
 
 	JLabel currentTurnPlayerLabel;
-	JButton auctionButton = new JButton("Auction");
+	JButton auctionButton = new JButton("<html>Sell<br>Property</html>");
 	JButton tradeButton = new JButton("<html>Make<br>Trade</html>");
 	JButton rollButton = new JButton("Roll");
 	JButton endTurn = new JButton("<html>End<br>Turn</html>");
@@ -278,9 +278,8 @@ public class TopMenu extends JPanel{
 		public void actionPerformed(ActionEvent e){
 			ArrayList<Player> otherPlayers = new ArrayList<Player>(game.allPlayers);
 			otherPlayers.remove(game.getCurrentTurnPlayer());	// this arraylist should only contain players excluding current turn player			
-			CustomFrameScale cfs = new CustomFrameScale();
-			
-			new Trade(game.getCurrentTurnPlayer(), otherPlayers, game, cfs.getTradeMenuScaleX(), cfs.getTradeMenuScaleY());
+			new Trade(game.getCurrentTurnPlayer(), otherPlayers, game, 0.63, 0.63);
+
 		}
 	}//end of class TradeListener
 
