@@ -80,6 +80,10 @@ public class TopMenu extends JPanel{
 		toggleJButtonEnabled(endTurn);
 	}
 
+	public void updateCurrentTurnLabel(Player p) {
+		currentTurnPlayerLabel.setText("<html>Turn:<br>" + p.getName() + "</html>");
+	}
+
 	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
 		Function: toggleJButtonEnabled
 	~	Parameters: JButton -- Button to toggle 								~
@@ -150,9 +154,57 @@ public class TopMenu extends JPanel{
 		~				 a property tile.											~
 		~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 		private void doPropertyInteraction(PropertyTile pTile, Player curPlayer) {
+			// if player lands on their own tile don't do anything
+			if (pTile.getOwner() == curPlayer)
+				return;
+
+			ArrayList<PropertyTile> forecloseProps = new ArrayList<PropertyTile>();
 			if (pTile.isOwned()) {
-				// notify player
-				JOptionPane.showMessageDialog(null, "You landed on " + pTile.getTileName() + " owned by " +
+				//if player doesn't have enough money to pay, but they have properties,
+				// the bank will foreclose their properties until they can pay rent
+				if (curPlayer.getMoney() < pTile.getRent()) {
+					ArrayList<PropertyTile> ownedProps = game.getOwnedProperties(curPlayer);
+					// auction until player can afford rent
+					for (PropertyTile prop : ownedProps) {
+						// if they have enough to pay rent after selling, break out of loop
+						if (curPlayer.getMoney() > pTile.getRent()) {
+							break;
+						}
+						int price = prop.getValue();
+						curPlayer.setMoney(curPlayer.getMoney() + (price/2));
+						prop.removeOwnership();
+						forecloseProps.add(prop);	
+						ownedProps = game.getOwnedProperties(curPlayer);
+					}
+
+					// if after auctioning all properties, they still cant pay rent
+					// then the player loses
+					if (curPlayer.getMoney() < pTile.getRent()) {
+						// tell the player they lost
+						JOptionPane.showMessageDialog(null, "You ran out of money and properties. You lose!");
+						
+						game.playerLose(curPlayer);
+						game.endTurn();
+
+						//check to see if a player has won and if so notify them
+						if (game.checkWon()) {
+							Player winner = game.getWinner();
+							JOptionPane.showMessageDialog(null, winner.getName() + " has won the game!");
+						}
+
+						game.getGameBoard().refreshBoard();
+						return;
+					}
+				}
+
+				if (forecloseProps.size() > 0) {
+					String msg = "You didn't have enough money to pay rent so they bank foreclosed these properties:\n";
+					for (PropertyTile prop : forecloseProps)
+						msg += prop.getTileName() + "\n";
+					JOptionPane.showMessageDialog(null, msg);
+				} else 
+					// notify player that they owe someone rent
+					JOptionPane.showMessageDialog(null, "You landed on " + pTile.getTileName() + " owned by " +
 													pTile.getOwner().getName() + ". You pay them " +
 													pTile.getRent() + " dollars.");
 				// subtract money from curPlayer and add to owner
@@ -229,11 +281,7 @@ public class TopMenu extends JPanel{
 		~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 		public void actionPerformed(ActionEvent e) {
 			// increment turn count
-			game.numTurns = game.numTurns + 1;
-			int nextTurnPlayer = game.getIndexCurrentTurnPlayer();
-			// update current player & label
-			game.setCurrentTurnPlayer(nextTurnPlayer);
-			currentTurnPlayerLabel.setText("<html>Turn:<br>" + game.getCurrentTurnPlayer().getName() + "</html>");
+			game.endTurn();
 
 			// toggle turn buttons
 			toggleJButtonEnabled(rollButton);
@@ -278,8 +326,9 @@ public class TopMenu extends JPanel{
 		public void actionPerformed(ActionEvent e){
 			ArrayList<Player> otherPlayers = new ArrayList<Player>(game.allPlayers);
 			otherPlayers.remove(game.getCurrentTurnPlayer());	// this arraylist should only contain players excluding current turn player			
-			new Trade(game.getCurrentTurnPlayer(), otherPlayers, game, 0.63, 0.63);
-
+			CustomFrameScale cfs = new CustomFrameScale();
+			
+			new Trade(game.getCurrentTurnPlayer(), otherPlayers, game, cfs.getTradeMenuScaleX(), cfs.getTradeMenuScaleY());
 		}
 	}//end of class TradeListener
 
@@ -291,6 +340,4 @@ public class TopMenu extends JPanel{
 			new Auction(game);
 		}
 	}//end of class AuctionListener
-
-
 }
