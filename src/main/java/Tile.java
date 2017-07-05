@@ -9,6 +9,8 @@ public class Tile{
 	//this method stub is needed to call this on an array of all types of tiles
 	//it will be overridden in the proprties tile class
 	public Player getOwner(){return null;};
+	public boolean setOwnership(Player p){return false;};//will override in PropertyTile
+	public void removeOwnership(){};//will override in PopertyTile
 
     Tile(){
         this.tileName = "";

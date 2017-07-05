@@ -21,13 +21,13 @@ public class InfoPanelTest {
 
 	private ArrayList<Player> generatePlayerList() {
 		ArrayList<Player> list = new ArrayList<Player>();
-		Player p0 = new Player("p0", 1000);
+		Player p0 = new Player("p0", 1000, 0);
 		list.add(p0);
-		Player p1 = new Player("p1", 2000);
+		Player p1 = new Player("p1", 2000, 0);
 		list.add(p1);
-		Player p2 = new Player("p2", 3333);
+		Player p2 = new Player("p2", 3333, 0);
 		list.add(p2);
-		Player p3 = new Player("p3", 4545);
+		Player p3 = new Player("p3", 4545, 0);
 		list.add(p3);
 		return list;
 	}
