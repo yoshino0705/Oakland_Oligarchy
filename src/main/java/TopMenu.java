@@ -62,9 +62,6 @@ public class TopMenu extends JPanel{
 		this.add(endTurn, 0, 5);
 
 		endGame.setFont(new Font("Courier", Font.PLAIN, 20));
-		//TODO: remove this -- it is for testing purposes
-		EndListener el = new EndListener();
-		endGame.addActionListener(el);
 		this.add(endGame, 0, 6);
 
 		HelpListener help_listener = new HelpListener();
@@ -157,17 +154,28 @@ public class TopMenu extends JPanel{
 		~				 a property tile.											~
 		~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 		private void doPropertyInteraction(PropertyTile pTile, Player curPlayer) {
+			// if player lands on their own tile don't do anything
+			if (pTile.getOwner() == curPlayer)
+				return;
+
+			ArrayList<PropertyTile> forecloseProps = new ArrayList<PropertyTile>();
 			if (pTile.isOwned()) {
 				//if player doesn't have enough money to pay, but they have properties,
-				// they must auction properties until they can pay.
+				// the bank will foreclose their properties until they can pay rent
 				if (curPlayer.getMoney() < pTile.getRent()) {
 					ArrayList<PropertyTile> ownedProps = game.getOwnedProperties(curPlayer);
 					// auction until player can afford rent
-					while (curPlayer.getMoney() < pTile.getRent() && ownedProps.size() > 0) {
-						Auction a = new Auction(game);
-						// TODO: wait for auction to end before starting new one
-						ownedProps = game.getOwnedProperties(curPlayer);		
-					} 
+					for (PropertyTile prop : ownedProps) {
+						// if they have enough to pay rent after selling, break out of loop
+						if (curPlayer.getMoney() > pTile.getRent()) {
+							break;
+						}
+						int price = prop.getValue();
+						curPlayer.setMoney(curPlayer.getMoney() + (price/2));
+						prop.removeOwnership();
+						forecloseProps.add(prop);	
+						ownedProps = game.getOwnedProperties(curPlayer);
+					}
 
 					// if after auctioning all properties, they still cant pay rent
 					// then the player loses
@@ -189,11 +197,16 @@ public class TopMenu extends JPanel{
 					}
 				}
 
-				// notify player that they owe someone rent
-				JOptionPane.showMessageDialog(null, "You landed on " + pTile.getTileName() + " owned by " +
+				if (forecloseProps.size() > 0) {
+					String msg = "You didn't have enough money to pay rent so they bank foreclosed these properties:\n";
+					for (PropertyTile prop : forecloseProps)
+						msg += prop.getTileName() + "\n";
+					JOptionPane.showMessageDialog(null, msg);
+				} else 
+					// notify player that they owe someone rent
+					JOptionPane.showMessageDialog(null, "You landed on " + pTile.getTileName() + " owned by " +
 													pTile.getOwner().getName() + ". You pay them " +
 													pTile.getRent() + " dollars.");
-
 				// subtract money from curPlayer and add to owner
 				curPlayer.setMoney(curPlayer.getMoney() - pTile.getRent());
 				pTile.getOwner().setMoney(pTile.getOwner().getMoney() + pTile.getRent());
@@ -327,12 +340,4 @@ public class TopMenu extends JPanel{
 			new Auction(game);
 		}
 	}//end of class AuctionListener
-
-	class EndListener implements ActionListener {
-		//TODO: remove this - it is for testing purposes
-		public void actionPerformed(ActionEvent e) {
-			game.playerLose(game.getCurrentTurnPlayer());
-			game.refreshInfoPanel();
-		}
-	}
 }
