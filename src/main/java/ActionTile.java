@@ -40,6 +40,9 @@ public class ActionTile extends Tile{
             case 7:
                 this.tileInfo = "Lucky Day";
                 break;
+            case 8:
+                this.tileInfo = "Donate to Charity!";
+                break;
             default:
                 this.tileInfo = "invalid flage error";
         }
@@ -85,6 +88,9 @@ public class ActionTile extends Tile{
                 break;
             case 7:
                 this.scenario7(p, pList);
+                break;
+            case 8:
+                this.scenario8(p);
                 break;
             default:
                 return false;
@@ -170,4 +176,10 @@ public class ActionTile extends Tile{
         }while(found == false);
     }
 
+    //player donates to charity and loses money
+    //@param p - current player
+    private void scenario8(Player p){
+        JOptionPane.showMessageDialog(null, "Wow, what a generous deed. You donated $50 to charity!");
+        p.setMoney(p.getMoney() - 50);
+    }
 }
