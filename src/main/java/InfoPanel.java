@@ -16,6 +16,7 @@ public class InfoPanel extends JPanel{
 
 		infoLabel.setHorizontalTextPosition(SwingConstants.LEFT);
 		infoLabel.setHorizontalAlignment(SwingConstants.LEFT);
+
 		subPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		this.setLayout(new BorderLayout());
 		subPanel.add(infoLabel);
