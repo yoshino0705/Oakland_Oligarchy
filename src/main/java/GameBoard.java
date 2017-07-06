@@ -409,7 +409,7 @@ public class GameBoard extends JPanel{
 			this.setToolTipText(toolTipText);
 
 		}
-		else{
+		else if (tileIndex != -1) {
 			toolTipText = "<html><font size=" + fontSize + "> "
 					+ "Action Tile:" + "</br>"
 					+ "<b>" + ((ActionTile)it.getTile(tileIndex)).getTileInfo() + "</b>"
