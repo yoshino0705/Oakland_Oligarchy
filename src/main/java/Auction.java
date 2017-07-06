@@ -48,7 +48,7 @@ public class Auction extends JDialog {
 			this.setTitle(aProp + " Auction");
 			this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			this.setResizable(false);
-			this.setSize(600,200);	
+			this.setSize(600,200);
 			this.setLayout(new GridLayout(4,1));
 			//topPanel holds current bid and current leader
 			topPanel = new JPanel();
@@ -60,7 +60,7 @@ public class Auction extends JDialog {
 			lblCurLeader = new JLabel("Leader: N/A");
 			topPanel.add(lblCurLeader, BorderLayout.EAST);
 			this.add(topPanel);
-			
+
 			//add buttons for each player that can bid
 			otherPlayers = getOtherPlayers(game);
 			bidButtons = new JButton[otherPlayers.size()];
@@ -86,9 +86,9 @@ public class Auction extends JDialog {
 			ConcludeListener conclude_listener = new ConcludeListener();
 			conclude_button.addActionListener(conclude_listener);
 			this.add(conclude_button);
-		
+
 			//find current tile price
-			 
+
 			for(int i = 0; i < TILE_COUNT; i++){
 				Tile curTile = game.tiles.getTile(i);
 				if(curTile.isProperty() && curTile.getTileName().equals(aProp)){
@@ -106,6 +106,15 @@ public class Auction extends JDialog {
 			validateButtons();
 
 			this.setVisible(true);
+		}
+	}//end of constructor
+
+	//For testing purposes
+	public Auction(OaklandOligarchy game, String s){
+		if (s.equals("test")) {
+			this.game = game;
+			Player owner = game.getCurrentTurnPlayer();	//getCurrentTurnPlayer();
+			ArrayList<String> ownerPropertyNames = getPlayerPropertyNames(owner, game);
 		}
 	}//end of constructor
 
@@ -134,7 +143,7 @@ public class Auction extends JDialog {
 	}//end getOtherPlayers()
 
 	//get all properties owned by player and return them in an ArrayList
-	private ArrayList<String> getPlayerPropertyNames(Player p, OaklandOligarchy game) {
+	public ArrayList<String> getPlayerPropertyNames(Player p, OaklandOligarchy game) {
 		ArrayList<String> retList = new ArrayList<String>();
 		for (int i = 0; i < TILE_COUNT; i++) {
 			Tile curTile = game.tiles.getTile(i);	//game.getTiles().getTile(i)
@@ -145,7 +154,7 @@ public class Auction extends JDialog {
 		return retList;
 	}//end getPlayerpropertyNames()
 
-	private boolean playerOwnsProperty(PropertyTile prop, Player p) {
+	public boolean playerOwnsProperty(PropertyTile prop, Player p) {
 		return prop.getOwner() == p;
 	}//end playerOwnsProperty()
 
@@ -207,7 +216,7 @@ public class Auction extends JDialog {
 	//sell the propety to the bank for half the buying cost
 	class BankerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
-			//find property and remove ownership	
+			//find property and remove ownership
 			for(int i = 0; i < TILE_COUNT; i++){
 				Tile curTile = game.tiles.getTile(i);
 				if(curTile.isProperty() && curTile.getTileName().equals(aProp)){
@@ -215,7 +224,7 @@ public class Auction extends JDialog {
 					curTile.removeOwnership();
 				}
 			}//end for loop
-		
+
 				//give money to player
 				Player owner = game.getCurrentTurnPlayer();
 				owner.setMoney(owner.getMoney()+prop_price/2);
@@ -227,7 +236,7 @@ public class Auction extends JDialog {
 				remove(banker_button);
 				setLayout(new GridLayout(1,1));
 				JLabel msg = new JLabel("You sold the property to the bank for $" + prop_price/2);
-				add(msg);	
+				add(msg);
 				//update InfoPanel
 				game.refreshInfoPanel();
 				validate();
@@ -247,4 +256,3 @@ public class Auction extends JDialog {
 
 
 }//end class Auction
-
