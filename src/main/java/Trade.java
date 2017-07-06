@@ -42,6 +42,7 @@ public class Trade extends JDialog{
 	private Font defaultButtonFont = new Font("TimesNewRoman", Font.BOLD, 30);
 
 	private Player currentPlayer;
+	private OaklandOligarchy game;
 	
 	public Trade(Player curPlayer, ArrayList<Player> otherPlayers, OaklandOligarchy game, double scaleInX, double scaleInY){
 		// set and apply scales
@@ -51,7 +52,7 @@ public class Trade extends JDialog{
 		this.buttonHeight *= this.scaleY;
 		this.defaultButtonFont = new Font("TimesNewRoman", Font.BOLD, (int)(30 * this.scaleX));
 		this.currentPlayer = curPlayer;
-		
+		this.game = game;
 		//Trader temp = new Trader();
 		//this.frameWidth = temp.getScaledWidth(this.scaleX)*3 + 100;
 		this.frameWidth *= this.scaleX;
@@ -291,7 +292,7 @@ public class Trade extends JDialog{
 		curTile.setOwnership(newOwner.getPlayer());
 		
 		System.out.println("new owner of " + curTile.getTileName() + " is " + game.tiles.getTile(propertyIndex).getOwner().getName());
-
+		game.refreshInfoPanel();
 	}
 	
 	// give money to a player
@@ -325,7 +326,7 @@ public class Trade extends JDialog{
 			// success message
 			JOptionPane.showMessageDialog(null, "Done transfer!");
 		}			
-
+		game.refreshInfoPanel();
 		
 	}
 	

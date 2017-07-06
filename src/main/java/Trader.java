@@ -44,7 +44,7 @@ public class Trader extends JPanel{
 		
 		//this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.setPreferredSize(new Dimension((int)(this.width), (int)(this.height)));
-		this.setLayout(null);
+		//this.setLayout(null);
 		
 		// class variables settings
 		playerName = new JLabel(p.getName());
