@@ -243,7 +243,7 @@ public class TopMenu extends JPanel{
 			Description: Moves player from startPos to endPos, hopping through each
 		~				 tile in between the two.									~
 		~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
-		private void animatedMovePlayer(GameBoard gb, int playerNum, int startPos, int roll) {
+		public void animatedMovePlayer(GameBoard gb, int playerNum, int startPos, int roll) {
 			for (int i = 1; i <= roll; i++) {
 				gb.movePlayer(playerNum, (i + startPos) % NUM_TILES);
 				gb.refreshBoard();

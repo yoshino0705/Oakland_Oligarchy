@@ -143,7 +143,7 @@ public class ActionTile extends Tile{
         }else{
             JOptionPane.showMessageDialog(null, "Move " + distance + " spaces forward!");
         }
-        rl.animatedMovePlayer(game.gb, game.getIndexCurrentTurnPlayer(), p.getPosition(), distance);
+        rl.animatedMovePlayer(game.getGameBoard(), game.getIndexCurrentTurnPlayer(), p.getPosition(), distance);
         p.setPosition((p.getPosition() + distance) % 36);
     }
 
