@@ -20,7 +20,7 @@ public class InfoPanel extends JPanel{
 		subPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		this.setLayout(new BorderLayout());
 		subPanel.add(infoLabel);
-		this.add(subPanel); 
+		this.add(subPanel);
 
 		//set formatting for the panel
 		this.setPreferredSize(new Dimension(200,1000));

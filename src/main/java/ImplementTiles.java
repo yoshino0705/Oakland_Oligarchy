@@ -25,7 +25,7 @@ public class ImplementTiles{
 
         /*
         for(int i = 0; i < 36; ++i){
-            tileArray[i] = new ActionTile(7);
+            tileArray[i] = new ActionTile(8);
 
 			String num_str = Integer.toString(i);
             tileArray[i] = new PropertyTile("Property"+num_str, (i + 1) * 10, i);
@@ -73,7 +73,7 @@ public class ImplementTiles{
         //monopoly block - Union Dining
         tileArray[18] = new PropertyTile("Pizza Hut", 220, 27);
         //space for another action?
-        tileArray[19] = new ActionTile(1);
+        tileArray[19] = new ActionTile(8);
         tileArray[20] = new PropertyTile("Taco Bell", 230, 29);
         tileArray[21] = new PropertyTile("Sub Connection", 230, 30);
 

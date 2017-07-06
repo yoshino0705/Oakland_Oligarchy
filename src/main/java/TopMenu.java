@@ -129,15 +129,26 @@ public class TopMenu extends JPanel{
 
 			System.out.println("new pos: " + curPlayer.getPosition());
 
+			//access players by game.allPlayers();
 			// if tile is property, player can either buy or has to pay rent
-			Tile curTile = game.tiles.getTile(newPosition);
-			if (curTile.isProperty()) {
-				PropertyTile pTile = (PropertyTile) curTile;
-				doPropertyInteraction(pTile, curPlayer);
-			} else {	// tile is action tile and action is performed
-				ActionTile aTile = (ActionTile) curTile;
-				//TODO: perform action to player
-			}
+			boolean positionChange = false;
+			do{
+				Tile curTile = game.tiles.getTile(curPlayer.getPosition());
+				positionChange = false;
+				if (curTile.isProperty()) {
+					PropertyTile pTile = (PropertyTile) curTile;
+					doPropertyInteraction(pTile, curPlayer);
+				} else {	// tile is action tile and action is performed
+					ActionTile aTile = (ActionTile) curTile;
+					aTile.performAction(curPlayer, game.allPlayers, game, this);
+
+					//action tile 6 causes player to move again
+					if(aTile.getTileFlag() == 6){
+						positionChange = true;
+					}
+				}
+			}while(positionChange == true);
+
 			// toggle turn buttons
 			toggleJButtonEnabled(rollButton);
 			toggleJButtonEnabled(endTurn);
@@ -173,7 +184,7 @@ public class TopMenu extends JPanel{
 						int price = prop.getValue();
 						curPlayer.setMoney(curPlayer.getMoney() + (price/2));
 						prop.removeOwnership();
-						forecloseProps.add(prop);	
+						forecloseProps.add(prop);
 						ownedProps = game.getOwnedProperties(curPlayer);
 					}
 
@@ -182,7 +193,7 @@ public class TopMenu extends JPanel{
 					if (curPlayer.getMoney() < pTile.getRent()) {
 						// tell the player they lost
 						JOptionPane.showMessageDialog(null, "You ran out of money and properties. You lose!");
-						
+
 						game.playerLose(curPlayer);
 						game.endTurn();
 
@@ -202,7 +213,7 @@ public class TopMenu extends JPanel{
 					for (PropertyTile prop : forecloseProps)
 						msg += prop.getTileName() + "\n";
 					JOptionPane.showMessageDialog(null, msg);
-				} else 
+				} else
 					// notify player that they owe someone rent
 					JOptionPane.showMessageDialog(null, "You landed on " + pTile.getTileName() + " owned by " +
 													pTile.getOwner().getName() + ". You pay them " +
@@ -244,16 +255,27 @@ public class TopMenu extends JPanel{
 		~				 tile in between the two.									~
 		~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 		public void animatedMovePlayer(GameBoard gb, int playerNum, int startPos, int roll) {
-			for (int i = 1; i <= roll; i++) {
-				gb.movePlayer(playerNum, (i + startPos) % NUM_TILES);
-				gb.refreshBoard();
-				// sleep so user can see animation
-				try {
-					Thread.sleep(200);
-				} catch (Exception e) {
-					System.out.println("I can't fall asleep!");
+				boolean back = false;
+				if(roll < 0){
+					roll *= -1;
+					back = true;
 				}
-			}
+				for (int i = 1; i <= roll; i++) {
+					if(back == false){
+						gb.movePlayer(playerNum, (i + startPos) % NUM_TILES);
+					}else{
+						gb.movePlayer(playerNum, (startPos - i) % NUM_TILES);
+					}
+
+					gb.refreshBoard();
+					// sleep so user can see animation
+					try {
+						Thread.sleep(200);
+					} catch (Exception e) {
+						System.out.println("I can't fall asleep!");
+					}
+				}
+
 		}
 
 		/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
@@ -325,9 +347,9 @@ public class TopMenu extends JPanel{
 	class TradeListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			ArrayList<Player> otherPlayers = new ArrayList<Player>(game.allPlayers);
-			otherPlayers.remove(game.getCurrentTurnPlayer());	// this arraylist should only contain players excluding current turn player			
+			otherPlayers.remove(game.getCurrentTurnPlayer());	// this arraylist should only contain players excluding current turn player
 			CustomFrameScale cfs = new CustomFrameScale();
-			
+
 			new Trade(game.getCurrentTurnPlayer(), otherPlayers, game, cfs.getTradeMenuScaleX(), cfs.getTradeMenuScaleY());
 		}
 	}//end of class TradeListener
@@ -341,4 +363,3 @@ public class TopMenu extends JPanel{
 		}
 	}//end of class AuctionListener
 }
-
