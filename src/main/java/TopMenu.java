@@ -1,3 +1,4 @@
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -322,17 +323,17 @@ public class TopMenu extends JPanel{
 			JScrollPane editorScrollPane = new JScrollPane(editorpane);
 			editorScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 			//this is the file path if ran from the root dir like gradle run
-			File file = new File("src/main/java/HelpDocs.html");
+			File file = new File("src/main/java/HelpDocs.htm");
 			try {
 				editorpane.setPage(file.toURI().toURL());
 			} catch(Exception ex){
 				//couldnt load that file, try other path
 				try {
 					//this is the file path if you are testing from within src/main/java
-					File file2 = new File("HelpDocs.html");
+					File file2 = new File("HelpDocs.htm");
 					editorpane.setPage(file2.toURI().toURL());
 				} catch(Exception exx){
-					System.out.println("Error: Couldn't find HelpDocs.html");
+					System.out.println("Error: Couldn't find HelpDocs.htm");
 				}
 			}
 			editorpane.setEditable(false);
