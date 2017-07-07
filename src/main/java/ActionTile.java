@@ -157,23 +157,27 @@ public class ActionTile extends Tile{
     //@param p - current player
     //@param pList - list of players
     private void scenario7(Player p, ArrayList<Player> pList){
-        boolean found = false;
-        do{
-            String playerName = JOptionPane.showInputDialog("Your lucky day! Pick a player to take $100 from!");
-            found = false;
-
-            for(int i = 0; i < pList.size(); ++i){
-                if(pList.get(i).getName().equals(playerName)){
-                    found = true;
-                    pList.get(i).setMoney(pList.get(i).getMoney() - 100);
-                    p.setMoney(p.getMoney() + 100);
-                    break;
-                }
-            }
-            if(found == false){
-                JOptionPane.showMessageDialog(null, "That name does not exist! Please re-enter a valid name.");
-            }
-        }while(found == false);
+        ArrayList<Player> otherPlayers = new ArrayList<Player>(pList);
+        otherPlayers.remove(p);
+        
+        Object[] playerNameSelections = new Object[otherPlayers.size()];
+        for(int i = 0; i < otherPlayers.size(); i++) {
+        	playerNameSelections[i] = otherPlayers.get(i).getName();
+        	
+        }
+        
+        String selectedPlayerName = (String) JOptionPane.showInputDialog(null, "Your lucky day! Pick a player to take $100 from!", "Select", JOptionPane.QUESTION_MESSAGE, null, playerNameSelections, playerNameSelections[0]);
+        Player theChosenOne;
+        
+        for(int i = 0; i < pList.size(); i++) {
+        	if(pList.get(i).getName().equals(selectedPlayerName)){
+        		theChosenOne = pList.get(i);  
+        		theChosenOne.setMoney(theChosenOne.getMoney() - 100);
+        		p.setMoney(p.getMoney() + 100);
+        		break;
+        	}
+        	
+        }
     }
 
     //player donates to charity and loses money
