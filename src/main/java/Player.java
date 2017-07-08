@@ -13,6 +13,15 @@ public class Player{
 		this.hasLost = lost;
 	}
 
+	
+	Player(String name, int money, int player_number, boolean lost, int position){
+		this.name = name.toUpperCase();
+		this.setMoney(money);
+		this.position = position;
+		this.color = makeColor(player_number);
+		this.hasLost = lost;
+	}
+
 	public int getMoney(){
 		return this.money;
 	}
