@@ -3,6 +3,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.io.*;
+import java.util.*;
+
 public class OaklandOligarchy implements MouseMotionListener{
 	//main window for the application
 	JFrame window = new JFrame("OaklandOligarchy");
@@ -90,7 +92,80 @@ public class OaklandOligarchy implements MouseMotionListener{
 
 	//OaklandOligarchy constructor used for resuming a game from a file
 	OaklandOligarchy(File file){
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setSize(1000,1000);
+		//make tiles for the game
+		tiles = new ImplementTiles();
+		//make gameboard
+		gb = new GameBoard(0, 0, .63, .63);
+		gb.addMouseMotionListener(this);
 
+		try {
+			Scanner scan = new Scanner(file);//set scanner to read from save file
+			//read time from file
+			String time_str = scan.nextLine();
+			String[] split_time = time_str.split(":");
+			int hours = Integer.parseInt(split_time[0]);
+			int minutes = Integer.parseInt(split_time[1]);
+			int seconds = Integer.parseInt(split_time[2]);
+			//get the name of current turn player
+			String curTurnPlayerName = scan.nextLine();
+			System.out.println("current turn: "+curTurnPlayerName);
+			int num_players = Integer.parseInt(scan.nextLine());
+			System.out.println("num players:"+num_players);
+			//loop through and get info to create each player and their properties
+			for(int i = 0; i < num_players; i++){
+				String pname = scan.nextLine();//get player name
+				System.out.println(pname);
+				int pmoney = Integer.parseInt(scan.nextLine());//get player money
+				System.out.println(pmoney);
+				boolean plost = Boolean.parseBoolean(scan.nextLine());//get if the player has lost
+				System.out.println(plost);
+				int num_props = Integer.parseInt(scan.nextLine());//get number of owned properties
+				System.out.println(num_props);
+				String[] prop_names = new String[num_props];
+				//get list of all the owned properties
+				for(int j = 0; j < num_props; j++){
+					String prop_name = scan.nextLine();
+					System.out.println(prop_name);
+					prop_names[j] = prop_name;
+				}//end for j
+
+				Player thePlayer = new Player(pname, pmoney, i, plost);
+				//System.out.println(pname);
+				if(pname.equals(curTurnPlayerName)){//if this player is the current turn player
+					currentTurnPlayer = thePlayer;
+					numTurns = i;
+					System.out.println("found equal name");
+				}
+				allPlayers.add(thePlayer);
+				numPlayers++;
+				//set the properties owned by this player
+				for(int k = 0; k < 36; k++){//loop through all 36 tiles
+					Tile t = tiles.getTile(k);
+					for(int h = 0; h < num_props; h++){//loop though all props owned by player
+						if(t.getTileName().equals(prop_names[h])){//if tile is owned then set ownership
+							t.setOwnership(thePlayer);
+						}//end if
+					}//end for h
+				}//end for k
+				gb.movePlayer(i, 0);
+			}//and for i
+
+			//add top menu
+			tm = new TopMenu(this);
+			window.add(tm, BorderLayout.NORTH);
+			
+			info = new InfoPanel(allPlayers, tiles, hours, minutes, seconds);
+			window.add(info, BorderLayout.WEST);
+			
+			window.add(gb, BorderLayout.CENTER);
+			window.setVisible(true);
+			
+		} catch(Exception e){
+			e.printStackTrace();
+			System.out.println("Error reading game info from file");
+		}
 	}
 
 	// An Oakland Oligarchy constructor used for testing purposes
