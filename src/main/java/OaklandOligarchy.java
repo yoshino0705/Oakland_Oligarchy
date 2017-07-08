@@ -111,6 +111,10 @@ public class OaklandOligarchy implements MouseMotionListener{
 			//get the name of current turn player
 			String curTurnPlayerName = scan.nextLine();
 			System.out.println("current turn: "+curTurnPlayerName);
+			//get whether roll button is enabled
+			boolean roll_button_boolean = Boolean.parseBoolean(scan.nextLine());
+			//get whether end turn button is enabled
+			boolean end_button_boolean = Boolean.parseBoolean(scan.nextLine());
 			int num_players = Integer.parseInt(scan.nextLine());
 			System.out.println("num players:"+num_players);
 			//loop through and get info to create each player and their properties
@@ -121,6 +125,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 				System.out.println(pmoney);
 				boolean plost = Boolean.parseBoolean(scan.nextLine());//get if the player has lost
 				System.out.println(plost);
+				int position = Integer.parseInt(scan.nextLine());//get player position
 				int num_props = Integer.parseInt(scan.nextLine());//get number of owned properties
 				System.out.println(num_props);
 				String[] prop_names = new String[num_props];
@@ -149,11 +154,13 @@ public class OaklandOligarchy implements MouseMotionListener{
 						}//end if
 					}//end for h
 				}//end for k
-				gb.movePlayer(i, 0);
+				gb.movePlayer(i, position);
 			}//and for i
 
 			//add top menu
 			tm = new TopMenu(this);
+			tm.rollButton.setEnabled(roll_button_boolean);
+			tm.endTurn.setEnabled(end_button_boolean);
 			window.add(tm, BorderLayout.NORTH);
 			
 			info = new InfoPanel(allPlayers, tiles, hours, minutes, seconds);
@@ -344,4 +351,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 		
 	}
 
+	public TopMenu getTopMenu(){
+		return this.tm;
+	}
 }//end of class OaklandOligarchy
