@@ -2,6 +2,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.ArrayList;
+import java.io.*;
+import java.util.*;
 
 public class OaklandOligarchy implements MouseMotionListener{
 	//main window for the application
@@ -22,7 +24,25 @@ public class OaklandOligarchy implements MouseMotionListener{
 	private final int TILE_COUNT = 36;
 
 	public static void main(String[] args){
-		new OaklandOligarchy();
+		NewOrLoad new_or_load = new NewOrLoad();
+		boolean isLoadedGame = new_or_load.getIsLoadedGame();
+		if(isLoadedGame){//if game is being loaded from file
+			JFileChooser fc = new JFileChooser();
+			File workingDirectory = new File(System.getProperty("user.dir"));
+			fc.setCurrentDirectory(workingDirectory);
+			int rVal = fc.showOpenDialog(null);
+			File file;
+			if(rVal == JFileChooser.APPROVE_OPTION){
+				file = fc.getSelectedFile();
+				System.out.println("Loading game from file: "+fc.getSelectedFile().getName());
+				new OaklandOligarchy(file);
+			}else{
+				System.out.println("No file selected, aborting");
+				System.exit(1);
+			}
+		}else{//else start new game
+			new OaklandOligarchy();
+		}
 	}
 
 	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
@@ -37,7 +57,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 
 		// load players from StartMenu into allPlayers array
 		for (int i = 0; i < sm.getPlayerCount(); i++) {
-			Player p = new Player(sm.getPlayerName(i), 1000, i);
+			Player p = new Player(sm.getPlayerName(i), 1000, i, false);
 			allPlayers.add(p);
 			numPlayers++;
 		}
@@ -54,7 +74,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 		tiles = new ImplementTiles();
 
 		//add info to the left side of the frame
-		info = new InfoPanel(allPlayers, tiles);
+		info = new InfoPanel(allPlayers, tiles, 0, 0, 0);
 		window.add(info, BorderLayout.WEST);
 
 		gb = new GameBoard(0, 0, .63, .63);
@@ -71,18 +91,103 @@ public class OaklandOligarchy implements MouseMotionListener{
 		tiles = new ImplementTiles();
 	}
 
+	//OaklandOligarchy constructor used for resuming a game from a file
+	OaklandOligarchy(File file){
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setSize(1000,1000);
+		//make tiles for the game
+		tiles = new ImplementTiles();
+		//make gameboard
+		gb = new GameBoard(0, 0, .63, .63);
+		gb.addMouseMotionListener(this);
+
+		try {
+			Scanner scan = new Scanner(file);//set scanner to read from save file
+			//read time from file
+			String time_str = scan.nextLine();
+			String[] split_time = time_str.split(":");
+			int hours = Integer.parseInt(split_time[0]);
+			int minutes = Integer.parseInt(split_time[1]);
+			int seconds = Integer.parseInt(split_time[2]);
+			//get the name of current turn player
+			String curTurnPlayerName = scan.nextLine();
+			System.out.println("current turn: "+curTurnPlayerName);
+			//get whether roll button is enabled
+			boolean roll_button_boolean = Boolean.parseBoolean(scan.nextLine());
+			//get whether end turn button is enabled
+			boolean end_button_boolean = Boolean.parseBoolean(scan.nextLine());
+			int num_players = Integer.parseInt(scan.nextLine());
+			System.out.println("num players:"+num_players);
+			//loop through and get info to create each player and their properties
+			for(int i = 0; i < num_players; i++){
+				String pname = scan.nextLine();//get player name
+				System.out.println(pname);
+				int pmoney = Integer.parseInt(scan.nextLine());//get player money
+				System.out.println(pmoney);
+				boolean plost = Boolean.parseBoolean(scan.nextLine());//get if the player has lost
+				System.out.println(plost);
+				int position = Integer.parseInt(scan.nextLine());//get player position
+				int num_props = Integer.parseInt(scan.nextLine());//get number of owned properties
+				System.out.println(num_props);
+				String[] prop_names = new String[num_props];
+				//get list of all the owned properties
+				for(int j = 0; j < num_props; j++){
+					String prop_name = scan.nextLine();
+					System.out.println(prop_name);
+					prop_names[j] = prop_name;
+				}//end for j
+
+				Player thePlayer = new Player(pname, pmoney, i, plost, position);
+				//System.out.println(pname);
+				if(pname.equals(curTurnPlayerName)){//if this player is the current turn player
+					currentTurnPlayer = thePlayer;
+					numTurns = i;
+					System.out.println("found equal name");
+				}
+				allPlayers.add(thePlayer);
+				numPlayers++;
+				//set the properties owned by this player
+				for(int k = 0; k < 36; k++){//loop through all 36 tiles
+					Tile t = tiles.getTile(k);
+					for(int h = 0; h < num_props; h++){//loop though all props owned by player
+						if(t.getTileName().equals(prop_names[h])){//if tile is owned then set ownership
+							t.setOwnership(thePlayer);
+						}//end if
+					}//end for h
+				}//end for k
+				gb.movePlayer(i, position);
+			}//and for i
+
+			//add top menu
+			tm = new TopMenu(this);
+			tm.rollButton.setEnabled(roll_button_boolean);
+			tm.endTurn.setEnabled(end_button_boolean);
+			window.add(tm, BorderLayout.NORTH);
+			
+			info = new InfoPanel(allPlayers, tiles, hours, minutes, seconds);
+			window.add(info, BorderLayout.WEST);
+			
+			window.add(gb, BorderLayout.CENTER);
+			window.setVisible(true);
+			
+		} catch(Exception e){
+			e.printStackTrace();
+			System.out.println("Error reading game info from file");
+		}
+	}
+
 	// An Oakland Oligarchy constructor used for testing purposes
 	OaklandOligarchy(String s) {
 		if (s.equals("test")) {
 			for (int i = 0; i < 4; i++) {
-				Player p = new Player("p" + i, 1000, i);
+				Player p = new Player("p" + i, 1000, i, false);
 				allPlayers.add(p);
 				numPlayers++;
 			}	
 
 			//initial globals
 			tiles = new ImplementTiles();
-			info = new InfoPanel(allPlayers, tiles);
+			info = new InfoPanel(allPlayers, tiles, 0, 0, 0);
 			gb = new GameBoard(0, 0, .63, .63);
 			currentTurnPlayer = allPlayers.get(getIndexCurrentTurnPlayer());
 			tm = new TopMenu(this);
@@ -225,6 +330,10 @@ public class OaklandOligarchy implements MouseMotionListener{
 	public void setCurrentTurnPlayer(int index) {
 		this.currentTurnPlayer = allPlayers.get(index);
 	}
+	
+	public InfoPanel getInfoPanel(){
+		return info;
+	}
 
 	public void refreshInfoPanel() {
 		info.refresh(this.allPlayers, this.tiles);
@@ -243,4 +352,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 		
 	}
 
+	public TopMenu getTopMenu(){
+		return this.tm;
+	}
 }//end of class OaklandOligarchy

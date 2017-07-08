@@ -7,8 +7,9 @@ public class InfoPanel extends JPanel{
 	JLabel infoLabel = new JLabel("", SwingConstants.LEFT);//this is the label with all of the info
 	int numPlayers;
 	JPanel subPanel = new JPanel();
+	Clock info_clock;
 	//constructor for InfoPanel class
-	InfoPanel(ArrayList<Player> all_players, ImplementTiles tiles){
+	InfoPanel(ArrayList<Player> all_players, ImplementTiles tiles, int hours, int minutes, int seconds){
 		numPlayers = all_players.size();
 		refresh(all_players, tiles);
 
@@ -26,7 +27,7 @@ public class InfoPanel extends JPanel{
 		this.setPreferredSize(new Dimension(200,1000));
 		this.setBorder(BorderFactory.createLineBorder(Color.black));
 
-		Clock info_clock = new Clock(0,0,0);
+		info_clock = new Clock(hours, minutes, seconds);
 		Thread clock_thread = new Thread(info_clock);
 		this.add(info_clock, BorderLayout.SOUTH);
 		clock_thread.start();

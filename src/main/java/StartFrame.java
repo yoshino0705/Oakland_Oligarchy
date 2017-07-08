@@ -144,7 +144,7 @@ public class StartFrame{
 		public void actionPerformed(ActionEvent e) {
 			int i = 0;
 			for(JTextField tf: name_fields){
-				all_players.add(new Player(tf.getText(),10000, i));
+				all_players.add(new Player(tf.getText(),10000, i, false));
 				i++;
 			}
 			//debug prints

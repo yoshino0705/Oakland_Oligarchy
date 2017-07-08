@@ -13,7 +13,7 @@ public class TopMenu extends JPanel{
 	JButton tradeButton = new JButton("<html>Make<br>Trade</html>");
 	JButton rollButton = new JButton("Roll");
 	JButton endTurn = new JButton("<html>End<br>Turn</html>");
-	JButton endGame = new JButton("<html>End<br>Game</html>");
+	JButton saveGame = new JButton("<html>Save<br>Game</html>");
 	JButton helpButton  = new JButton("Help");
 	OaklandOligarchy game;
 
@@ -62,8 +62,10 @@ public class TopMenu extends JPanel{
 		toggleJButtonEnabled(endTurn);
 		this.add(endTurn, 0, 5);
 
-		endGame.setFont(new Font("Courier", Font.PLAIN, 20));
-		this.add(endGame, 0, 6);
+		saveGame.setFont(new Font("Courier", Font.PLAIN, 20));
+		SaveGameListener save_game_listener = new SaveGameListener();
+		saveGame.addActionListener(save_game_listener);
+		this.add(saveGame, 0, 6);
 
 		HelpListener help_listener = new HelpListener();
 		helpButton.addActionListener(help_listener);
@@ -363,4 +365,14 @@ public class TopMenu extends JPanel{
 			new Auction(game);
 		}
 	}//end of class AuctionListener
+
+	
+	class SaveGameListener implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			System.out.println("saving game");
+			new Saver(game);
+		}
+	}//end of SaveGameListener
+
+
 }

@@ -5,12 +5,21 @@ public class Player{
 	String color;
 	boolean hasLost;
 
-	Player(String name, int money, int player_number){
+	Player(String name, int money, int player_number, boolean lost){
 		this.name = name.toUpperCase();
 		this.setMoney(money);
 		this.position = 0;
 		this.color = makeColor(player_number);
-		this.hasLost = false;
+		this.hasLost = lost;
+	}
+
+	
+	Player(String name, int money, int player_number, boolean lost, int position){
+		this.name = name.toUpperCase();
+		this.setMoney(money);
+		this.position = position;
+		this.color = makeColor(player_number);
+		this.hasLost = lost;
 	}
 
 	public int getMoney(){
