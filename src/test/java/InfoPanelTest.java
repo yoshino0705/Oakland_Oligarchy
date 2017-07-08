@@ -12,22 +12,22 @@ public class InfoPanelTest {
 	public void testInfoPanelPlayers() {
 		ArrayList<Player> list = generatePlayerList();
 		ImplementTiles it = new ImplementTiles();
-		InfoPanel ip = new InfoPanel(list, it);
+		InfoPanel ip = new InfoPanel(list, it, 0, 0, 0);
 		assertEquals(ip.numPlayers, 4);
 		list.remove(list.size() - 1);
-		ip = new InfoPanel(list, it);
+		ip = new InfoPanel(list, it, 0, 0, 0);
 		assertEquals(ip.numPlayers, 3);
 	}
 
 	private ArrayList<Player> generatePlayerList() {
 		ArrayList<Player> list = new ArrayList<Player>();
-		Player p0 = new Player("p0", 1000, 0);
+		Player p0 = new Player("p0", 1000, 0, false);
 		list.add(p0);
-		Player p1 = new Player("p1", 2000, 0);
+		Player p1 = new Player("p1", 2000, 0, false);
 		list.add(p1);
-		Player p2 = new Player("p2", 3333, 0);
+		Player p2 = new Player("p2", 3333, 0, false);
 		list.add(p2);
-		Player p3 = new Player("p3", 4545, 0);
+		Player p3 = new Player("p3", 4545, 0, false);
 		list.add(p3);
 		return list;
 	}

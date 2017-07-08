@@ -15,7 +15,7 @@ public class TopMenuTest {
 		assertNotNull(tm.tradeButton);
 		assertNotNull(tm.rollButton);
 		assertNotNull(tm.endTurn);
-		assertNotNull(tm.endGame);
+		assertNotNull(tm.saveGame);
 		assertNotNull(tm.helpButton);
 	}
 
