@@ -24,8 +24,9 @@ public class OaklandOligarchy implements MouseMotionListener{
 	private final int TILE_COUNT = 36;
 
 	public static void main(String[] args){
-		boolean loadedGame = true;
-		if(loadedGame){//if game is being loaded from file
+		NewOrLoad new_or_load = new NewOrLoad();
+		boolean isLoadedGame = new_or_load.getIsLoadedGame();
+		if(isLoadedGame){//if game is being loaded from file
 			JFileChooser fc = new JFileChooser();
 			File workingDirectory = new File(System.getProperty("user.dir"));
 			fc.setCurrentDirectory(workingDirectory);
