@@ -6,7 +6,7 @@ public class NewOrLoad{
 
 	NewOrLoad(){
 		try {
-			String choice = (String) JOptionPane.showInputDialog(null,"Welcome, would you like to start a new game or load a saved one?","what", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+			String choice = (String) JOptionPane.showInputDialog(null,"Welcome, would you like to start a new game or load a saved one?","Welcome", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 			if(choice.equals("New Game")){
 				isLoadedGame = false;
 			}else{
