@@ -21,7 +21,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 	private TopMenu tm;
 	ArrayList<Player> allPlayers = new ArrayList<Player>(); // list of all the players in this game
 	
-	private final int TILE_COUNT = 36;
+//	private final int TILE_COUNT = 36;
 
 	public static void main(String[] args){
 		NewOrLoad new_or_load = new NewOrLoad();
@@ -259,7 +259,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 	public void playerLose(Player p) {
 		// remove any owned properties from player
-		for (int i = 0; i < TILE_COUNT; i++) {
+		for (int i = 0; i < GameBoard.TILE_COUNT; i++) {
 			PropertyTile pTile;
 			Tile curTile = tiles.getTile(i);
 			if (curTile.isProperty())
@@ -307,7 +307,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 	public ArrayList<PropertyTile> getOwnedProperties(Player p) {
 		ArrayList<PropertyTile> retList = new ArrayList<PropertyTile>();
-		for (int i = 0; i < TILE_COUNT; i++) {
+		for (int i = 0; i < GameBoard.TILE_COUNT; i++) {
 			Tile curTile = tiles.getTile(i);	//game.getTiles().getTile(i)
 			if (curTile.isProperty() && playerOwnsProperty((PropertyTile) curTile, p))
 				retList.add((PropertyTile) curTile);
@@ -339,6 +339,14 @@ public class OaklandOligarchy implements MouseMotionListener{
 		info.refresh(this.allPlayers, this.tiles);
 	}
 
+	public TopMenu getTopMenu() {
+		return this.tm;
+	}
+
+	public void animatedMovePlayer(int playerNum, int startPos, int roll) {
+		gb.animatedMovePlayer(playerNum, startPos, roll);
+	}
+	
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
 		// TODO Auto-generated method stub
