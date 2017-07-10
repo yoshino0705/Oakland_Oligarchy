@@ -64,7 +64,7 @@ public class ActionTile extends Tile{
     @return boolean - true if the action has taken place - false the flag is incorrect
         for some reason
     */
-    public boolean performAction(Player p, ArrayList<Player> pList, OaklandOligarchy game, TopMenu.RollListener rl){
+    public boolean performAction(Player p, ArrayList<Player> pList, OaklandOligarchy game){
         switch(this.tileFlag){
             case 1:
                 this.scenario1(p);
@@ -82,7 +82,7 @@ public class ActionTile extends Tile{
                 this.scenario5(p, pList);
                 break;
             case 6:
-                this.scenario6(p, game, rl);
+                this.scenario6(p, game);
                 break;
             case 7:
                 this.scenario7(p, pList);
@@ -138,7 +138,7 @@ public class ActionTile extends Tile{
 
     //may not be able to move backward
     //In this scenario the player is pushed a random amount of spaces forward or backward
-    private void scenario6(Player p, OaklandOligarchy game, TopMenu.RollListener rl){
+    private void scenario6(Player p, OaklandOligarchy game){
         Random rand = new Random();
         int distance = rand.nextInt(10) + 1;
         int direction = rand.nextInt(2);
@@ -149,7 +149,7 @@ public class ActionTile extends Tile{
         }else{
             JOptionPane.showMessageDialog(null, "Move " + distance + " spaces forward!");
         }
-        rl.animatedMovePlayer(game.getGameBoard(), game.getIndexCurrentTurnPlayer(), p.getPosition(), distance);
+        game.animatedMovePlayer(game.getIndexCurrentTurnPlayer(), p.getPosition(), distance);
         p.setPosition((p.getPosition() + distance) % 36);
     }
 

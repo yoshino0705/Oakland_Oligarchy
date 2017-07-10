@@ -40,8 +40,6 @@ public class InfoPanel extends JPanel{
 	public void refresh(ArrayList<Player> all_players, ImplementTiles tiles){
 		String str = new String("");//this string will be used to build str for info JLabel
 
-		final int NUM_TILES = 36;//make final int to avoid magic number, this is num tiles in tile array
-
 		str = str + "<html><br>";//begin the opening html tag
 		int player_number = 0;
 		for(Player p : all_players){//loop through all the players and get their info
@@ -51,7 +49,7 @@ public class InfoPanel extends JPanel{
 			str = str + "Properties: <br>";//now list all properties owned
 
 			int num_props = 0;//keep track of number of owned props
-			for(int i = 0; i < NUM_TILES; i++){//loop through all props and find ones that this player owns
+			for(int i = 0; i < GameBoard.TILE_COUNT; i++){//loop through all props and find ones that this player owns
 				if(tiles.getTile(i).isProperty() && tiles.getTile(i).getOwner() == p){
 					str = str + tiles.getTile(i).getTileName() + "<br>";
 					num_props++;

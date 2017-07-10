@@ -20,7 +20,7 @@ public class ImplementTiles{
 
     //change PropertyTile names and values if you'd like
     ImplementTiles(){
-        this.tileArray = new Tile[36];
+        this.tileArray = new Tile[GameBoard.TILE_COUNT];
         //for testing purposes
 
         /*
