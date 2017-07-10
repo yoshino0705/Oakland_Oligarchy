@@ -11,6 +11,7 @@ public class TopMenu extends JPanel{
 	JLabel currentTurnPlayerLabel;
 	JButton auctionButton = new JButton("<html>Sell<br>Property</html>");
 	JButton tradeButton = new JButton("<html>Make<br>Trade</html>");
+	//JButton mortgage = new JButton("<html>Mortgage<br>Options</html>");
 	JButton rollButton = new JButton("Roll");
 	JButton endTurn = new JButton("<html>End<br>Turn</html>");
 	JButton saveGame = new JButton("<html>Save<br>Game</html>");
@@ -243,6 +244,8 @@ public class TopMenu extends JPanel{
 					curPlayer.setMoney(curPlayer.getMoney() - pTile.getValue());
 					// set curPlayer as owner of tile
 					pTile.setOwnership(curPlayer);
+					//set pTile as a tile of curPlayer
+					curPlayer.addProperty(pTile);
 				}
 			}
 		}
@@ -366,7 +369,7 @@ public class TopMenu extends JPanel{
 		}
 	}//end of class AuctionListener
 
-	
+
 	class SaveGameListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			System.out.println("saving game");

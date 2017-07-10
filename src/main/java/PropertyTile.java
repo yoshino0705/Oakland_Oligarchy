@@ -7,6 +7,7 @@ public class PropertyTile extends Tile{
     private int rent;
     private boolean isPropertyOwned;
     private Player owner;
+    private boolean isMortgaged;
 
     PropertyTile(){
         this.setTileName("");
@@ -15,6 +16,7 @@ public class PropertyTile extends Tile{
         this.isPropertyOwned = false;
         this.owner = null;
         this.setProperty(true);
+        this.isMortgaged = false;
     }
 
     PropertyTile(String newName, int newVal, int newRent){
@@ -24,6 +26,10 @@ public class PropertyTile extends Tile{
         this.isPropertyOwned = false;
         this.owner = null;
         this.setProperty(true);
+    }
+
+    public void setMortgage(boolean newVal){
+        this.isMortgaged = newVal;
     }
 
     public void setRent(int newRent){
