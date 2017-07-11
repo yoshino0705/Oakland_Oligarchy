@@ -11,7 +11,7 @@ public class TopMenu extends JPanel{
 	JLabel currentTurnPlayerLabel;
 	JButton auctionButton = new JButton("<html>Sell<br>Property</html>");
 	JButton tradeButton = new JButton("<html>Make<br>Trade</html>");
-	//JButton mortgage = new JButton("<html>Mortgage<br>Options</html>");
+	JButton mortgageButton = new JButton("<html>Mortgage</html>");
 	JButton rollButton = new JButton("Roll");
 	JButton endTurn = new JButton("<html>End<br>Turn</html>");
 	JButton saveGame = new JButton("<html>Save<br>Game</html>");
@@ -52,26 +52,31 @@ public class TopMenu extends JPanel{
 		auctionButton.setFont(new Font("Courier", Font.PLAIN, 20));
 		this.add(auctionButton,0,3);
 
+		MortgageListener mortgage_listener = new MortgageListener();
+		mortgageButton.addActionListener(mortgage_listener);
+		mortgageButton.setFont(new Font("Courier", Font.PLAIN, 20));
+		this.add(mortgageButton,0,4);
+
 		rollButton.setFont(new Font("Courier", Font.PLAIN, 20));
 		RollListener rl = new RollListener();
 		rollButton.addActionListener(rl);
-		this.add(rollButton,0,4);
+		this.add(rollButton,0,5);
 		//set font for buttons in menu panel
 		endTurn.setFont(new Font("Courier", Font.PLAIN, 20));
 		EndTurnListener etl = new EndTurnListener();
 		endTurn.addActionListener(etl);
 		toggleJButtonEnabled(endTurn);
-		this.add(endTurn, 0, 5);
+		this.add(endTurn, 0, 6);
 
 		saveGame.setFont(new Font("Courier", Font.PLAIN, 20));
 		SaveGameListener save_game_listener = new SaveGameListener();
 		saveGame.addActionListener(save_game_listener);
-		this.add(saveGame, 0, 6);
+		this.add(saveGame, 0, 7);
 
 		HelpListener help_listener = new HelpListener();
 		helpButton.addActionListener(help_listener);
 		helpButton.setFont(new Font("Courier", Font.PLAIN, 20));
-		this.add(helpButton, 0, 7);
+		this.add(helpButton, 0, 8);
 
 
 	}
@@ -175,9 +180,16 @@ public class TopMenu extends JPanel{
 
 			ArrayList<PropertyTile> forecloseProps = new ArrayList<PropertyTile>();
 			if (pTile.isOwned()) {
+				//if the property is mortgaged and it is not owned by the current player.
+				if(pTile.isMortgaged() && !pTile.getOwner().equals(curPlayer)){
+					JOptionPane.showMessageDialog(null, "This properpty is mortgaged. Your lucky day!");
+					return;
+				}
+
 				//if player doesn't have enough money to pay, but they have properties,
 				// the bank will foreclose their properties until they can pay rent
 				if (curPlayer.getMoney() < pTile.getRent()) {
+
 					ArrayList<PropertyTile> ownedProps = game.getOwnedProperties(curPlayer);
 					// auction until player can afford rent
 					for (PropertyTile prop : ownedProps) {
@@ -197,7 +209,6 @@ public class TopMenu extends JPanel{
 					if (curPlayer.getMoney() < pTile.getRent()) {
 						// tell the player they lost
 						JOptionPane.showMessageDialog(null, "You ran out of money and properties. You lose!");
-
 						game.playerLose(curPlayer);
 						game.endTurn();
 
@@ -295,6 +306,48 @@ public class TopMenu extends JPanel{
 			int min = 1;
 			int max = 6;
 			return rand.nextInt((max - min) + 1) + min;
+		}
+	}
+
+	class MortgageListener implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+
+			Player curPlayer = game.getCurrentTurnPlayer();
+			ArrayList<PropertyTile> owned = curPlayer.getPropertiesList();
+
+			//count how many properties are unmortgaged
+			int unmortgageCount = 0;
+			for(int i = 0; i < owned.size(); ++i){
+				if(!owned.get(i).isMortgaged())
+					++unmortgageCount;
+			}
+			String[] options = new String[unmortgageCount];
+
+			//build list of properties that can be mortgaged
+			int optionCount = 0;
+			for(int i = 0; i < owned.size(); ++i){
+				if(!owned.get(i).isMortgaged()){
+					options[optionCount] = owned.get(i).getTileName();
+					++optionCount;
+				}
+			}
+
+			String choice;
+			//check if the user is capable of mortgaging any properties.
+			if(options.length > 0){
+				choice = (String) JOptionPane.showInputDialog(null,"Choose which property to mortgage.","Mortgage", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+
+				for(int i = 0; i < owned.size(); ++i){
+					if(owned.get(i).getTileName().equals(choice)){
+						curPlayer.mortgage(owned.get(i));
+						break;
+					}
+				}
+			}else{
+				JOptionPane.showMessageDialog(null, "You do not have any properties to mortgage at this time.");
+				return;
+			}
+			game.refreshInfoPanel();
 		}
 	}
 

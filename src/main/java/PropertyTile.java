@@ -28,8 +28,9 @@ public class PropertyTile extends Tile{
         this.setProperty(true);
     }
 
-    public void setMortgage(boolean newVal){
+    public int setMortgage(boolean newVal){
         this.isMortgaged = newVal;
+        return this.getValue() / 2;
     }
 
     public void setRent(int newRent){
@@ -66,6 +67,12 @@ public class PropertyTile extends Tile{
     //@return - true if the property is owned, false if the property is not owned
     public boolean isOwned(){
         return this.isPropertyOwned;
+    }
+
+    //retuns true if property is mortgaged
+    //returns fals if not
+    public boolean isMortgaged(){
+        return this.isMortgaged;
     }
 
     public int getValue() {

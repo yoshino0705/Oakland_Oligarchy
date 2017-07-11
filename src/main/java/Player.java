@@ -25,15 +25,34 @@ public class Player{
 		this.hasLost = lost;
 	}
 
-	public boolean mortgage(Property property){
+	//mortgage the player's property and set the player's money appropriately
+	public boolean mortgage(PropertyTile property){
 		for(int i = 0; i < propertyOwned.size(); ++i){
 			if(propertyOwned.get(i).getTileName().equals(property.getTileName())){
 				//when mortgaging a property the property must return the value it is worth
-				property.mortgage(true);
+				//note: set mortgage returns the mortgage value (half the value)
+				this.setMoney(this.getMoney() + property.setMortgage(true));
 				//when unmortgaging a property it must return what it costs to unmortgage
 				return true;
 			}
 		}
+		System.out.println("property not found");
+		return false;
+	}
+
+	//buys the mortgage back so that the player's money is set appropriately and the property is active
+	public boolean buyBackMortgage(PropertyTile property){
+		for(int i = 0; i < propertyOwned.size(); ++i){
+			if(propertyOwned.get(i).getTileName().equals(property.getTileName())){
+				//when mortgaging a property the property must return the value it is worth
+				//note: set mortgage returns the mortgage value (half the value)
+				this.setMoney(this.getMoney() - property.setMortgage(false));
+				//when unmortgaging a property it must return what it costs to unmortgage
+				return true;
+			}
+		}
+		System.out.println("property not found");
+		return false;
 	}
 
 	public boolean hasProperty(){
