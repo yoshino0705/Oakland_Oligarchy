@@ -3,9 +3,16 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class GameBoard extends JPanel{
@@ -63,8 +70,14 @@ public class GameBoard extends JPanel{
 	public static final int PLAYER_2 = 1;
 	public static final int PLAYER_3 = 2;
 	public static final int PLAYER_4 = 3;
-	public static final int TILE_COUNT = 36;
-
+	private final int TILE_COUNT = 36;
+	
+	public static final int PROPERTY_ICON = 0;
+	public static final int BANK_ICON = 1;
+	public static final int ACTION_ICON = 2;
+	
+	private int iconSelection = 0;
+	
 	private int playerOnTile[];
 
 	private int centerX[];
@@ -108,14 +121,12 @@ public class GameBoard extends JPanel{
 
 	public void paintComponent(Graphics g) {
 	    super.paintComponent(g);
-	    //System.out.println(this.getGraphics());
 	    drawBasicBoard(g);
 	    drawSubRect(g);
 	    Font font = new Font("TimesNewRoman", Font.BOLD, 50);
 	    drawText(g, "Oakland Oligarchy", boardWidth/2 - getStringLengthOnBoard(g, "Oakland Oligarchy", font)/2, boardHeight / 2.0, font);
 	    drawPlayersOnBoard(g);
-
-
+	    drawIcon(g);
 
 	}
 
@@ -127,7 +138,8 @@ public class GameBoard extends JPanel{
 		Font font = new Font("TimesNewRoman", Font.BOLD, 50);
 		drawText(this.getGraphics(), "Oakland Oligarchy", boardWidth/2 - getStringLengthOnBoard(this.getGraphics(), "Oakland Oligarchy", font)/2, boardHeight / 2.0, font);
 		drawPlayersOnBoard(this.getGraphics());
-
+		drawIcon(this.getGraphics());
+		
 	}
 
 	private void fillSubRect(Graphics g, int tileID, Color color, ArrayList<Integer> arr){
@@ -825,28 +837,104 @@ public class GameBoard extends JPanel{
 
 
 	}
+	
+	private Image getScaledImage(Image srcImg, int w, int h){
+	    BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+	    Graphics2D g2 = resizedImg.createGraphics();
 
-	public void animatedMovePlayer(int playerNum, int startPos, int roll) {
-		boolean back = false;
-		if(roll < 0){
-			roll *= -1;
-			back = true;
-		}
-		for (int i = 1; i <= roll; i++) {
-			if(back == false){
-				this.movePlayer(playerNum, (i + startPos) % TILE_COUNT);
-			}else{
-				this.movePlayer(playerNum, (startPos - i) % TILE_COUNT);
-			}
+	    g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+	    g2.drawImage(srcImg, 0, 0, w, h, null);
+	    g2.dispose();
 
-			this.refreshBoard();
-			// sleep so user can see animation
-			try {
-				Thread.sleep(200);
-			} catch (Exception e) {
-				System.out.println("I can't fall asleep!");
-			}
+	    return resizedImg;
+	}
+	
+	private void drawPropertyIcon(Graphics g) {
+		int x = (int) (this.boardWidth / 2 + this.shiftX);
+		int y = (int) (this.boardHeight / 2 + this.shiftY + 50*this.scaleY);
+		int imgWidth = (int) (300 * this.scaleX);
+		int imgHeight = (int) (300 * this.scaleY);
+		try {
+			Image aImage = ImageIO.read(new File("house.png"));
+			aImage = this.getScaledImage(aImage, imgWidth, imgHeight);
+			g.drawImage(aImage, x - imgWidth/2, y, null);
+			
+		} catch (IOException e) {
+			System.out.println("Cannot open image");
 		}
+	}
+	
+	private void drawActionIcon(Graphics g) {
+		int x = (int) (this.boardWidth / 2 + this.shiftX);
+		int y = (int) (this.boardHeight / 2 + this.shiftY + 50*this.scaleY);
+		int imgWidth = (int) (300 * this.scaleX);
+		int imgHeight = (int) (300 * this.scaleY);
+		try {
+			Image aImage = ImageIO.read(new File("action.png"));
+			aImage = this.getScaledImage(aImage, imgWidth, imgHeight);
+			g.drawImage(aImage, x - imgWidth/2, y, null);
+			
+		} catch (IOException e) {
+			System.out.println("Cannot open image");
+		}
+	}
+	
+	private void drawBankIcon(Graphics g) {
+		int x = (int) (this.boardWidth / 2 + this.shiftX);
+		int y = (int) (this.boardHeight / 2 + this.shiftY + 50*this.scaleY);
+		int imgWidth = (int) (300 * this.scaleX);
+		int imgHeight = (int) (300 * this.scaleY);
+		try {
+			Image aImage = ImageIO.read(new File("bank.png"));
+			aImage = this.getScaledImage(aImage, imgWidth, imgHeight);
+			g.drawImage(aImage, x - imgWidth/2, y, null);
+			
+		} catch (IOException e) {
+			System.out.println("Cannot open image");
+		}
+	}	
+	
+	private void drawIcon(Graphics g) {	    
+	    switch(this.iconSelection) {
+		case 0:
+			this.drawPropertyIcon(g);
+			//this.repaint();
+			break;
+		case 1:
+			this.drawBankIcon(g);
+			//this.repaint();
+			break;
+		case 2:
+			this.drawActionIcon(g);
+			//this.repaint();
+			break;
+			
+		default:
+			this.drawPropertyIcon(g);
+			break;
+	
+	    }
+		
+	}
+	
+	private void drawLaboon(Graphics g, int num) {
+		int x = (int) (this.boardWidth / 2 + this.shiftX);
+		int y = (int) (this.boardHeight / 2 + this.shiftY + 50*this.scaleY);
+		int imgWidth = (int) (300 * this.scaleX);
+		int imgHeight = (int) (300 * this.scaleY);
+		try {
+			Image aImage = ImageIO.read(new File("laboon" + num + ".png"));
+			aImage = this.getScaledImage(aImage, imgWidth, imgHeight);
+			g.drawImage(aImage, x - imgWidth/2, y, null);
+			
+		} catch (IOException e) {
+			System.out.println("Cannot open image");
+		}
+		
+	}
+	
+	public void drawIcon(int selection) {
+		this.iconSelection = selection;
 	}
 
 	public Color getRandomColor(){
@@ -857,6 +945,32 @@ public class GameBoard extends JPanel{
 
 		return new Color(r, g, b);
 	}
+	
+	public double getBoardWidth() {
+		return this.boardWidth;
+		
+	}
+	
+	public double getBoardHeight() {
+		return this.boardHeight;
+		
+	}
+	
+	public double getScaleX() {
+		return this.scaleX;
+	}
+	
+	public double getScaleY() {
+		return this.scaleY;
+	}
+	
+	public int getShiftX() {
+		return this.shiftX;
+	}
+	
+	public int getShiftY() {
+		return this.shiftY;
+	}
 
 	public static void main(String args[]){
 		// for testing
@@ -865,16 +979,16 @@ public class GameBoard extends JPanel{
 		newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		newFrame.setSize(2000,2000);
 
-		GameBoard gb = new GameBoard(100, 100, 1.5, 1.5);
+		GameBoard gb = new GameBoard(100, 100, 1, 1);
 		newFrame.add(gb, BorderLayout.CENTER);
 
 		gb.movePlayer(0, 30);
 		gb.movePlayer(1, 30);
 		gb.movePlayer(2, 30);
 		gb.movePlayer(3, 30);
-
+		
+		gb.drawIcon(GameBoard.BANK_ICON);
 		newFrame.setVisible(true);
-
 
 	}
 
