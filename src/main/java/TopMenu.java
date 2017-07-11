@@ -12,6 +12,7 @@ public class TopMenu extends JPanel{
 	JButton auctionButton = new JButton("<html>Sell<br>Property</html>");
 	JButton tradeButton = new JButton("<html>Make<br>Trade</html>");
 	JButton mortgageButton = new JButton("<html>Mortgage</html>");
+	JButton unmortgageButton = new JButton("<html>Buy Back Mortgage</html>");
 	JButton rollButton = new JButton("Roll");
 	JButton endTurn = new JButton("<html>End<br>Turn</html>");
 	JButton saveGame = new JButton("<html>Save<br>Game</html>");
@@ -30,7 +31,7 @@ public class TopMenu extends JPanel{
 		this.game = oo;
 		this.setPreferredSize(new Dimension(1000, 100));
 		this.setBorder(BorderFactory.createLineBorder(Color.black));
-		this.setLayout(new GridLayout(0, 8));
+		this.setLayout(new GridLayout(0, 5));
 
 		// title label
 		JLabel title = new JLabel("<html>Oakland<br>Oligarchy</html>");
@@ -77,6 +78,11 @@ public class TopMenu extends JPanel{
 		helpButton.addActionListener(help_listener);
 		helpButton.setFont(new Font("Courier", Font.PLAIN, 20));
 		this.add(helpButton, 0, 8);
+
+		UnmortgageListener unmortgage_listener = new UnmortgageListener();
+		unmortgageButton.addActionListener(unmortgage_listener);
+		unmortgageButton.setFont(new Font("Courier", Font.PLAIN, 20));
+		this.add(unmortgageButton,0,9);
 
 
 	}
@@ -306,6 +312,47 @@ public class TopMenu extends JPanel{
 			int min = 1;
 			int max = 6;
 			return rand.nextInt((max - min) + 1) + min;
+		}
+	}
+
+	class UnmortgageListener implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			Player curPlayer = game.getCurrentTurnPlayer();
+			ArrayList<PropertyTile> owned = curPlayer.getPropertiesList();
+
+			//count how many properties are unmortgaged
+			int mortgageCount = 0;
+			for(int i = 0; i < owned.size(); ++i){
+				if(owned.get(i).isMortgaged())
+					++mortgageCount;
+			}
+			String[] options = new String[mortgageCount];
+
+			//build list of properties that can be mortgaged
+			int optionCount = 0;
+			for(int i = 0; i < owned.size(); ++i){
+				if(owned.get(i).isMortgaged()){
+					options[optionCount] = owned.get(i).getTileName();
+					++optionCount;
+				}
+			}
+
+			String choice;
+			//check if the user is capable of mortgaging any properties.
+			if(options.length > 0){
+				choice = (String) JOptionPane.showInputDialog(null,"Choose which property to buy back.","Buy Back", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+
+				for(int i = 0; i < owned.size(); ++i){
+					if(owned.get(i).getTileName().equals(choice)){
+						curPlayer.buyBackMortgage(owned.get(i));
+						break;
+					}
+				}
+			}else{
+				JOptionPane.showMessageDialog(null, "You do not have any properties to buy back at this time.");
+				return;
+			}
+			game.refreshInfoPanel();
 		}
 	}
 
