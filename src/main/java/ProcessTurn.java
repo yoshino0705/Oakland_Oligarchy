@@ -82,7 +82,7 @@ public class ProcessTurn {
 				JOptionPane.showMessageDialog(null, "This properpty is mortgaged. Your lucky day!");
 				return;
 			}
-			
+
 			//if player doesn't have enough money to pay, but they have properties,
 			// the bank will foreclose their properties until they can pay rent
 			if (curPlayer.getMoney() < pTile.getRent()) {
@@ -152,6 +152,7 @@ public class ProcessTurn {
 				curPlayer.setMoney(curPlayer.getMoney() - pTile.getValue());
 				// set curPlayer as owner of tile
 				pTile.setOwnership(curPlayer);
+				curPlayer.addProperty(pTile);
 			}
 		}
 	}
