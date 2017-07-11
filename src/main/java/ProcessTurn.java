@@ -76,6 +76,13 @@ public class ProcessTurn {
 
 		ArrayList<PropertyTile> forecloseProps = new ArrayList<PropertyTile>();
 		if (pTile.isOwned()) {
+
+			//if the property is mortgaged and it is not owned by the current player.
+			if(pTile.isMortgaged() && !pTile.getOwner().equals(curPlayer)){
+				JOptionPane.showMessageDialog(null, "This properpty is mortgaged. Your lucky day!");
+				return;
+			}
+			
 			//if player doesn't have enough money to pay, but they have properties,
 			// the bank will foreclose their properties until they can pay rent
 			if (curPlayer.getMoney() < pTile.getRent()) {
@@ -89,7 +96,7 @@ public class ProcessTurn {
 					int price = prop.getValue();
 					curPlayer.setMoney(curPlayer.getMoney() + (price/2));
 					prop.removeOwnership();
-					forecloseProps.add(prop);	
+					forecloseProps.add(prop);
 					ownedProps = game.getOwnedProperties(curPlayer);
 				}
 
@@ -98,7 +105,7 @@ public class ProcessTurn {
 				if (curPlayer.getMoney() < pTile.getRent()) {
 					// tell the player they lost
 					JOptionPane.showMessageDialog(null, "You ran out of money and properties. You lose!");
-						
+
 					game.playerLose(curPlayer);
 					game.endTurn();
 
@@ -118,7 +125,7 @@ public class ProcessTurn {
 				for (PropertyTile prop : forecloseProps)
 					msg += prop.getTileName() + "\n";
 				JOptionPane.showMessageDialog(null, msg);
-			} else 
+			} else
 				// notify player that they owe someone rent
 				JOptionPane.showMessageDialog(null, "You landed on " + pTile.getTileName() + " owned by " +
 					pTile.getOwner().getName() + ". You pay them " +
