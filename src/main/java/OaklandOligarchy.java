@@ -360,7 +360,4 @@ public class OaklandOligarchy implements MouseMotionListener{
 		
 	}
 
-	public TopMenu getTopMenu(){
-		return this.tm;
-	}
 }//end of class OaklandOligarchy
