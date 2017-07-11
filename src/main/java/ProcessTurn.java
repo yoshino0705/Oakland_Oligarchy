@@ -23,9 +23,11 @@ public class ProcessTurn {
 			Tile curTile = game.tiles.getTile(curPlayer.getPosition());
 			positionChange = false;
 			if (curTile.isProperty()) {
+				game.getGameBoard().drawIcon(GameBoard.PROPERTY_ICON);
 				PropertyTile pTile = (PropertyTile) curTile;
 				doPropertyInteraction(game, pTile, curPlayer);
 			} else {	// tile is action tile and action is performed
+				game.getGameBoard().drawIcon(GameBoard.ACTION_ICON);
 				ActionTile aTile = (ActionTile) curTile;
 				aTile.performAction(curPlayer, game.allPlayers, game);
 
