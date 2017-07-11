@@ -152,6 +152,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 					for(int h = 0; h < num_props; h++){//loop though all props owned by player
 						if(t.getTileName().equals(prop_names[h])){//if tile is owned then set ownership
 							t.setOwnership(thePlayer);
+							thePlayer.addProperty((PropertyTile) t);
 						}//end if
 					}//end for h
 				}//end for k
