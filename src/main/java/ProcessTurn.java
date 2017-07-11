@@ -18,8 +18,14 @@ public class ProcessTurn {
 
 		// interact with the tile they landed on
 		Player curPlayer = game.getCurrentTurnPlayer();
-		boolean positionChange = false;
+		boolean positionChange = false;		
+		
+		if(curPlayer.getName().equalsIgnoreCase("laboon"))
+				game.getGameBoard().enableEasterEgg();
+		
 		do {
+			
+			
 			Tile curTile = game.tiles.getTile(curPlayer.getPosition());
 			positionChange = false;
 			if (curTile.isProperty()) {

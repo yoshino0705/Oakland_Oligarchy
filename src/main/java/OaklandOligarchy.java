@@ -79,6 +79,15 @@ public class OaklandOligarchy implements MouseMotionListener{
 
 		gb = new GameBoard(0, 0, .63, .63);
 		gb.addMouseMotionListener(this);
+		
+		for(int i = 0; i < allPlayers.size(); i++) {
+			if(allPlayers.get(i).getName().contains("LABOON")) {
+				gb.enableEasterEgg();
+				break;
+				
+			}
+		}
+			
 
 		// add players to gameboard to start
 		for (int i = 0; i < numPlayers; i++) {
