@@ -75,6 +75,9 @@ public class GameBoard extends JPanel{
 	public static final int PROPERTY_ICON = 0;
 	public static final int BANK_ICON = 1;
 	public static final int ACTION_ICON = 2;
+	private final String filePath = "src/main/java/";
+	
+	private int easterEgg = 0;
 	
 	private int iconSelection = 0;
 	
@@ -126,19 +129,24 @@ public class GameBoard extends JPanel{
 	    Font font = new Font("TimesNewRoman", Font.BOLD, 50);
 	    drawText(g, "Oakland Oligarchy", boardWidth/2 - getStringLengthOnBoard(g, "Oakland Oligarchy", font)/2, boardHeight / 2.0, font);
 	    drawPlayersOnBoard(g);
-	    drawIcon(g);
-
+	    
+	    if(this.easterEgg == 0)
+	    	drawIcon(g);
+	    else
+	    	drawRandomLaboon(g);
 	}
 
 	public void refreshBoard(){
-		//System.out.println(this.getGraphics());
 		clearDrawingBoard(this.getGraphics());
 		drawBasicBoard(this.getGraphics());
 		drawSubRect(this.getGraphics());
 		Font font = new Font("TimesNewRoman", Font.BOLD, 50);
 		drawText(this.getGraphics(), "Oakland Oligarchy", boardWidth/2 - getStringLengthOnBoard(this.getGraphics(), "Oakland Oligarchy", font)/2, boardHeight / 2.0, font);
 		drawPlayersOnBoard(this.getGraphics());
-		drawIcon(this.getGraphics());
+		if(this.easterEgg == 0)
+	    	drawIcon(this.getGraphics());
+	    else
+	    	drawRandomLaboon(this.getGraphics());
 		
 	}
 
@@ -880,7 +888,7 @@ public class GameBoard extends JPanel{
 		int imgWidth = (int) (300 * this.scaleX);
 		int imgHeight = (int) (300 * this.scaleY);
 		try {
-			Image aImage = ImageIO.read(new File("src/main/java/house.png"));
+			Image aImage = ImageIO.read(new File(filePath + "house.png"));
 			aImage = this.getScaledImage(aImage, imgWidth, imgHeight);
 			g.drawImage(aImage, x - imgWidth/2, y, null);
 			
@@ -895,7 +903,7 @@ public class GameBoard extends JPanel{
 		int imgWidth = (int) (300 * this.scaleX);
 		int imgHeight = (int) (300 * this.scaleY);
 		try {
-			Image aImage = ImageIO.read(new File("src/main/java/action.png"));
+			Image aImage = ImageIO.read(new File(filePath + "action.png"));
 			aImage = this.getScaledImage(aImage, imgWidth, imgHeight);
 			g.drawImage(aImage, x - imgWidth/2, y, null);
 			
@@ -910,7 +918,7 @@ public class GameBoard extends JPanel{
 		int imgWidth = (int) (300 * this.scaleX);
 		int imgHeight = (int) (300 * this.scaleY);
 		try {
-			Image aImage = ImageIO.read(new File("src/main/java/bank.png"));
+			Image aImage = ImageIO.read(new File(filePath + "bank.png"));
 			aImage = this.getScaledImage(aImage, imgWidth, imgHeight);
 			g.drawImage(aImage, x - imgWidth/2, y, null);
 			
@@ -948,7 +956,7 @@ public class GameBoard extends JPanel{
 		int imgWidth = (int) (300 * this.scaleX);
 		int imgHeight = (int) (300 * this.scaleY);
 		try {
-			Image aImage = ImageIO.read(new File("src/main/java/laboon" + num + ".png"));
+			Image aImage = ImageIO.read(new File(filePath + "laboon" + num + ".png"));
 			aImage = this.getScaledImage(aImage, imgWidth, imgHeight);
 			g.drawImage(aImage, x - imgWidth/2, y, null);
 			
@@ -958,10 +966,31 @@ public class GameBoard extends JPanel{
 		
 	}
 	
+	private void drawRandomLaboon(Graphics g) {
+		Random rand = new Random();
+		this.drawLaboon(g, rand.nextInt(4)+1);
+		
+	}
+	
 	public void drawIcon(int selection) {
 		this.iconSelection = selection;
 	}
+	
+	public void toggleEasterEgg() {
+		this.easterEgg = 1 - this.easterEgg;
+		
+	}
 
+	public void enableEasterEgg() {
+		this.easterEgg = 1;
+		
+	}
+	
+	public void disableEasterEgg() {
+		this.easterEgg = 0;
+		
+	}
+	
 	public Color getRandomColor(){
 		Random rand = new Random();
 		float r = rand.nextFloat();
@@ -1013,8 +1042,9 @@ public class GameBoard extends JPanel{
 		gb.movePlayer(3, 30);
 		
 		gb.drawIcon(GameBoard.BANK_ICON);
+		
 		newFrame.setVisible(true);
-
+		gb.enableEasterEgg();
 	}
 
 
