@@ -354,7 +354,6 @@ public class OaklandOligarchy implements MouseMotionListener{
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		//System.out.println("MouseX: " + e.getX() + " MouseY: " + e.getY() + " TileID: " + gb.getTileID(e.getX(), e.getY()));
 		gb.showTileDetails(e.getX(), e.getY(), 20, tiles);
 
 		
