@@ -7,8 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Auction extends JDialog {
-	private final int TILE_COUNT = 36;
-
 	private JButton[] bidButtons;
 	private JLabel lblCurPrice, lblCurLeader;
 	private int curPrice = 0;
@@ -89,7 +87,7 @@ public class Auction extends JDialog {
 
 			//find current tile price
 
-			for(int i = 0; i < TILE_COUNT; i++){
+			for(int i = 0; i < GameBoard.TILE_COUNT; i++){
 				Tile curTile = game.tiles.getTile(i);
 				if(curTile.isProperty() && curTile.getTileName().equals(aProp)){
 					PropertyTile the_tile = (PropertyTile) curTile;
@@ -145,7 +143,7 @@ public class Auction extends JDialog {
 	//get all properties owned by player and return them in an ArrayList
 	public ArrayList<String> getPlayerPropertyNames(Player p, OaklandOligarchy game) {
 		ArrayList<String> retList = new ArrayList<String>();
-		for (int i = 0; i < TILE_COUNT; i++) {
+		for (int i = 0; i < GameBoard.TILE_COUNT; i++) {
 			Tile curTile = game.tiles.getTile(i);	//game.getTiles().getTile(i)
 			if (curTile.isProperty() && game.playerOwnsProperty((PropertyTile) curTile, p))
 				retList.add(curTile.getTileName());
@@ -188,7 +186,7 @@ public class Auction extends JDialog {
 						+"<br>The property will be sold to that player.</html>");
 				add(msg);
 				//set new owner
-				for(int i = 0; i < TILE_COUNT; i++){
+				for(int i = 0; i < GameBoard.TILE_COUNT; i++){
 					Tile curTile = game.tiles.getTile(i);
 					if(curTile.isProperty() && curTile.getTileName().equals(aProp)){
 						System.out.println("transfering " + curTile.getTileName());
@@ -217,7 +215,7 @@ public class Auction extends JDialog {
 	class BankerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			//find property and remove ownership
-			for(int i = 0; i < TILE_COUNT; i++){
+			for(int i = 0; i < GameBoard.TILE_COUNT; i++){
 				Tile curTile = game.tiles.getTile(i);
 				if(curTile.isProperty() && curTile.getTileName().equals(aProp)){
 					System.out.println("selling to bank:  " + curTile.getTileName());

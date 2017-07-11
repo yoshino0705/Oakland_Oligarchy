@@ -63,7 +63,7 @@ public class GameBoard extends JPanel{
 	public static final int PLAYER_2 = 1;
 	public static final int PLAYER_3 = 2;
 	public static final int PLAYER_4 = 3;
-	private final int TILE_COUNT = 36;
+	public static final int TILE_COUNT = 36;
 
 	private int playerOnTile[];
 
@@ -824,6 +824,29 @@ public class GameBoard extends JPanel{
 		}
 
 
+	}
+
+	public void animatedMovePlayer(int playerNum, int startPos, int roll) {
+		boolean back = false;
+		if(roll < 0){
+			roll *= -1;
+			back = true;
+		}
+		for (int i = 1; i <= roll; i++) {
+			if(back == false){
+				this.movePlayer(playerNum, (i + startPos) % TILE_COUNT);
+			}else{
+				this.movePlayer(playerNum, (startPos - i) % TILE_COUNT);
+			}
+
+			this.refreshBoard();
+			// sleep so user can see animation
+			try {
+				Thread.sleep(200);
+			} catch (Exception e) {
+				System.out.println("I can't fall asleep!");
+			}
+		}
 	}
 
 	public Color getRandomColor(){

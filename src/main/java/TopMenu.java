@@ -114,59 +114,14 @@ public class TopMenu extends JPanel{
 	}
 
 	class RollListener implements ActionListener {
-		final int NUM_TILES = 36;
-
 		/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
 			Function: actionPerformed
 		~	Parameters: ActionEvent -- event generated from button click			~
 			Returns: None
-		~	Description: Moves player, handles buying property/paying rent/action 	~
-						 tiles.
+		~	Description: launches ProcessTurn instance to handle turn logic			~
 		~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 		public void actionPerformed(ActionEvent e) {
-			// calculate player's dice rolls
-			int roll1 = rollDie();
-			int roll2 = rollDie();
-			int rollSum = roll1 + roll2;
-
-			System.out.println("roll: " + rollSum);
-
-			// get current player & calculate their new position
-			Player curPlayer = game.getCurrentTurnPlayer();
-			int newPosition = (curPlayer.getPosition() + rollSum) % NUM_TILES;
-			// move player on board
-			animatedMovePlayer(game.getGameBoard(), game.getIndexCurrentTurnPlayer(), curPlayer.getPosition(), rollSum);
-
-			System.out.println("Old pos: " + curPlayer.getPosition());
-
-			// update Players positiom
-			curPlayer.setPosition(newPosition);
-
-			System.out.println("new pos: " + curPlayer.getPosition());
-
-			//access players by game.allPlayers();
-			// if tile is property, player can either buy or has to pay rent
-			boolean positionChange = false;
-			do{
-				Tile curTile = game.tiles.getTile(curPlayer.getPosition());
-				positionChange = false;
-				if (curTile.isProperty()) {
-					PropertyTile pTile = (PropertyTile) curTile;
-					doPropertyInteraction(pTile, curPlayer);
-				} else {	// tile is action tile and action is performed
-					ActionTile aTile = (ActionTile) curTile;
-					aTile.performAction(curPlayer, game.allPlayers, game, this);
-
-					//action tile 6 causes player to move again
-					if(aTile.getTileFlag() == 6){
-						positionChange = true;
-					}
-				}
-			}while(positionChange == true);
-
-			// toggle turn buttons
-			toggleJButtonEnabled(rollButton);
-			toggleJButtonEnabled(endTurn);
+			new ProcessTurn(game);
 			//update info panel
 			game.refreshInfoPanel();
 		}
@@ -313,6 +268,7 @@ public class TopMenu extends JPanel{
 			int max = 6;
 			return rand.nextInt((max - min) + 1) + min;
 		}
+
 	}
 
 	class UnmortgageListener implements ActionListener{

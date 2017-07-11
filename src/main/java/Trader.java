@@ -22,7 +22,6 @@ public class Trader extends JPanel{
 	protected JList<Object> propertyOwned;
 	protected JLabel balance;
 	private JLabel playerName;
-	private final int TILE_COUNT = 36;
 	private Font defaultButtonFont = new Font("TimesNewRoman", Font.BOLD, 30);
 	
 	private Player player;
@@ -54,7 +53,7 @@ public class Trader extends JPanel{
 		
 		// initialize propertyOwned content
 		ArrayList<String> prop = new ArrayList<String>();
-		for(int i = 0; i < TILE_COUNT; i++){
+		for(int i = 0; i < GameBoard.TILE_COUNT; i++){
 			if(it.getTile(i).isProperty() && ((PropertyTile)it.getTile(i)).isOwned())
 				if(it.getTile(i).getOwner() == p)
 					prop.add(it.getTile(i).getTileName());
