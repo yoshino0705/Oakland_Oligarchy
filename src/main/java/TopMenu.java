@@ -161,7 +161,7 @@ public class TopMenu extends JPanel{
 						int price = prop.getValue();
 						curPlayer.setMoney(curPlayer.getMoney() + (price/2));
 						prop.removeOwnership();
-						curPlayer.removeProperty(prop)
+						curPlayer.removeProperty(prop);
 						forecloseProps.add(prop);
 						ownedProps = game.getOwnedProperties(curPlayer);
 					}
