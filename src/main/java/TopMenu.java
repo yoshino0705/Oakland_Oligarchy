@@ -161,6 +161,7 @@ public class TopMenu extends JPanel{
 						int price = prop.getValue();
 						curPlayer.setMoney(curPlayer.getMoney() + (price/2));
 						prop.removeOwnership();
+						curPlayer.removeProperty(prop)
 						forecloseProps.add(prop);
 						ownedProps = game.getOwnedProperties(curPlayer);
 					}
@@ -240,9 +241,9 @@ public class TopMenu extends JPanel{
 				}
 				for (int i = 1; i <= roll; i++) {
 					if(back == false){
-						gb.movePlayer(playerNum, (i + startPos) % NUM_TILES);
+						gb.movePlayer(playerNum, (i + startPos) % 36);
 					}else{
-						gb.movePlayer(playerNum, (startPos - i) % NUM_TILES);
+						gb.movePlayer(playerNum, (startPos - i) % 36);
 					}
 
 					gb.refreshBoard();
