@@ -75,7 +75,7 @@ public class GameBoard extends JPanel{
 	public static final int PROPERTY_ICON = 0;
 	public static final int BANK_ICON = 1;
 	public static final int ACTION_ICON = 2;
-	private final String filePath = "src/main/java/";
+	private final String filePath = "";
 	
 	private int easterEgg = 0;
 	

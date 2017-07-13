@@ -51,6 +51,7 @@ public class PropertyTile extends Tile{
         if(this.isPropertyOwned == false){
             this.isPropertyOwned = true;
             this.owner = pName;
+            this.owner.addProperty(this);
             return true;
         }else{
             return false;
@@ -59,8 +60,13 @@ public class PropertyTile extends Tile{
 
     //remove ownership of the property
     public void removeOwnership(){
-        this.isPropertyOwned = false;
-        this.owner = null;
+    	if (this.isPropertyOwned == true) {
+    		this.owner.removeProperty(this);
+    		this.isPropertyOwned = false;
+    		this.owner = null;
+    	}
+        
+        
     }
 
     //determine if the property currently has an owner

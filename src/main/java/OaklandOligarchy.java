@@ -58,6 +58,10 @@ public class OaklandOligarchy implements MouseMotionListener{
 		// load players from StartMenu into allPlayers array
 		for (int i = 0; i < sm.getPlayerCount(); i++) {
 			Player p = new Player(sm.getPlayerName(i), 1000, i, false);
+			if(p.getName().equalsIgnoreCase("AI")) {				
+				p = new AI(sm.getPlayerName(i), 1000, i, false);
+			}
+			
 			allPlayers.add(p);
 			numPlayers++;
 		}
@@ -303,6 +307,16 @@ public class OaklandOligarchy implements MouseMotionListener{
 			numTurns++;
 			int nextTurnPlayer = getIndexCurrentTurnPlayer();
 			setCurrentTurnPlayer(nextTurnPlayer);
+			
+//			if(this.getCurrentTurnPlayer().isAI == true) {
+//				AI curAI = (AI) this.getCurrentTurnPlayer();
+//				curAI.processTheTurn(this);
+//				//numTurns++;
+//				//this.endTurn();
+//				
+//			}
+				
+			
 		} while (currentTurnPlayer.hasLost());
 
 		tm.updateCurrentTurnLabel(currentTurnPlayer);

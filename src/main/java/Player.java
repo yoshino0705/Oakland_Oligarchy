@@ -6,6 +6,7 @@ public class Player{
 	int position;
 	String color;
 	boolean hasLost;
+	boolean isAI = false;
 	ArrayList<PropertyTile> propertyOwned = new ArrayList<PropertyTile>();
 
 	Player(String name, int money, int player_number, boolean lost){

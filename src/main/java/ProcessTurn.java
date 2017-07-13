@@ -20,18 +20,16 @@ public class ProcessTurn {
 		Player curPlayer = game.getCurrentTurnPlayer();
 		boolean positionChange = false;		
 		
-		if(curPlayer.getName().equalsIgnoreCase("laboon"))
-				game.getGameBoard().enableEasterEgg();
-		
 		do {
-			
 			
 			Tile curTile = game.tiles.getTile(curPlayer.getPosition());
 			positionChange = false;
 			if (curTile.isProperty()) {
 				game.getGameBoard().drawIcon(GameBoard.PROPERTY_ICON);
 				PropertyTile pTile = (PropertyTile) curTile;
-				doPropertyInteraction(game, pTile, curPlayer);
+				
+				if(curPlayer.isAI == false)
+					doPropertyInteraction(game, pTile, curPlayer);
 			} else {	// tile is action tile and action is performed
 				game.getGameBoard().drawIcon(GameBoard.ACTION_ICON);
 				ActionTile aTile = (ActionTile) curTile;
@@ -86,7 +84,7 @@ public class ProcessTurn {
 		if (pTile.isOwned()) {
 
 			//if the property is mortgaged and it is not owned by the current player.
-			if(pTile.isMortgaged() && !pTile.getOwner().equals(curPlayer)){
+			if(pTile.isMortgaged() && !pTile.getOwner().equals(curPlayer) && curPlayer.isAI == false){
 				JOptionPane.showMessageDialog(null, "This properpty is mortgaged. Your lucky day!");
 				return;
 			}
@@ -112,7 +110,9 @@ public class ProcessTurn {
 				// then the player loses
 				if (curPlayer.getMoney() < pTile.getRent()) {
 					// tell the player they lost
-					JOptionPane.showMessageDialog(null, "You ran out of money and properties. You lose!");
+					
+					if(curPlayer.isAI == false)
+						JOptionPane.showMessageDialog(null, "You ran out of money and properties. You lose!");
 
 					game.playerLose(curPlayer);
 					game.endTurn();
@@ -132,36 +132,58 @@ public class ProcessTurn {
 				String msg = "You didn't have enough money to pay rent so they bank foreclosed these properties:\n";
 				for (PropertyTile prop : forecloseProps)
 					msg += prop.getTileName() + "\n";
-				JOptionPane.showMessageDialog(null, msg);
+				
+				if(curPlayer.isAI == false)
+					JOptionPane.showMessageDialog(null, msg);
 			} else
 				// notify player that they owe someone rent
-				JOptionPane.showMessageDialog(null, "You landed on " + pTile.getTileName() + " owned by " +
-					pTile.getOwner().getName() + ". You pay them " +
-					pTile.getRent() + " dollars.");
-			// subtract money from curPlayer and add to owner
-			curPlayer.setMoney(curPlayer.getMoney() - pTile.getRent());
-			pTile.getOwner().setMoney(pTile.getOwner().getMoney() + pTile.getRent());
+				
+				if(curPlayer.isAI == false)
+					JOptionPane.showMessageDialog(null, "You landed on " + pTile.getTileName() + " owned by " +
+							pTile.getOwner().getName() + ". You pay them " +
+							pTile.getRent() + " dollars.");
+			
+				// subtract money from curPlayer and add to owner
+				curPlayer.setMoney(curPlayer.getMoney() - pTile.getRent());
+				pTile.getOwner().setMoney(pTile.getOwner().getMoney() + pTile.getRent());
+				
 		} else {
 			// check if player has enough money to purchase property
 			if (curPlayer.getMoney() < pTile.getValue()) {
-				JOptionPane.showMessageDialog(null, "You landed on " + pTile.getTileName() + " but you don't have"
-					+ " enough money to purchase it.\n" + pTile.getTileName() +
-					" costs $" + pTile.getValue() + " but you only have $" +
-					curPlayer.getMoney() + ". How sad :(");
+				// only display message to actual players
+				
+				if(curPlayer.isAI == false)
+					JOptionPane.showMessageDialog(null, "You landed on " + pTile.getTileName() + " but you don't have"
+							+ " enough money to purchase it.\n" + pTile.getTileName() +
+							" costs $" + pTile.getValue() + " but you only have $" +
+							curPlayer.getMoney() + ". How sad :(");
 				return;
 			}
-			//give player option to buy tile
-			int result = JOptionPane.showConfirmDialog(null, "You landed on " + pTile.getTileName() +
-				", would you like to buy this property for " +
-				pTile.getValue() + " dollars?",
-				"Purchase Property", JOptionPane.YES_NO_OPTION);
-			if (result == JOptionPane.YES_OPTION) {
+			
+			if(curPlayer.isAI == false) {
+				//give player option to buy tile
+				int result = JOptionPane.showConfirmDialog(null, "You landed on " + pTile.getTileName() +
+					", would you like to buy this property for " +
+					pTile.getValue() + " dollars?",
+					"Purchase Property", JOptionPane.YES_NO_OPTION);
+				if (result == JOptionPane.YES_OPTION) {
+					// subtract cost from player
+					curPlayer.setMoney(curPlayer.getMoney() - pTile.getValue());
+					// set curPlayer as owner of tile
+					pTile.setOwnership(curPlayer);
+					curPlayer.addProperty(pTile);
+				}
+				
+			}else {
+				// AI auto buys the tile
 				// subtract cost from player
 				curPlayer.setMoney(curPlayer.getMoney() - pTile.getValue());
 				// set curPlayer as owner of tile
 				pTile.setOwnership(curPlayer);
 				curPlayer.addProperty(pTile);
+				
 			}
+
 		}
 	}
 
