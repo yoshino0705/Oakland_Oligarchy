@@ -1,5 +1,7 @@
 import java.util.Random;
 
+import javax.swing.JOptionPane;
+
 public class AI extends Player{
 	
 	public AI(String name, int money, int playerNumber, boolean lost) {
@@ -39,6 +41,11 @@ public class AI extends Player{
 		game.getTopMenu().helpButton.setEnabled(true);
 		game.getTopMenu().tradeButton.setEnabled(true);
 		game.getTopMenu().unmortgageButton.setEnabled(true);
+		
+	}
+	
+	public static void displayActionMessage(String msg) {
+		JOptionPane.showMessageDialog(null, msg);
 		
 	}
 

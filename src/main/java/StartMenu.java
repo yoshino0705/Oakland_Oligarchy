@@ -5,7 +5,7 @@ public class StartMenu{
 	 * example code:
 	 * 
 	 * StartMenu sm = new StartMenu(); 
-	 * sm.getPlayerNames(0 to 4);
+	 * sm.getPlayerNames(0 to 3);
 	 * sm.getPlayerCount();
 	 * 
 	 * */
@@ -26,7 +26,9 @@ public class StartMenu{
 	    
 		playerNames = new String[playerCount];
 		
-		for(int i = 0; i < playerCount; i++){
+		playerNames[0] = this.ensureFirstPlayerIsntAI();
+		
+		for(int i = 1; i < playerCount; i++){
 			playerNames[i] = JOptionPane.showInputDialog("Enter Player " + (i+1) + "'s Name");
 				
 			if(playerNames[i].trim().contentEquals(""))
@@ -43,6 +45,20 @@ public class StartMenu{
 	public int getPlayerCount(){
 		return this.playerCount;
 		
+	}
+	
+	private String ensureFirstPlayerIsntAI() {
+		String firstPlayerName = JOptionPane.showInputDialog("Enter Player 1's Name");
+		
+		while(firstPlayerName.equalsIgnoreCase("ai")) {
+			JOptionPane.showMessageDialog(null, "First player cannot be AI! Please re-enter player name!");
+			firstPlayerName = JOptionPane.showInputDialog("Enter Player 1's Name");
+		}
+		
+		if(firstPlayerName.equalsIgnoreCase(""))
+			firstPlayerName = "Player 1";
+		
+		return firstPlayerName;
 	}
 	
 	public static void main(String args[]){

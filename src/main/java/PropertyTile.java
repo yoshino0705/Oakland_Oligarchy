@@ -47,7 +47,7 @@ public class PropertyTile extends Tile{
 
     //@param pName - takes the player to pass ownership of property to
     //@return - true if property is unowned, false if already owned
-    public boolean setOwnership(Player pName){
+	public boolean setOwnership(Player pName){
         if(this.isPropertyOwned == false){
             this.isPropertyOwned = true;
             this.owner = pName;
