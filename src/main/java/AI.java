@@ -15,12 +15,10 @@ public class AI extends Player{
 	}
 	
 	public void processTheTurn(OaklandOligarchy game) {
-		disableAllButtons(game);
-		new ProcessTurn(game);		// rolls the dice and move toke
-		enableAllButtons(game);
+		new ProcessTurn(game);		// rolls the dice and move token
 	}
 	
-	public void disableAllButtons(OaklandOligarchy game) {
+	public void disableButtons(OaklandOligarchy game) {
 		game.getTopMenu().auctionButton.setEnabled(false);
 		//game.getTopMenu().endTurn.setEnabled(false);
 		game.getTopMenu().mortgageButton.setEnabled(false);
@@ -32,7 +30,7 @@ public class AI extends Player{
 		
 	}
 	
-	public void enableAllButtons(OaklandOligarchy game) {
+	public void enableButtons(OaklandOligarchy game) {
 		game.getTopMenu().auctionButton.setEnabled(true);
 		//game.getTopMenu().endTurn.setEnabled(true);
 		game.getTopMenu().mortgageButton.setEnabled(true);

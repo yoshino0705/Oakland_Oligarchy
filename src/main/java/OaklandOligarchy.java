@@ -306,16 +306,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 		do {
 			numTurns++;
 			int nextTurnPlayer = getIndexCurrentTurnPlayer();
-			setCurrentTurnPlayer(nextTurnPlayer);
-			
-//			if(this.getCurrentTurnPlayer().isAI == true) {
-//				AI curAI = (AI) this.getCurrentTurnPlayer();
-//				curAI.processTheTurn(this);
-//				//numTurns++;
-//				//this.endTurn();
-//				
-//			}
-				
+			setCurrentTurnPlayer(nextTurnPlayer);				
 			
 		} while (currentTurnPlayer.hasLost());
 

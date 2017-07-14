@@ -372,6 +372,12 @@ public class TopMenu extends JPanel{
 				// toggle turn buttons
 				toggleJButtonEnabled(rollButton);
 				toggleJButtonEnabled(endTurn);
+			}else {
+				AI ai = (AI) game.getCurrentTurnPlayer();
+				ai.disableButtons(game);
+				ai.processTheTurn(game);
+				ai.enableButtons(game);
+				game.endTurn();
 			}
 		}
 	}
