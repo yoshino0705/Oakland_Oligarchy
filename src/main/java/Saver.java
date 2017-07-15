@@ -35,6 +35,10 @@ public class Saver{
 					str += p.getPosition() + "\n";
 					//write the players number of owned properties and then list them
 					str += getPlayerProperties(game, p);
+					
+					// write the value of isAI to determine if it's AI
+					str += Boolean.toString(p.isAI) + "\n";
+					
 				}//end for loop
 				
 
