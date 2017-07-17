@@ -20,6 +20,7 @@ public class Auction extends JDialog {
 	String aProp = "";
 	ArrayList<Player> otherPlayers;
 	int prop_price;
+
 	public Auction(OaklandOligarchy game){
 		this.game = game;
 		Player owner = game.getCurrentTurnPlayer();	//getCurrentTurnPlayer();
@@ -185,17 +186,19 @@ public class Auction extends JDialog {
 				msg.setText("<html>High bid was "+curPrice+" from "+lastBid.getName()+"."
 						+"<br>The property will be sold to that player.</html>");
 				add(msg);
+				Player owner = game.getCurrentTurnPlayer();	//getCurrentTurnPlayer();
 				//set new owner
 				for(int i = 0; i < GameBoard.TILE_COUNT; i++){
 					Tile curTile = game.tiles.getTile(i);
 					if(curTile.isProperty() && curTile.getTileName().equals(aProp)){
 						System.out.println("transfering " + curTile.getTileName());
 						curTile.removeOwnership();
+						owner.removeProperty((PropertyTile)curTile);
+						lastBid.addProperty((PropertyTile)curTile);
 						curTile.setOwnership(lastBid);
 					}
 				}//end for loop
 				lastBid.setMoney(lastBid.getMoney()-curPrice);
-				Player owner = game.getCurrentTurnPlayer();	//getCurrentTurnPlayer();
 				owner.setMoney(owner.getMoney()+curPrice);
 				game.refreshInfoPanel();
 			}
@@ -220,6 +223,8 @@ public class Auction extends JDialog {
 				if(curTile.isProperty() && curTile.getTileName().equals(aProp)){
 					System.out.println("selling to bank:  " + curTile.getTileName());
 					curTile.removeOwnership();
+					Player owner = game.getCurrentTurnPlayer();
+					owner.removeProperty((PropertyTile) curTile);
 				}
 			}//end for loop
 
