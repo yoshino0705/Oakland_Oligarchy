@@ -55,9 +55,12 @@ public class Trader extends JPanel{
 		ArrayList<String> prop = new ArrayList<String>();
 		for(int i = 0; i < GameBoard.TILE_COUNT; i++){
 			if(it.getTile(i).isProperty() && ((PropertyTile)it.getTile(i)).isOwned())
-				if(it.getTile(i).getOwner() == p)
-					prop.add(it.getTile(i).getTileName());
-			
+				if(it.getTile(i).getOwner() == p) {
+					PropertyTile pt = (PropertyTile) it.getTile(i);
+					
+					if(pt.isMortgaged() == false)
+						prop.add(pt.getTileName());
+				}
 		}
 		
 		listModel = new DefaultListModel<String>();
