@@ -337,7 +337,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 		if(currentTurnPlayer.isAI) {
 			AI ai = (AI) currentTurnPlayer;
 			ai.processTheTurn(this);
-			this.endTurn();
+
 		}
 	}
 

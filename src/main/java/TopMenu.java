@@ -367,14 +367,9 @@ public class TopMenu extends JPanel{
 		public void actionPerformed(ActionEvent e) {
 			// increment turn count
 			game.endTurn();
+			toggleJButtonEnabled(rollButton);
+			toggleJButtonEnabled(endTurn);
 			
-			if(game.getCurrentTurnPlayer().isAI == false) {
-				// toggle turn buttons
-				toggleJButtonEnabled(rollButton);
-				toggleJButtonEnabled(endTurn);
-			}else {
-				game.endTurn();
-			}
 		}
 	}
 
