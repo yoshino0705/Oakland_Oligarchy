@@ -102,6 +102,11 @@ public class OaklandOligarchy implements MouseMotionListener{
 
 		// initialize tiles
 		tiles = new ImplementTiles();
+//		
+//		if(this.getCurrentTurnPlayer().isAI) {
+//			this.getTopMenu().rollButton.doClick();
+//			this.getTopMenu().endTurn.doClick();
+//		}
 	}
 
 	//OaklandOligarchy constructor used for resuming a game from a file
@@ -328,6 +333,12 @@ public class OaklandOligarchy implements MouseMotionListener{
 		} while (currentTurnPlayer.hasLost());
 
 		tm.updateCurrentTurnLabel(currentTurnPlayer);
+		
+		if(currentTurnPlayer.isAI) {
+			AI ai = (AI) currentTurnPlayer;
+			ai.processTheTurn(this);
+			this.endTurn();
+		}
 	}
 
 	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~

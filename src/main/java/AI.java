@@ -1,5 +1,10 @@
+import java.awt.AWTException;
+import java.awt.Point;
+import java.awt.Robot;
+import java.awt.event.InputEvent;
 import java.util.Random;
 
+import javax.swing.AbstractButton;
 import javax.swing.JOptionPane;
 
 public class AI extends Player{
@@ -16,8 +21,12 @@ public class AI extends Player{
 		
 	}
 	
-	public void processTheTurn(OaklandOligarchy game) {
+	public void processTheTurn(OaklandOligarchy game){				
+		this.click(game.getTopMenu().rollButton);
+		this.disableButtons(game);
 		new ProcessTurn(game);		// rolls the dice and move token
+		this.enableButtons(game);
+		this.click(game.getTopMenu().endTurn);
 	}
 	
 	public void disableButtons(OaklandOligarchy game) {
@@ -42,6 +51,21 @@ public class AI extends Player{
 		game.getTopMenu().tradeButton.setEnabled(true);
 		game.getTopMenu().unmortgageButton.setEnabled(true);
 		
+	}
+	
+	public void click(AbstractButton button) {
+	    Point p = button.getLocationOnScreen();
+	    Robot r = null;
+		try {
+			r = new Robot();
+		} catch (AWTException e) {
+			e.printStackTrace();
+		}
+		
+	    r.mouseMove(p.x + button.getWidth() / 2, p.y + button.getHeight() / 2);
+	    r.mousePress(InputEvent.BUTTON1_MASK);
+	    //try { Thread.sleep(millis); } catch (Exception e) {}
+	    r.mouseRelease(InputEvent.BUTTON1_MASK);
 	}
 	
 	public static void displayActionMessage(String msg) {
