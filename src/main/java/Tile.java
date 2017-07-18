@@ -11,6 +11,8 @@ public class Tile{
 	public Player getOwner(){return null;};
 	public boolean setOwnership(Player p){return false;};//will override in PropertyTile
 	public void removeOwnership(){};//will override in PopertyTile
+	public boolean isMortgaged(){return false;};//will override in PropertyTile
+	public int setMortgage(boolean b){return -1;};
 
     Tile(){
         this.tileName = "";
