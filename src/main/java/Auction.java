@@ -146,7 +146,7 @@ public class Auction extends JDialog {
 		ArrayList<String> retList = new ArrayList<String>();
 		for (int i = 0; i < GameBoard.TILE_COUNT; i++) {
 			Tile curTile = game.tiles.getTile(i);	//game.getTiles().getTile(i)
-			if (curTile.isProperty() && game.playerOwnsProperty((PropertyTile) curTile, p))
+			if (curTile.isProperty() && game.playerOwnsProperty((PropertyTile) curTile, p) && !curTile.isMortgaged())
 				retList.add(curTile.getTileName());
 		}
 
