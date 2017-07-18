@@ -139,11 +139,16 @@ public class OaklandOligarchy implements MouseMotionListener{
 				int num_props = Integer.parseInt(scan.nextLine());//get number of owned properties
 				System.out.println(num_props);
 				String[] prop_names = new String[num_props];
+				String[] prop_bools = new String[num_props];
 				//get list of all the owned properties
 				for(int j = 0; j < num_props; j++){
-					String prop_name = scan.nextLine();
+					String prop_str = scan.nextLine();
+					String[] split_prop = prop_str.split(":");
+					String prop_name = split_prop[0];
+					String prop_bool = split_prop[1];	
 					System.out.println(prop_name);
 					prop_names[j] = prop_name;
+					prop_bools[j] = prop_bool;
 				}//end for j
 
 				Player thePlayer = new Player(pname, pmoney, i, plost, position);
@@ -162,6 +167,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 						if(t.getTileName().equals(prop_names[h])){//if tile is owned then set ownership
 							t.setOwnership(thePlayer);
 							thePlayer.addProperty((PropertyTile) t);
+							t.setMortgage(Boolean.parseBoolean(prop_bools[h]));	
 						}//end if
 					}//end for h
 				}//end for k

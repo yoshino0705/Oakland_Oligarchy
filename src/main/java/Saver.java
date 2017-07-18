@@ -62,7 +62,7 @@ public class Saver{
 			Player player = game.tiles.getTile(i).getOwner();
 			if(player == p){//if this tile is owned by the player
 				num_props++;
-				props += game.tiles.getTile(i).getTileName() + "\n";
+				props += game.tiles.getTile(i).getTileName() + ":" + game.tiles.getTile(i).isMortgaged() + "\n";
 			}
 		}//end for
 		ret_str = num_props + "\n" + props;
