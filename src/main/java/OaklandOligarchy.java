@@ -188,7 +188,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 			
 		} catch(Exception e){
 		//	e.printStackTrace();
-			System.out.println("----Error reading game info from file----");
+			System.out.println("----Error reading game info from file, not in proper format----");
 		}
 	}
 
