@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import javax.swing.*;
 
 public class Player{
 	String name;
@@ -7,6 +8,7 @@ public class Player{
 	String color;
 	boolean hasLost;
 	ArrayList<PropertyTile> propertyOwned = new ArrayList<PropertyTile>();
+	static OaklandOligarchy game;
 
 	Player(String name, int money, int player_number, boolean lost){
 		this.name = name.toUpperCase();
@@ -23,6 +25,10 @@ public class Player{
 		this.position = position;
 		this.color = makeColor(player_number);
 		this.hasLost = lost;
+	}
+
+	public static void setPlayerGame(OaklandOligarchy game){
+		Player.game = game;
 	}
 
 	//mortgage the player's property and set the player's money appropriately
@@ -82,10 +88,57 @@ public class Player{
 	public int getMoney(){
 		return this.money;
 	}
+
 	public void setMoney(int money){
-		if (money < 0)
-			money = 0;
-		this.money = money;
+		if(money < 0){//sell properties until money is >= 0 or out of properties
+			ArrayList<PropertyTile> ownedProps = game.getOwnedProperties(this);
+			ArrayList<PropertyTile> forecloseProps = new ArrayList<PropertyTile>();
+			for(PropertyTile prop : ownedProps){//go through properties selling them until there is enough money or out of props
+				if(money >= 0){
+					break;//if the player now has enough money, break the loop
+				}
+
+				int sell_price = prop.getValue()/2;//get price of selling property
+				money = money + sell_price;
+				prop.removeOwnership();
+				forecloseProps.add(prop);
+				ownedProps = game.getOwnedProperties(this);
+
+			}//end enhanced for loop
+
+			//if player has sold all properties and still is under 0 money they should lose
+			if(money < 0){
+				// tell the player they lost
+				JOptionPane.showMessageDialog(null, this.getName()+" ran out of money and properties. They lose!");
+				System.out.println("DB1");
+				game.playerLose(this);
+				game.refreshInfoPanel();
+
+				//check to see if a player has won and if so notify them
+				if (game.checkWon()) {
+					Player winner = game.getWinner();
+					JOptionPane.showMessageDialog(null, winner.getName() + " has won the game!");
+				}
+
+				game.getGameBoard().refreshBoard();
+				
+			}//end of if player should lose
+
+			
+			if(forecloseProps.size() > 0){//if the bank had forclosed on properties
+				String msg = this.getName() + " didn't have enough money so they bank foreclosed these properties:\n";
+				for (PropertyTile prop : forecloseProps)
+					msg += prop.getTileName() + "\n";
+				JOptionPane.showMessageDialog(null, msg);
+			}
+			game.getGameBoard().refreshBoard();
+			game.refreshInfoPanel();
+			game.getTopMenu().toggleEndTurnButton();
+			game.getTopMenu().toggleRollButton();
+			this.money = money;
+		}else{
+			this.money = money;
+		}
 	}
 
 	public void setName(String s) {
