@@ -37,7 +37,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 				System.out.println("Loading game from file: "+fc.getSelectedFile().getName());
 				new OaklandOligarchy(file);
 			}else{
-				System.out.println("No file selected, aborting");
+				System.out.println("----Error: No file selected, aborting----");
 				System.exit(1);
 			}
 		}else{//else start new game
@@ -120,33 +120,33 @@ public class OaklandOligarchy implements MouseMotionListener{
 			int seconds = Integer.parseInt(split_time[2]);
 			//get the name of current turn player
 			String curTurnPlayerName = scan.nextLine();
-			System.out.println("current turn: "+curTurnPlayerName);
+			//System.out.println("current turn: "+curTurnPlayerName);
 			//get whether roll button is enabled
 			boolean roll_button_boolean = Boolean.parseBoolean(scan.nextLine());
 			//get whether end turn button is enabled
 			boolean end_button_boolean = Boolean.parseBoolean(scan.nextLine());
 			int num_players = Integer.parseInt(scan.nextLine());
-			System.out.println("num players:"+num_players);
+			//System.out.println("num players:"+num_players);
 			//loop through and get info to create each player and their properties
 			for(int i = 0; i < num_players; i++){
 				String pname = scan.nextLine();//get player name
-				System.out.println(pname);
+				//System.out.println(pname);
 				int pmoney = Integer.parseInt(scan.nextLine());//get player money
-				System.out.println(pmoney);
+				//System.out.println(pmoney);
 				boolean plost = Boolean.parseBoolean(scan.nextLine());//get if the player has lost
-				System.out.println(plost);
+				//System.out.println(plost);
 				int position = Integer.parseInt(scan.nextLine());//get player position
 				int num_props = Integer.parseInt(scan.nextLine());//get number of owned properties
-				System.out.println(num_props);
+				//System.out.println(num_props);
 				String[] prop_names = new String[num_props];
 				String[] prop_bools = new String[num_props];
-				//get list of all the owned properties
+				//get list of all the owned properties and their mortgage status
 				for(int j = 0; j < num_props; j++){
 					String prop_str = scan.nextLine();
 					String[] split_prop = prop_str.split(":");
 					String prop_name = split_prop[0];
 					String prop_bool = split_prop[1];	
-					System.out.println(prop_name);
+					//System.out.println(prop_name);
 					prop_names[j] = prop_name;
 					prop_bools[j] = prop_bool;
 				}//end for j
@@ -156,7 +156,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 				if(pname.equals(curTurnPlayerName)){//if this player is the current turn player
 					currentTurnPlayer = thePlayer;
 					numTurns = i;
-					System.out.println("found equal name");
+					//System.out.println("found equal name");
 				}
 				allPlayers.add(thePlayer);
 				numPlayers++;
@@ -187,8 +187,8 @@ public class OaklandOligarchy implements MouseMotionListener{
 			window.setVisible(true);
 			
 		} catch(Exception e){
-			e.printStackTrace();
-			System.out.println("Error reading game info from file");
+		//	e.printStackTrace();
+			System.out.println("----Error reading game info from file, not in proper format----");
 		}
 	}
 
