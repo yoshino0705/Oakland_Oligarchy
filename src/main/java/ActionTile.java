@@ -129,7 +129,7 @@ public class ActionTile extends Tile{
     private void scenario5(Player p, ArrayList<Player> pList){
         JOptionPane.showMessageDialog(null, "Pay each player $50 for being quality friends!");
         for(int i = 0; i < pList.size(); ++i){
-            if(!pList.get(i).getName().equals(p.getName()) && !pList.get(i).hasLost){
+            if(!pList.get(i).getName().equals(p.getName()) && !pList.get(i).hasLost && !p.hasLost){
                 pList.get(i).setMoney(pList.get(i).getMoney() + 50);
                 p.setMoney(p.getMoney() - 50);
             }
