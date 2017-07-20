@@ -272,6 +272,11 @@ public class Trade extends JDialog{
 
 	}
 
+	// for testing
+	public Trade() {
+		
+	}
+
 	// gets the selected index for a JList
 	private int getSelectedPropertyIndex(JList<Object> list, ImplementTiles tiles){
 		for(int i = 0; i < 36; i++){
@@ -284,7 +289,7 @@ public class Trade extends JDialog{
 	}
 
 	// change ownership of a property
-	private void changeOwnership(Trader originalOwner, Trader newOwner, OaklandOligarchy game, int propertyIndex){
+	public void changeOwnership(Trader originalOwner, Trader newOwner, OaklandOligarchy game, int propertyIndex){
 		PropertyTile curTile = (PropertyTile)game.tiles.getTile(propertyIndex);
 		originalOwner.removeSelectedItem();
 		newOwner.addItem(curTile.getTileName());
