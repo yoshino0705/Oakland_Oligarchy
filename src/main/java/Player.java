@@ -21,7 +21,7 @@ public class Player{
 
 	Player(String name, int money, int player_number, boolean lost, int position){
 		this.name = name.toUpperCase();
-		this.setMoney(money);
+		this.money = money;
 		this.position = position;
 		this.color = makeColor(player_number);
 		this.hasLost = lost;
@@ -90,7 +90,7 @@ public class Player{
 	}
 
 	public void setMoney(int money){
-		if(money < 0){//sell properties until money is >= 0 or out of properties
+		if(money < 0 && !this.hasLost){//sell properties until money is >= 0 or out of properties
 			ArrayList<PropertyTile> ownedProps = game.getOwnedProperties(this);
 			ArrayList<PropertyTile> forecloseProps = new ArrayList<PropertyTile>();
 			for(PropertyTile prop : ownedProps){//go through properties selling them until there is enough money or out of props
@@ -107,7 +107,7 @@ public class Player{
 			}//end enhanced for loop
 
 			//if player has sold all properties and still is under 0 money they should lose
-			if(money < 0){
+			if(money < 0 && !this.hasLost){
 				// tell the player they lost
 				JOptionPane.showMessageDialog(null, this.getName()+" ran out of money and properties. They lose!");
 				System.out.println("DB1");
