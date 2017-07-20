@@ -9,7 +9,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 	//main window for the application
 	JFrame window = new JFrame("OaklandOligarchy");
 	//JLabel currentTurnPlayerLabel;
-	
+
 	ImplementTiles tiles;
 	// in order to show message while hovering on board, GameBoard gb has to be a class object
 	private GameBoard gb;
@@ -20,7 +20,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 	private InfoPanel info;
 	private TopMenu tm;
 	ArrayList<Player> allPlayers = new ArrayList<Player>(); // list of all the players in this game
-	
+
 //	private final int TILE_COUNT = 36;
 
 	public static void main(String[] args){
@@ -37,7 +37,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 				System.out.println("Loading game from file: "+fc.getSelectedFile().getName());
 				new OaklandOligarchy(file);
 			}else{
-				System.out.println("No file selected, aborting");
+				System.out.println("----Error: No file selected, aborting----");
 				System.exit(1);
 			}
 		}else{//else start new game
@@ -48,11 +48,12 @@ public class OaklandOligarchy implements MouseMotionListener{
 	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
 		Function: OaklandOligarchy (constructor)
 	~	Parameters: None														~
-		Returns: None																			
+		Returns: None
 	~	Description: Launches start menu. Sets up main GUI window and adds 		~
-					different game components to said window.					
+					different game components to said window.
 	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 	OaklandOligarchy(){
+		Player.setPlayerGame(this);
 		StartMenu sm = new StartMenu();
 
 		// load players from StartMenu into allPlayers array
@@ -83,15 +84,15 @@ public class OaklandOligarchy implements MouseMotionListener{
 
 		gb = new GameBoard(0, 0, .63, .63);
 		gb.addMouseMotionListener(this);
-		
+
 		for(int i = 0; i < allPlayers.size(); i++) {
 			if(allPlayers.get(i).getName().contains("LABOON")) {
 				gb.enableEasterEgg();
 				break;
-				
+
 			}
 		}
-			
+
 
 		// add players to gameboard to start
 		for (int i = 0; i < numPlayers; i++) {
@@ -111,6 +112,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 
 	//OaklandOligarchy constructor used for resuming a game from a file
 	OaklandOligarchy(File file){
+		Player.setPlayerGame(this);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setSize(1000,1000);
 		//make tiles for the game
@@ -129,33 +131,35 @@ public class OaklandOligarchy implements MouseMotionListener{
 			int seconds = Integer.parseInt(split_time[2]);
 			//get the name of current turn player
 			String curTurnPlayerName = scan.nextLine();
-			System.out.println("current turn: "+curTurnPlayerName);
+			//System.out.println("current turn: "+curTurnPlayerName);
 			//get whether roll button is enabled
 			boolean roll_button_boolean = Boolean.parseBoolean(scan.nextLine());
 			//get whether end turn button is enabled
 			boolean end_button_boolean = Boolean.parseBoolean(scan.nextLine());
 			int num_players = Integer.parseInt(scan.nextLine());
-			System.out.println("num players:"+num_players);
+			//System.out.println("num players:"+num_players);
 			//loop through and get info to create each player and their properties
 			for(int i = 0; i < num_players; i++){
 				String pname = scan.nextLine();//get player name
-				System.out.println(pname);
+				//System.out.println(pname);
 				int pmoney = Integer.parseInt(scan.nextLine());//get player money
-				System.out.println(pmoney);
+				//System.out.println(pmoney);
 				boolean plost = Boolean.parseBoolean(scan.nextLine());//get if the player has lost
-				System.out.println(plost);
+				//System.out.println(plost);
 				int position = Integer.parseInt(scan.nextLine());//get player position
 				int num_props = Integer.parseInt(scan.nextLine());//get number of owned properties
-				System.out.println(num_props);
+				//System.out.println(num_props);
 				String[] prop_names = new String[num_props];
 				String[] prop_bools = new String[num_props];
-				//get list of all the owned properties
+
+				//get list of all the owned properties and their mortgage status
 				for(int j = 0; j < num_props; j++){
 					String prop_str = scan.nextLine();
 					String[] split_prop = prop_str.split(":");
 					String prop_name = split_prop[0];
-					String prop_bool = split_prop[1];					
-					System.out.println(prop_name);
+					String prop_bool = split_prop[1];
+					//System.out.println(prop_name);
+
 					prop_names[j] = prop_name;
 					prop_bools[j] = prop_bool;
 				}//end for j
@@ -175,7 +179,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 				if(pname.equals(curTurnPlayerName)){//if this player is the current turn player
 					currentTurnPlayer = thePlayer;
 					numTurns = i;
-					System.out.println("found equal name");
+					//System.out.println("found equal name");
 				}
 				allPlayers.add(thePlayer);
 				numPlayers++;
@@ -198,16 +202,16 @@ public class OaklandOligarchy implements MouseMotionListener{
 			tm.rollButton.setEnabled(roll_button_boolean);
 			tm.endTurn.setEnabled(end_button_boolean);
 			window.add(tm, BorderLayout.NORTH);
-			
+
 			info = new InfoPanel(allPlayers, tiles, hours, minutes, seconds);
 			window.add(info, BorderLayout.WEST);
-			
+
 			window.add(gb, BorderLayout.CENTER);
 			window.setVisible(true);
-			
+
 		} catch(Exception e){
-			e.printStackTrace();
-			System.out.println("Error reading game info from file");
+		//	e.printStackTrace();
+			System.out.println("----Error reading game info from file, not in proper format----");
 		}
 	}
 
@@ -218,7 +222,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 				Player p = new Player("p" + i, 1000, i, false);
 				allPlayers.add(p);
 				numPlayers++;
-			}	
+			}
 
 			//initial globals
 			tiles = new ImplementTiles();
@@ -231,15 +235,25 @@ public class OaklandOligarchy implements MouseMotionListener{
 			Player p = allPlayers.get(0);
 			PropertyTile prop = (PropertyTile) tiles.getTile(1);
 			prop.setOwnership(p);
+			p.addProperty(prop);
 			prop = (PropertyTile) tiles.getTile(3);
 			prop.setOwnership(p);
+			p.addProperty(prop);
+			// give player1 some properties for testing
+			p = allPlayers.get(1);
+			prop = (PropertyTile) tiles.getTile(2);
+			prop.setOwnership(p);
+			p.addProperty(prop);
+			prop = (PropertyTile) tiles.getTile(4);
+			prop.setOwnership(p);
+			p.addProperty(prop);
 		} else throw new IllegalArgumentException("Incorrect usage of Oakland Oligarchy class.");
 	}
 
 	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
 		Function: getIndexCurrentTurnPlayer
 	~	Parameters: None														~
-		Returns: int value representing player who's turn it is											~				
+		Returns: int value representing player who's turn it is											~
 	~	Description: Calculates which player's turn it currently is 			~
 	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 	public int getIndexCurrentTurnPlayer() {
@@ -253,7 +267,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
 		Function: checkWon
 	~	Parameters: None														~
-		Returns: boolean indicating whether game has been won									
+		Returns: boolean indicating whether game has been won
 	~	Description: determines whether the game has been won or not 			~
 	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 	public boolean checkWon() {
@@ -272,7 +286,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
 		Function: getWinner
 	~	Parameters: None														~
-		Returns: player who has won the game				
+		Returns: player who has won the game
 	~	Description: finds the player who has won the game and returns it		~
 	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 	public Player getWinner() {
@@ -289,7 +303,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
 		Function: playerLose
 	~	Parameters: player who has lost											~
-		Returns: None				
+		Returns: None
 	~	Description: executes logic for player who has lost game 				~
 	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 	public void playerLose(Player p) {
@@ -307,8 +321,8 @@ public class OaklandOligarchy implements MouseMotionListener{
 			}
 		}
 
-		// remove token from board
-		gb.movePlayer(getIndexCurrentTurnPlayer(), -1);
+		// remove token from board//change from current to p
+		gb.movePlayer(getPlayerIndex(p), -1);
 
 		// update player name
 		p.setName(p.getName() + " - LOSER");
@@ -318,10 +332,21 @@ public class OaklandOligarchy implements MouseMotionListener{
 		refreshInfoPanel();
 	}
 
+	public int getPlayerIndex(Player p){
+		int ret_index = 0;
+		for(Player pl : allPlayers){
+			if(pl == p){
+				return ret_index;
+			}
+			ret_index++;
+		}
+		return -1;
+	}
+
 	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
 		Function: endTurn
 	~	Parameters: None 														~
-		Returns: None				
+		Returns: None
 	~	Description: executes logic to end one player's turn and begin the next	~
 	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 	public void endTurn() {
@@ -344,7 +369,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
 		Function: getOwnedProperties
 	~	Parameters: Player who's owned properties we wish to find				~
-		Returns: list of properties owned by given player			
+		Returns: list of properties owned by given player
 	~	Description: generates list of properties owned by a given player 		~
 	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 	public ArrayList<PropertyTile> getOwnedProperties(Player p) {
@@ -372,7 +397,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 	public void setCurrentTurnPlayer(int index) {
 		this.currentTurnPlayer = allPlayers.get(index);
 	}
-	
+
 	public InfoPanel getInfoPanel(){
 		return info;
 	}
@@ -388,7 +413,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 	public void animatedMovePlayer(int playerNum, int startPos, int roll) {
 		gb.animatedMovePlayer(playerNum, startPos, roll);
 	}
-	
+
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
 		// TODO Auto-generated method stub
@@ -398,7 +423,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 	public void mouseMoved(MouseEvent e) {
 		gb.showTileDetails(e.getX(), e.getY(), 20, tiles);
 
-		
+
 	}
 
 }//end of class OaklandOligarchy
