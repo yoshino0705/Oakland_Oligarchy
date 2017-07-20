@@ -45,8 +45,10 @@ public class ProcessTurn {
 		} while (positionChange == true);
 
 		// update top menu buttons
-		game.getTopMenu().toggleRollButton();
+		
 		game.getTopMenu().toggleEndTurnButton();
+		game.getTopMenu().toggleRollButton();
+		
 	}
 
 	// constructor for testing purposes

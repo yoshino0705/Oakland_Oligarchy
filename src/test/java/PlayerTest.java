@@ -15,10 +15,10 @@ public class PlayerTest {
 		assertEquals(p.getMoney(), 9001);
 		p.setMoney(9002);
 		assertEquals(p.getMoney(), 9002);
-		p.setMoney(-10);
-		assertEquals(p.getMoney(), 0);
-		Player p2 = new Player("p2name", -20, 0, false);
-		assertEquals(p2.getMoney(), 0);
+		//p.setMoney(-10);
+		//assertEquals(p.getMoney(), 0);
+		//Player p2 = new Player("p2name", -20, 0, false);
+		//assertEquals(p2.getMoney(), 0);
 	}
 
 }

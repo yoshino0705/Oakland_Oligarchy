@@ -53,6 +53,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 					different game components to said window.					
 	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 	OaklandOligarchy(){
+		Player.setPlayerGame(this);
 		StartMenu sm = new StartMenu();
 
 		// load players from StartMenu into allPlayers array
@@ -102,6 +103,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 
 	//OaklandOligarchy constructor used for resuming a game from a file
 	OaklandOligarchy(File file){
+		Player.setPlayerGame(this);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setSize(1000,1000);
 		//make tiles for the game
@@ -288,8 +290,8 @@ public class OaklandOligarchy implements MouseMotionListener{
 			}
 		}
 
-		// remove token from board
-		gb.movePlayer(getIndexCurrentTurnPlayer(), -1);
+		// remove token from board//change from current to p
+		gb.movePlayer(getPlayerIndex(p), -1);
 
 		// update player name
 		p.setName(p.getName() + " - LOSER");
@@ -297,6 +299,17 @@ public class OaklandOligarchy implements MouseMotionListener{
 
 		endTurn();
 		refreshInfoPanel();
+	}
+
+	public int getPlayerIndex(Player p){
+		int ret_index = 0;
+		for(Player pl : allPlayers){
+			if(pl == p){
+				return ret_index;
+			}
+			ret_index++;
+		}
+		return -1;
 	}
 
 	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
