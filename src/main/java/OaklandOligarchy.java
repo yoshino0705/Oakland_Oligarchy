@@ -59,7 +59,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 		for (int i = 0; i < sm.getPlayerCount(); i++) {
 			Player p = new Player(sm.getPlayerName(i), 1000, i, false);
 			if(p.getName().equalsIgnoreCase("AI")) {				
-				p = new AI(sm.getPlayerName(i), 1000, i, false);
+				p = new AI("AI " + AI.AI_Count++, 1000, i, false);
 			}
 			
 			allPlayers.add(p);
@@ -81,7 +81,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 		info = new InfoPanel(allPlayers, tiles, 0, 0, 0);
 		window.add(info, BorderLayout.WEST);
 
-		gb = new GameBoard(0, 0, .63, .63);
+		gb = new GameBoard(0, 0, .63, .63, this);
 		gb.addMouseMotionListener(this);
 		
 		for(int i = 0; i < allPlayers.size(); i++) {
@@ -102,11 +102,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 
 		// initialize tiles
 		tiles = new ImplementTiles();
-//		
-//		if(this.getCurrentTurnPlayer().isAI) {
-//			this.getTopMenu().rollButton.doClick();
-//			this.getTopMenu().endTurn.doClick();
-//		}
+
 	}
 
 	//OaklandOligarchy constructor used for resuming a game from a file
@@ -116,7 +112,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 		//make tiles for the game
 		tiles = new ImplementTiles();
 		//make gameboard
-		gb = new GameBoard(0, 0, .63, .63);
+		gb = new GameBoard(0, 0, .63, .63, this);
 		gb.addMouseMotionListener(this);
 
 		try {
@@ -223,7 +219,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 			//initial globals
 			tiles = new ImplementTiles();
 			info = new InfoPanel(allPlayers, tiles, 0, 0, 0);
-			gb = new GameBoard(0, 0, .63, .63);
+			gb = new GameBoard(0, 0, .63, .63, this);
 			currentTurnPlayer = allPlayers.get(getIndexCurrentTurnPlayer());
 			tm = new TopMenu(this);
 
