@@ -8,6 +8,7 @@ import javax.swing.AbstractButton;
 import javax.swing.JOptionPane;
 
 public class AI extends Player{
+	public static int AI_Count = 1;
 	
 	public AI(String name, int money, int playerNumber, boolean lost) {
 		super(name, money, playerNumber, lost);
