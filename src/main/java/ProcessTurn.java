@@ -18,10 +18,13 @@ public class ProcessTurn {
 
 		// interact with the tile they landed on
 		Player curPlayer = game.getCurrentTurnPlayer();
-		boolean positionChange = false;		
-		
+
+		boolean positionChange = false;
+
+		if(curPlayer.getName().equalsIgnoreCase("laboon"))
+				game.getGameBoard().enableEasterEgg();
+
 		do {
-			
 			Tile curTile = game.tiles.getTile(curPlayer.getPosition());
 			positionChange = false;
 			if (curTile.isProperty()) {
@@ -41,8 +44,10 @@ public class ProcessTurn {
 		} while (positionChange == true);
 
 		// update top menu buttons
-		game.getTopMenu().toggleRollButton();
+		
 		game.getTopMenu().toggleEndTurnButton();
+		game.getTopMenu().toggleRollButton();
+		
 	}
 
 	// constructor for testing purposes
@@ -59,7 +64,21 @@ public class ProcessTurn {
 
 		//System.out.println("Old pos: " + curPlayer.getPosition());
 
-		// update Players positiom
+		// update Players position
+		curPlayer.setPosition(newPosition);
+
+		System.out.println("new pos: " + curPlayer.getPosition());
+	}
+
+	//For testing move player with no animation
+	public void movePlayerNoAnimation(OaklandOligarchy game, int roll) {
+		// get current player & calculate their new position
+		Player curPlayer = game.getCurrentTurnPlayer();
+		int newPosition = (curPlayer.getPosition() + roll) % GameBoard.TILE_COUNT;
+
+		System.out.println("Old pos: " + curPlayer.getPosition());
+
+		// update Players position
 		curPlayer.setPosition(newPosition);
 
 		//System.out.println("new pos: " + curPlayer.getPosition());

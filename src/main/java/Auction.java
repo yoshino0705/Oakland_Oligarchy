@@ -20,7 +20,7 @@ public class Auction extends JDialog {
 	String aProp = "";
 	ArrayList<Player> otherPlayers;
 	int prop_price;
-	
+
 	public Auction(OaklandOligarchy game){
 		this.game = game;
 		Player owner = game.getCurrentTurnPlayer();	//getCurrentTurnPlayer();

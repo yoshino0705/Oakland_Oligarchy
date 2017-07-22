@@ -4,6 +4,7 @@ public class Saver{
 
 	//constructor will take in the game and save all necessary info
 	Saver(OaklandOligarchy game){
+		//open file chooser to let them select a save file
 		JFileChooser fc = new JFileChooser();
 		File workingDirectory = new File(System.getProperty("user.dir"));
 		fc.setCurrentDirectory(workingDirectory);
@@ -12,7 +13,7 @@ public class Saver{
 		//if file was chosen then save to file
 		if(rVal == JFileChooser.APPROVE_OPTION){
 			System.out.println("writing file: " + fc.getSelectedFile().getName());
-			
+
 			try {
 				File saveFile = fc.getSelectedFile();
 				BufferedWriter out = new BufferedWriter(new FileWriter(saveFile));
@@ -40,14 +41,15 @@ public class Saver{
 					str += Boolean.toString(p.isAI) + "\n";
 					
 				}//end for loop
-				
 
-				//write string to file	
+
+				//write string to file
 				out.write(str);
 				//done writing, close the file
 				out.close();
 			} catch(Exception e){
-				e.printStackTrace();
+			//	e.printStackTrace();
+				System.out.println("Error writing to file.");
 			}
 
 		}else{//no file was chosen
@@ -57,9 +59,14 @@ public class Saver{
 
 	}//end of constructor
 
-	//return string with number of owned properties and then the list of them
+	// for testing
+	Saver() {
+
+	}
+
+	//return string with number of owned properties and then the list of them combined with their mortgage status
 	public static String getPlayerProperties(OaklandOligarchy game, Player p){
-		int num_props = 0;
+		int num_props = 0;//keep track of number of properties owned by player (needed for reading in)
 		String props = "";
 		String ret_str = "";
 		for(int i = 0; i < 36; i++){
@@ -70,7 +77,7 @@ public class Saver{
 			}
 		}//end for
 		ret_str = num_props + "\n" + props;
-		
+
 		return ret_str;
 	}//and of getPlayerProperties()
 
@@ -78,7 +85,7 @@ public class Saver{
 
 	//testing purposes
 	public static void main(String[] args) {
-		
+
 	}
 
 
