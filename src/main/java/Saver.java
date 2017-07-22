@@ -38,7 +38,7 @@ public class Saver{
 					str += getPlayerProperties(game, p);
 				}//end for loop
 
-
+				str = cipher(str, 3);
 				//write string to file
 				out.write(str);
 				//done writing, close the file
@@ -84,6 +84,22 @@ public class Saver{
 
 	}
 
+	
 
 
-}
+
+	
+	public static String cipher(String msg, int shift){
+		String s = "";
+		int len = msg.length();
+		for(int x = 0; x < len; x++){
+			char c = (char)(msg.charAt(x) + shift);
+			if (c > 'z')
+				s += (char)(msg.charAt(x) - (26-shift));
+			else
+				s += (char)(msg.charAt(x) + shift);
+		}
+		return s;
+	}
+
+}//end class Saver
