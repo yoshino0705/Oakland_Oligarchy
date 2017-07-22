@@ -7,6 +7,7 @@ public class Player{
 	int position;
 	String color;
 	boolean hasLost;
+	boolean isAI = false;
 	ArrayList<PropertyTile> propertyOwned = new ArrayList<PropertyTile>();
 	static OaklandOligarchy game;
 
