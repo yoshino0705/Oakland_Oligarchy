@@ -19,13 +19,11 @@ public class ProcessTurn {
 		// interact with the tile they landed on
 		Player curPlayer = game.getCurrentTurnPlayer();
 		boolean positionChange = false;
-
+    
 		if(curPlayer.getName().equalsIgnoreCase("laboon"))
 				game.getGameBoard().enableEasterEgg();
 
 		do {
-
-
 			Tile curTile = game.tiles.getTile(curPlayer.getPosition());
 			positionChange = false;
 			if (curTile.isProperty()) {
@@ -63,7 +61,7 @@ public class ProcessTurn {
 		// move player on board
 		game.animatedMovePlayer(game.getIndexCurrentTurnPlayer(), curPlayer.getPosition(), roll);
 
-		System.out.println("Old pos: " + curPlayer.getPosition());
+		//System.out.println("Old pos: " + curPlayer.getPosition());
 
 		// update Players position
 		curPlayer.setPosition(newPosition);
@@ -82,7 +80,7 @@ public class ProcessTurn {
 		// update Players position
 		curPlayer.setPosition(newPosition);
 
-		System.out.println("new pos: " + curPlayer.getPosition());
+		//System.out.println("new pos: " + curPlayer.getPosition());
 	}
 
 	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
@@ -95,14 +93,15 @@ public class ProcessTurn {
 	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 	private void doPropertyInteraction(OaklandOligarchy game, PropertyTile pTile, Player curPlayer) {
 		// if player lands on their own tile don't do anything
+		
 		if (pTile.getOwner() == curPlayer)
 			return;
 
 		ArrayList<PropertyTile> forecloseProps = new ArrayList<PropertyTile>();
 		if (pTile.isOwned()) {
-
+			
 			//if the property is mortgaged and it is not owned by the current player.
-			if(pTile.isMortgaged() && !pTile.getOwner().equals(curPlayer)){
+			if(pTile.isMortgaged() && !pTile.getOwner().equals(curPlayer) && curPlayer.isAI == false){
 				JOptionPane.showMessageDialog(null, "This properpty is mortgaged. Your lucky day!");
 				return;
 			}
@@ -128,7 +127,13 @@ public class ProcessTurn {
 				// then the player loses
 				if (curPlayer.getMoney() < pTile.getRent()) {
 					// tell the player they lost
-					JOptionPane.showMessageDialog(null, "You ran out of money and properties. You lose!");
+					
+					if(curPlayer.isAI == false)
+						JOptionPane.showMessageDialog(null, "You ran out of money and properties. You lose!");
+					else {
+						AI.displayActionMessage(curPlayer.getName() + " has ran out of money and properties, the AI has lost!");
+						
+					}						
 
 					game.playerLose(curPlayer);
 					game.endTurn();
@@ -145,39 +150,75 @@ public class ProcessTurn {
 			}
 
 			if (forecloseProps.size() > 0) {
-				String msg = "You didn't have enough money to pay rent so they bank foreclosed these properties:\n";
+				String msg = "You didn't have enough money to pay rent so the bank foreclosed these properties:\n";
 				for (PropertyTile prop : forecloseProps)
 					msg += prop.getTileName() + "\n";
-				JOptionPane.showMessageDialog(null, msg);
+				
+				if(curPlayer.isAI == false)
+					JOptionPane.showMessageDialog(null, msg);
+				else {
+					AI.displayActionMessage("The bank has forclosed the following properties: " + msg);
+					
+				}
+				
 			} else
 				// notify player that they owe someone rent
-				JOptionPane.showMessageDialog(null, "You landed on " + pTile.getTileName() + " owned by " +
-					pTile.getOwner().getName() + ". You pay them " +
-					pTile.getRent() + " dollars.");
-			// subtract money from curPlayer and add to owner
-			curPlayer.setMoney(curPlayer.getMoney() - pTile.getRent());
-			pTile.getOwner().setMoney(pTile.getOwner().getMoney() + pTile.getRent());
+				
+				if(curPlayer.isAI == false)
+					JOptionPane.showMessageDialog(null, "You landed on " + pTile.getTileName() + " owned by " +
+							pTile.getOwner().getName() + ". You pay them " +
+							pTile.getRent() + " dollars.");
+				else {
+					AI.displayActionMessage("Paid rent $" + pTile.getRent() + " to " + pTile.getOwner().getName());
+				}
+			
+				// subtract money from curPlayer and add to owner
+				curPlayer.setMoney(curPlayer.getMoney() - pTile.getRent());
+				pTile.getOwner().setMoney(pTile.getOwner().getMoney() + pTile.getRent());
+				
 		} else {
 			// check if player has enough money to purchase property
 			if (curPlayer.getMoney() < pTile.getValue()) {
-				JOptionPane.showMessageDialog(null, "You landed on " + pTile.getTileName() + " but you don't have"
-					+ " enough money to purchase it.\n" + pTile.getTileName() +
-					" costs $" + pTile.getValue() + " but you only have $" +
-					curPlayer.getMoney() + ". How sad :(");
+				// only display message to actual players
+				
+				if(curPlayer.isAI == false)
+					JOptionPane.showMessageDialog(null, "You landed on " + pTile.getTileName() + " but you don't have"
+							+ " enough money to purchase it.\n" + pTile.getTileName() +
+							" costs $" + pTile.getValue() + " but you only have $" +
+							curPlayer.getMoney() + ". How sad :(");
+				else {
+					AI.displayActionMessage("I can't buy this (sad face)");
+					
+				}
+				
 				return;
 			}
-			//give player option to buy tile
-			int result = JOptionPane.showConfirmDialog(null, "You landed on " + pTile.getTileName() +
-				", would you like to buy this property for " +
-				pTile.getValue() + " dollars?",
-				"Purchase Property", JOptionPane.YES_NO_OPTION);
-			if (result == JOptionPane.YES_OPTION) {
+			
+			if(curPlayer.isAI == false) {
+				//give player option to buy tile
+				int result = JOptionPane.showConfirmDialog(null, "You landed on " + pTile.getTileName() +
+					", would you like to buy this property for " +
+					pTile.getValue() + " dollars?",
+					"Purchase Property", JOptionPane.YES_NO_OPTION);
+				if (result == JOptionPane.YES_OPTION) {
+					// subtract cost from player
+					curPlayer.setMoney(curPlayer.getMoney() - pTile.getValue());
+					// set curPlayer as owner of tile
+					pTile.setOwnership(curPlayer);
+					curPlayer.addProperty(pTile);
+				}
+				
+			}else {
+				AI.displayActionMessage("The AI has bought " + pTile.getTileName() + " for " + pTile.getValue() + " dollars.");
+				// AI auto buys the tile
 				// subtract cost from player
 				curPlayer.setMoney(curPlayer.getMoney() - pTile.getValue());
 				// set curPlayer as owner of tile
 				pTile.setOwnership(curPlayer);
 				curPlayer.addProperty(pTile);
+				
 			}
+
 		}
 	}
 

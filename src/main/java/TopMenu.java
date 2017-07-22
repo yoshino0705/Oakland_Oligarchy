@@ -83,7 +83,7 @@ public class TopMenu extends JPanel{
 		unmortgageButton.addActionListener(unmortgage_listener);
 		unmortgageButton.setFont(new Font("Courier", Font.PLAIN, 20));
 		this.add(unmortgageButton,0,9);
-
+	
 
 	}
 
@@ -367,10 +367,9 @@ public class TopMenu extends JPanel{
 		public void actionPerformed(ActionEvent e) {
 			// increment turn count
 			game.endTurn();
-
-			// toggle turn buttons
 			toggleJButtonEnabled(rollButton);
 			toggleJButtonEnabled(endTurn);
+			
 		}
 	}
 

@@ -59,6 +59,10 @@ public class OaklandOligarchy implements MouseMotionListener{
 		// load players from StartMenu into allPlayers array
 		for (int i = 0; i < sm.getPlayerCount(); i++) {
 			Player p = new Player(sm.getPlayerName(i), 1000, i, false);
+			if(p.getName().equalsIgnoreCase("AI")) {				
+				p = new AI(sm.getPlayerName(i), 1000, i, false);
+			}
+			
 			allPlayers.add(p);
 			numPlayers++;
 		}
@@ -99,6 +103,11 @@ public class OaklandOligarchy implements MouseMotionListener{
 
 		// initialize tiles
 		tiles = new ImplementTiles();
+//		
+//		if(this.getCurrentTurnPlayer().isAI) {
+//			this.getTopMenu().rollButton.doClick();
+//			this.getTopMenu().endTurn.doClick();
+//		}
 	}
 
 	//OaklandOligarchy constructor used for resuming a game from a file
@@ -142,6 +151,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 				//System.out.println(num_props);
 				String[] prop_names = new String[num_props];
 				String[] prop_bools = new String[num_props];
+
 				//get list of all the owned properties and their mortgage status
 				for(int j = 0; j < num_props; j++){
 					String prop_str = scan.nextLine();
@@ -149,12 +159,23 @@ public class OaklandOligarchy implements MouseMotionListener{
 					String prop_name = split_prop[0];
 					String prop_bool = split_prop[1];
 					//System.out.println(prop_name);
+
 					prop_names[j] = prop_name;
 					prop_bools[j] = prop_bool;
 				}//end for j
+				
+				boolean isAIValue = Boolean.parseBoolean(scan.nextLine());
+				Player thePlayer;
+				
+				if(isAIValue == false) {
+					thePlayer = new Player(pname, pmoney, i, plost, position);
+					thePlayer.isAI = false;
+				}else {
+					thePlayer = new AI(pname, pmoney, i, plost, position);
+					thePlayer.isAI = true;
+					
+				}
 
-				Player thePlayer = new Player(pname, pmoney, i, plost, position);
-				//System.out.println(pname);
 				if(pname.equals(curTurnPlayerName)){//if this player is the current turn player
 					currentTurnPlayer = thePlayer;
 					numTurns = i;
@@ -332,10 +353,17 @@ public class OaklandOligarchy implements MouseMotionListener{
 		do {
 			numTurns++;
 			int nextTurnPlayer = getIndexCurrentTurnPlayer();
-			setCurrentTurnPlayer(nextTurnPlayer);
+			setCurrentTurnPlayer(nextTurnPlayer);				
+			
 		} while (currentTurnPlayer.hasLost());
 
 		tm.updateCurrentTurnLabel(currentTurnPlayer);
+		
+		if(currentTurnPlayer.isAI) {
+			AI ai = (AI) currentTurnPlayer;
+			ai.processTheTurn(this);
+
+		}
 	}
 
 	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~

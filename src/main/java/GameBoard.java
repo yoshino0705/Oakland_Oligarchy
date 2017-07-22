@@ -895,7 +895,7 @@ public class GameBoard extends JPanel{
 			g.drawImage(aImage, x - imgWidth/2, y, null);
 			
 		} catch (IOException e) {
-			System.out.println("Cannot open image");
+			//System.out.println("Cannot open image");
 		}
 	}
 	
@@ -910,7 +910,7 @@ public class GameBoard extends JPanel{
 			g.drawImage(aImage, x - imgWidth/2, y, null);
 			
 		} catch (IOException e) {
-			System.out.println("Cannot open image");
+			//System.out.println("Cannot open image");
 		}
 	}
 	
@@ -925,7 +925,7 @@ public class GameBoard extends JPanel{
 			g.drawImage(aImage, x - imgWidth/2, y, null);
 			
 		} catch (IOException e) {
-			System.out.println("Cannot open image");
+			//System.out.println("Cannot open image");
 		}
 	}	
 	
@@ -963,7 +963,7 @@ public class GameBoard extends JPanel{
 			g.drawImage(aImage, x - imgWidth/2, y, null);
 			
 		} catch (IOException e) {
-			System.out.println("Cannot open image");
+			//System.out.println("Cannot open image");
 		}
 		
 	}
