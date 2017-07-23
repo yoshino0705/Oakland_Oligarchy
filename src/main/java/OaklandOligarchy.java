@@ -61,6 +61,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 			Player p = new Player(sm.getPlayerName(i), 1000, i, false);
 			if(p.getName().equalsIgnoreCase("AI")) {				
 				p = new AI("AI " + AI.AI_Count++, 1000, i, false);
+
 			}
 			
 			allPlayers.add(p);
@@ -103,7 +104,6 @@ public class OaklandOligarchy implements MouseMotionListener{
 
 		// initialize tiles
 		tiles = new ImplementTiles();
-
 	}
 
 	//OaklandOligarchy constructor used for resuming a game from a file
@@ -155,6 +155,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 					String prop_name = split_prop[0];
 					String prop_bool = split_prop[1];
 					//System.out.println(prop_name);
+
 					prop_names[j] = prop_name;
 					prop_bools[j] = prop_bool;
 				}//end for j

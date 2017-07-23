@@ -20,7 +20,7 @@ public class ProcessTurn {
 		Player curPlayer = game.getCurrentTurnPlayer();
 
 		boolean positionChange = false;
-
+    
 		if(curPlayer.getName().equalsIgnoreCase("laboon"))
 				game.getGameBoard().enableEasterEgg();
 
