@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -7,17 +8,22 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 public class CustomizeTokens {
 	
 	private Image[] image = new Image[4];
+	private Color[] playerColor = new Color[4];
+	private final String[] options = {"Choose Color", "Choose Image"};
 	
 	public CustomizeTokens() {
-		// initializes the image array
-		for(int i = 0; i < 4; i++)
+		// initializes the arrays
+		for(int i = 0; i < 4; i++) {
 			image[i] = null;
+			playerColor[i] = null; 
+		}
 		
 	}
 	
@@ -67,6 +73,10 @@ public class CustomizeTokens {
 	}
 	
 	public void drawPlayer(Graphics g, int x, int y, int width, int height, int playerIndex) {
+		// sets to custom color if it has been specified by setPlayerColor(int) already
+		if(this.playerColor[playerIndex] != null)
+			g.setColor(this.playerColor[playerIndex]);
+		
 		if(this.isImageNull(playerIndex) == false) {
 			// draws the selected image
 			Image scaledImage = this.getScaledImage(this.image[playerIndex], width, height);
@@ -77,6 +87,57 @@ public class CustomizeTokens {
 			g.fillRect(x, y, width, height);
 		}
 		
+	}
+	
+	public void setPlayerColor(int playerIndex) {
+		try {
+			Color newColor = JColorChooser.showDialog(null, "Choose a color", Color.RED);
+			this.playerColor[playerIndex] = newColor;
+			
+		}catch(Exception e) {}
+		
+	}
+	
+	public void setPlayerColor(OaklandOligarchy game) {
+		for(int i = 0; i < game.allPlayers.size(); i++) {
+			if(this.playerColor[i] != null) {
+				String hex = String.format("#%02x%02x%02x", this.playerColor[i].getRed(), this.playerColor[i].getGreen(), this.playerColor[i].getBlue()); 
+				game.allPlayers.get(i).color = hex;
+			}
+		}
+		
+	}
+	
+	public Color getPlayerColor(int playerIndex) {
+		if(playerIndex > 0 && playerIndex < 4) {
+			return this.playerColor[playerIndex];
+			
+		}else {
+			// return default color
+			return Color.BLACK;
+			
+		}
+		
+	}
+	
+	public void showSelectionDialog(int playerIndex) {
+		String choice = (String) JOptionPane.showInputDialog(null,"Please select an option","Change Icon", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+		try {
+			if(choice.equals(this.options[0])){
+				// select from colors
+				this.setPlayerColor(playerIndex);
+				
+			}else{
+				// select from images
+				this.setImage(playerIndex);
+			}
+			
+		}catch(Exception e) {}
+	}
+	
+	public static void main(String args[]) {
+		Color newColor = JColorChooser.showDialog(null, "Choose a color", Color.RED);
+		System.out.println(newColor.toString());
 	}
 
 }
