@@ -147,8 +147,10 @@ public class GameBoard extends JPanel{
 		changeToken.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {        
-		    	tokenTexture.setImage(game.getIndexCurrentTurnPlayer());
-		        
+		    	tokenTexture.showSelectionDialog(game.getIndexCurrentTurnPlayer());
+		        tokenTexture.setPlayerColor(game);
+		        game.refreshInfoPanel();
+		        game.getGameBoard().refreshBoard();
 		    }
 		});
 		
@@ -217,7 +219,6 @@ public class GameBoard extends JPanel{
 	public void movePlayer(int playerNum, int toThisTileID){
 		if(playerNum > 4 || playerNum < 0){
 			System.out.println("Error in GameBoard movePlayer(): invalid playerNum");
-			System.out.println(playerNum + " " + toThisTileID);
 			//System.exit(1);
 			return;
 		}
