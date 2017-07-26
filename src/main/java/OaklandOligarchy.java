@@ -229,7 +229,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 			//delete the temp file
 			file.delete();
 		} catch(Exception e){
-			e.printStackTrace();
+			//e.printStackTrace();
 			System.out.println("----Error reading game info from file, not in proper format----");
 		}
 	}
