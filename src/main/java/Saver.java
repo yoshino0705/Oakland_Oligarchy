@@ -41,8 +41,9 @@ public class Saver{
 					str += Boolean.toString(p.isAI) + "\n";
 					
 				}//end for loop
-
-
+				
+				//cipher the string to hide it
+				str = cipher(str, 10);
 				//write string to file
 				out.write(str);
 				//done writing, close the file
@@ -88,6 +89,21 @@ public class Saver{
 
 	}
 
+	
 
 
-}
+
+	
+	public static String cipher(String msg, int shift){
+		String str = "";
+		for(int x = 0; x < msg.length(); x++){
+			str += (char)(msg.charAt(x) + shift);
+		}
+		return str;
+	}
+
+
+
+	
+
+}//end class Saver

@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.io.*;
 import java.util.*;
+import java.nio.file.*;
 
 public class OaklandOligarchy implements MouseMotionListener{
 	//main window for the application
@@ -107,7 +108,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 	}
 
 	//OaklandOligarchy constructor used for resuming a game from a file
-	OaklandOligarchy(File file){
+	OaklandOligarchy(File cipherFile){
 		Player.setPlayerGame(this);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setSize(1000,1000);
@@ -118,6 +119,22 @@ public class OaklandOligarchy implements MouseMotionListener{
 		gb.addMouseMotionListener(this);
 
 		try {
+
+			//convert cipher file into readable file
+			
+			String content = new Scanner(cipherFile).useDelimiter("\\Z").next();
+			//String content = new String(Files.readAllBytes(Paths.get(cipherFile.getAbsolutePath())));
+			content = Saver.cipher(content, -10);
+			//System.out.println(content);	
+
+			File tempFile = new File("temp_file");
+			BufferedWriter out = new BufferedWriter(new FileWriter(tempFile));
+			out.write(content);
+			out.close();
+
+			File file = new File("temp_file");
+			
+
 			Scanner scan = new Scanner(file);//set scanner to read from save file
 			//read time from file
 			String time_str = scan.nextLine();
@@ -204,9 +221,11 @@ public class OaklandOligarchy implements MouseMotionListener{
 
 			window.add(gb, BorderLayout.CENTER);
 			window.setVisible(true);
-
+	
+			//delete the temp file
+			file.delete();
 		} catch(Exception e){
-		//	e.printStackTrace();
+			//e.printStackTrace();
 			System.out.println("----Error reading game info from file, not in proper format----");
 		}
 	}
