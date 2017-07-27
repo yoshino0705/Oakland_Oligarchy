@@ -178,6 +178,9 @@ public class OaklandOligarchy implements MouseMotionListener{
 				}//end for j
 				
 				boolean isAIValue = Boolean.parseBoolean(scan.nextLine());
+				String tokenTextureData = scan.nextLine();				
+				System.out.println(tokenTextureData);
+				
 				Player thePlayer;
 				
 				if(isAIValue == false) {
@@ -188,6 +191,8 @@ public class OaklandOligarchy implements MouseMotionListener{
 					thePlayer.isAI = true;
 					
 				}
+				
+				gb.getTokenTextures().loadFromString(tokenTextureData);
 
 				if(pname.equals(curTurnPlayerName)){//if this player is the current turn player
 					currentTurnPlayer = thePlayer;

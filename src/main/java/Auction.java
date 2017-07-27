@@ -77,6 +77,10 @@ public class Auction extends JDialog {
 						makeBid(thisPlayer);
 					}
 				});
+				
+				if(otherPlayers.get(i).isAI == true)
+					bidButtons[i].setEnabled(false);
+				
 				middlePanel.add(bidButtons[i]);
 			}//end for
 			this.add(middlePanel);

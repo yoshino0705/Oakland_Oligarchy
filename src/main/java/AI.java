@@ -2,17 +2,21 @@ import java.awt.AWTException;
 import java.awt.Point;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.AbstractButton;
 import javax.swing.JOptionPane;
 
-public class AI extends Player{	
+public class AI extends Player{
 	public static int AI_Count = 1;
+	
+	private ArrayList<Integer> mortgageValues;
 	
 	public AI(String name, int money, int playerNumber, boolean lost) {
 		super(name, money, playerNumber, lost);
 		this.isAI = true;
+		mortgageValues = new ArrayList<Integer>();
 		
 	}
 	
@@ -60,13 +64,53 @@ public class AI extends Player{
 		try {
 			r = new Robot();
 		} catch (AWTException e) {
-			e.printStackTrace();
+			
 		}
 		
 	    r.mouseMove(p.x + button.getWidth() / 2, p.y + button.getHeight() / 2);
 	    r.mousePress(InputEvent.BUTTON1_MASK);
 	    //try { Thread.sleep(millis); } catch (Exception e) {}
 	    r.mouseRelease(InputEvent.BUTTON1_MASK);
+	}
+	
+	private ArrayList<PropertyTile> getMortgagePropertyList() {
+		ArrayList<PropertyTile> owned = this.getPropertiesList();
+		ArrayList<PropertyTile> mortgageable = new ArrayList<PropertyTile>();
+		
+		// initiates a list of mortgageable properties
+		for(int i = 0; i < owned.size(); i++) {
+			if(owned.get(i).isMortgaged() == false)
+				mortgageable.add(owned.get(i));
+		}
+		
+		return mortgageable;
+		
+	}
+	
+	private boolean canPerformMortgage() {
+		return (this.getMortgagePropertyList().size() == 0)? false : true;
+		
+	}
+	
+	private void performMortgage(PropertyTile prop) {
+		// uses mortgage method from player class
+		if(this.canPerformMortgage())
+			this.mortgage(prop);		
+		
+	}
+	
+	private void mortgageForMoney(int amount) {
+		ArrayList<PropertyTile> mortgageable = this.getMortgagePropertyList();
+		PropertyTile toMortgage = null;
+		for(int i = 0; i < mortgageable.size(); i++) {
+			if((mortgageable.get(i).getValue()/2) >= amount)
+				toMortgage = mortgageable.get(i);
+			
+		}
+		
+		if(toMortgage != null)
+			this.performMortgage(toMortgage);
+		
 	}
 	
 	public static void displayActionMessage(String msg) {

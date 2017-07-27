@@ -100,7 +100,7 @@ public class GameBoard extends JPanel{
 	private int subRectCoordX[];
 	private int subRectCoordY[];
 	
-	private CustomizeTokens tokenTexture = new CustomizeTokens();
+	private CustomizeTokens tokenTexture;
 
  	public GameBoard(int x, int y, double scaleX, double scaleY, OaklandOligarchy game){
 		shiftX = x;
@@ -140,6 +140,8 @@ public class GameBoard extends JPanel{
 		initSubRectCoord();
 		
 		buttonFont = new Font("TimesNewRoman", Font.BOLD, (int)(30 * this.scaleX));
+		
+		tokenTexture = new CustomizeTokens();
 		
 		changeToken = new JButton("Change Icon");
 		changeToken.setFont(buttonFont);
@@ -219,8 +221,7 @@ public class GameBoard extends JPanel{
 	public void movePlayer(int playerNum, int toThisTileID){
 		if(playerNum > 4 || playerNum < 0){
 			System.out.println("Error in GameBoard movePlayer(): invalid playerNum");
-			//System.exit(1);
-			return;
+			System.exit(1);
 		}
 
 		playerOnTile[playerNum] = toThisTileID;
@@ -1058,6 +1059,11 @@ public class GameBoard extends JPanel{
 	
 	public int getShiftY() {
 		return this.shiftY;
+	}
+	
+	public CustomizeTokens getTokenTextures() {
+		return this.tokenTexture;
+		
 	}
 
 	public static void main(String args[]){

@@ -15,14 +15,18 @@ import javax.swing.JOptionPane;
 public class CustomizeTokens {
 	
 	private Image[] image = new Image[4];
+	private String[] imagePath = new String[4];	// stores paths of images
 	private Color[] playerColor = new Color[4];
 	private final String[] options = {"Choose Color", "Choose Image"};
+	private int[] type = new int[4];		// 0 for color, 1 for image
+	private final String DELIMITER = "=";
 	
 	public CustomizeTokens() {
 		// initializes the arrays
 		for(int i = 0; i < 4; i++) {
 			image[i] = null;
 			playerColor[i] = null; 
+			type[i] = -1;
 		}
 		
 	}
@@ -38,6 +42,8 @@ public class CustomizeTokens {
 			
 			try {
 				this.image[playerIndex] = ImageIO.read(imageFile);
+				this.imagePath[playerIndex] = imageFile.getPath();
+				this.type[playerIndex] = 1;
 				JOptionPane.showMessageDialog(null, "Icon Changed!");
 				
 			} catch (IOException e) {
@@ -74,10 +80,11 @@ public class CustomizeTokens {
 	
 	public void drawPlayer(Graphics g, int x, int y, int width, int height, int playerIndex) {
 		// sets to custom color if it has been specified by setPlayerColor(int) already
-		if(this.playerColor[playerIndex] != null)
+		if(this.type[playerIndex] == 0) {
 			g.setColor(this.playerColor[playerIndex]);
-		
-		if(this.isImageNull(playerIndex) == false) {
+			g.fillRect(x, y, width, height);
+		}
+		else if(this.type[playerIndex] == 1) {
 			// draws the selected image
 			Image scaledImage = this.getScaledImage(this.image[playerIndex], width, height);
 			g.drawImage(scaledImage, x, y, null);
@@ -126,18 +133,60 @@ public class CustomizeTokens {
 			if(choice.equals(this.options[0])){
 				// select from colors
 				this.setPlayerColor(playerIndex);
+				this.type[playerIndex] = 0;
 				
 			}else{
 				// select from images
 				this.setImage(playerIndex);
+				this.type[playerIndex] = 1;
 			}
 			
 		}catch(Exception e) {}
 	}
 	
+	public String toString(int playerIndex) {
+		if(this.type[playerIndex] == 0) {
+			String hex = "" + this.playerColor[playerIndex].getRed() + DELIMITER + this.playerColor[playerIndex].getGreen() + DELIMITER + this.playerColor[playerIndex].getBlue(); 
+			return "" + playerIndex + DELIMITER + this.type[playerIndex] + DELIMITER + hex;
+		}else
+			return "" + playerIndex + DELIMITER + this.type[playerIndex] + DELIMITER + this.imagePath[playerIndex];
+		
+	}
+	
+	public void loadFromString(String str) {
+		String tokens[] = str.split(DELIMITER);
+
+		try {
+			int playerIndex = Integer.parseInt(tokens[0]);
+			int type = Integer.parseInt(tokens[1]);
+			
+			if(type == 0) {
+				// color
+				this.type[playerIndex] = 0;
+				this.playerColor[playerIndex] = new Color(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[3]), Integer.parseInt(tokens[4]));
+				System.out.println("Color changed for player index: " + playerIndex + " Color: " + this.playerColor[playerIndex].getRGB());
+			}
+			else if(type == 1) {
+				// image
+				this.type[playerIndex] = 1;
+				this.imagePath[playerIndex] = tokens[2];
+				System.out.println("Image changed for player index: " + playerIndex + " Path: " + this.imagePath[playerIndex]);
+
+			}				
+			else {
+				this.type[playerIndex] = -1;
+				System.out.println("Nothing changed");
+			}
+				
+			
+		}catch(Exception e){System.out.println("Error Occurred");}
+		
+	}
+	
 	public static void main(String args[]) {
-		Color newColor = JColorChooser.showDialog(null, "Choose a color", Color.RED);
-		System.out.println(newColor.toString());
+		String str = "0=1=C:\\Users\\Weihao\\Desktop\\java\\Oakland Oligarchy\\house.png";
+		String token[] = str.split("=");
+		System.out.println(token[2]);
 	}
 
 }

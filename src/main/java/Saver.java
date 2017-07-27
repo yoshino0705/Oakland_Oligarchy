@@ -39,6 +39,7 @@ public class Saver{
 					
 					// write the value of isAI to determine if it's AI
 					str += Boolean.toString(p.isAI) + "\n";
+					str += game.getGameBoard().getTokenTextures().toString(i) + "\n";
 					
 				}//end for loop
 				

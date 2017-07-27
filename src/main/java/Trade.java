@@ -347,7 +347,8 @@ public class Trade extends JDialog{
 		else
 			aButton.setBounds(sender.getX(), (int)(sender.getY() + sender.height + 10), (int)buttonWidth, (int)buttonHeight);
 
-		//printButtonInfo(aButton);
+		if(sender.getPlayer().isAI == true)
+			aButton.setEnabled(false);
 
 		return aButton;
 	}
@@ -363,6 +364,8 @@ public class Trade extends JDialog{
 			aButton.setBounds((int)(sender.getX() + this.buttonWidth + 10), (int)(sender.getY() + sender.height + 10), (int)buttonWidth, (int)buttonHeight);
 
 		//printButtonInfo(aButton);
+		if(sender.getPlayer().isAI == true)
+			aButton.setEnabled(false);
 
 		return aButton;
 	}
