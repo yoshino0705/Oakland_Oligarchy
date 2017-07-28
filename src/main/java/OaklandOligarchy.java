@@ -124,7 +124,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 			
 			String content = new Scanner(cipherFile).useDelimiter("\\Z").next();
 			//String content = new String(Files.readAllBytes(Paths.get(cipherFile.getAbsolutePath())));
-			content = Saver.cipher(content, -10);
+			content = Saver.cipher(content, -2);
 			//System.out.println(content);	
 
 			File tempFile = new File("temp_file");
@@ -132,8 +132,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 			out.write(content);
 			out.close();
 
-			File file = new File("temp_file");
-			
+			File file = new File("temp_file");			
 
 			Scanner scan = new Scanner(file);//set scanner to read from save file
 			//read time from file
@@ -179,7 +178,7 @@ public class OaklandOligarchy implements MouseMotionListener{
 				
 				boolean isAIValue = Boolean.parseBoolean(scan.nextLine());
 				String tokenTextureData = scan.nextLine();				
-				System.out.println(tokenTextureData);
+				gb.getTokenTextures().loadFromString(tokenTextureData);
 				
 				Player thePlayer;
 				
@@ -192,8 +191,6 @@ public class OaklandOligarchy implements MouseMotionListener{
 					
 				}
 				
-				gb.getTokenTextures().loadFromString(tokenTextureData);
-
 				if(pname.equals(curTurnPlayerName)){//if this player is the current turn player
 					currentTurnPlayer = thePlayer;
 					numTurns = i;
@@ -214,6 +211,8 @@ public class OaklandOligarchy implements MouseMotionListener{
 				}//end for k
 				gb.movePlayer(i, position);
 			}//and for i
+			
+			gb.getTokenTextures().setPlayerColor(this); 	// sets custom player color if any
 
 			//add top menu
 			tm = new TopMenu(this);

@@ -43,8 +43,9 @@ public class Saver{
 					
 				}//end for loop
 				
+				
 				//cipher the string to hide it
-				str = cipher(str, 10);
+				str = cipher(str, 2);
 				//write string to file
 				out.write(str);
 				//done writing, close the file

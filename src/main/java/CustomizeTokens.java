@@ -2,10 +2,16 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.List;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 import javax.swing.JColorChooser;
@@ -97,6 +103,7 @@ public class CustomizeTokens {
 	}
 	
 	public void setPlayerColor(int playerIndex) {
+		this.type[playerIndex] = 0;
 		try {
 			Color newColor = JColorChooser.showDialog(null, "Choose a color", Color.RED);
 			this.playerColor[playerIndex] = newColor;
@@ -133,12 +140,12 @@ public class CustomizeTokens {
 			if(choice.equals(this.options[0])){
 				// select from colors
 				this.setPlayerColor(playerIndex);
-				this.type[playerIndex] = 0;
+				//this.type[playerIndex] = 0;
 				
 			}else{
 				// select from images
 				this.setImage(playerIndex);
-				this.type[playerIndex] = 1;
+				//this.type[playerIndex] = 1;
 			}
 			
 		}catch(Exception e) {}
@@ -164,18 +171,19 @@ public class CustomizeTokens {
 				// color
 				this.type[playerIndex] = 0;
 				this.playerColor[playerIndex] = new Color(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[3]), Integer.parseInt(tokens[4]));
-				System.out.println("Color changed for player index: " + playerIndex + " Color: " + this.playerColor[playerIndex].getRGB());
+				//System.out.println("Color changed for player index: " + playerIndex + " Color: " + this.playerColor[playerIndex].getRGB());
 			}
 			else if(type == 1) {
 				// image
 				this.type[playerIndex] = 1;
 				this.imagePath[playerIndex] = tokens[2];
-				System.out.println("Image changed for player index: " + playerIndex + " Path: " + this.imagePath[playerIndex]);
+				this.image[playerIndex] = ImageIO.read(new File(this.imagePath[playerIndex]));
+				//System.out.println("Image changed for player index: " + playerIndex + " Path: " + this.imagePath[playerIndex]);
 
 			}				
 			else {
 				this.type[playerIndex] = -1;
-				System.out.println("Nothing changed");
+				//System.out.println("Nothing changed");
 			}
 				
 			
@@ -184,9 +192,9 @@ public class CustomizeTokens {
 	}
 	
 	public static void main(String args[]) {
-		String str = "0=1=C:\\Users\\Weihao\\Desktop\\java\\Oakland Oligarchy\\house.png";
-		String token[] = str.split("=");
-		System.out.println(token[2]);
+		String str = "A\\B\\C";
+		String str2 = str.replace("\\", "/");
+		System.out.println(str2);
 	}
 
 }
