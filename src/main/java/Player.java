@@ -71,8 +71,43 @@ public class Player{
 		return propertyOwned;
 	}
 
-	public void addProperty(PropertyTile property){
+	/*
+	Adds property to the Player's list of owned properties. Also checks the
+	61 bus feature.
+
+	@param - property - the property to be added to the list of propteries owned
+	@return - true when the player wins by 61 bus rule - false otherwise
+
+	*/
+
+	public boolean addProperty(PropertyTile property){
+		//if the property being added is a 61 bus property
+		if(property.getTileName().contains("61")){
+
+			//count how many 61 tiles the player already owns
+			ArrayList<Integer> count61 = new ArrayList<Integer>();
+			for(int i = 0; i < propertyOwned.size(); ++i){
+				if(propertyOwned.get(i).getTileName().contains("61")){
+					count61.add(i);
+				}
+			}
+
+			//reset rent for each tile if necessary
+			if(count61.size() == 1){
+				propertyOwned.get(count61.get(0)).setRent(100);
+				property.setRent(100);
+			}else if(count61.size() == 2){
+				propertyOwned.get(count61.get(0)).setRent(200);
+				propertyOwned.get(count61.get(1)).setRent(200);
+				property.setRent(200);
+			}else if(count61.size() == 3){
+				//player wins here
+				return true;
+			}
+
+		}
 		propertyOwned.add(property);
+		return false;
 	}
 
 	public boolean removeProperty(PropertyTile property){
@@ -122,10 +157,10 @@ public class Player{
 				}
 
 				game.getGameBoard().refreshBoard();
-				
+
 			}//end of if player should lose
 
-			
+
 			if(forecloseProps.size() > 0){//if the bank had forclosed on properties
 				String msg = this.getName() + " didn't have enough money so they bank foreclosed these properties:\n";
 				for (PropertyTile prop : forecloseProps)

@@ -42,7 +42,7 @@ public class ImplementTiles{
         //monopoly block - freshman basics
         tileArray[2] = new PropertyTile("Market Central", 90, 14);
         tileArray[3] = new PropertyTile("Market-to-Go", 100, 16);
-        tileArray[4] = new PropertyTile("The Perch", 110, 17);
+        tileArray[4] = new PropertyTile("Bus 61A", 200, 50);
 
         //action tiles example
         tileArray[5] = new ActionTile(1);
@@ -61,7 +61,7 @@ public class ImplementTiles{
         tileArray[12] = new ActionTile(4);
 
         //monopoly block - Schenly Plaza
-        tileArray[13] = new PropertyTile("Schenly Lawn", 180, 23); //cant really own this? change it?
+        tileArray[13] = new PropertyTile("Bus 61B", 200, 50);
         //space for another action?
         tileArray[14] = new ActionTile(5);
         tileArray[15] = new PropertyTile("The Porch Restaurant", 200, 25);
@@ -80,7 +80,7 @@ public class ImplementTiles{
 
 
         //monopoly block - Deep South O
-        tileArray[22] = new PropertyTile("Larry and Carol's Pizza", 250, 30);
+        tileArray[22] = new PropertyTile("Bus 61C", 200, 50);
         tileArray[23] = new PropertyTile("Bootleggers", 250, 32);
         //space for another action?
         tileArray[24] = new ActionTile(2);
@@ -94,7 +94,7 @@ public class ImplementTiles{
         tileArray[29] = new ActionTile(3);
         tileArray[30] = new PropertyTile("Sennot Square", 280, 36);
         //3 spaces for actions?
-        tileArray[31] = new ActionTile(4);
+        tileArray[31] = new PropertyTile("Bus 61D", 200, 50);
         tileArray[32] = new ActionTile(7);
         tileArray[33] = new ActionTile(6);
         //monopoly block - The big properties of Pitt

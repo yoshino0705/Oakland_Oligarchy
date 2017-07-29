@@ -20,7 +20,7 @@ public class ProcessTurn {
 		Player curPlayer = game.getCurrentTurnPlayer();
 
 		boolean positionChange = false;
-    
+
 		if(curPlayer.getName().equalsIgnoreCase("laboon"))
 				game.getGameBoard().enableEasterEgg();
 
@@ -44,10 +44,10 @@ public class ProcessTurn {
 		} while (positionChange == true);
 
 		// update top menu buttons
-		
+
 		game.getTopMenu().toggleEndTurnButton();
 		game.getTopMenu().toggleRollButton();
-		
+
 	}
 
 	// constructor for testing purposes
@@ -94,13 +94,13 @@ public class ProcessTurn {
 	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 	private void doPropertyInteraction(OaklandOligarchy game, PropertyTile pTile, Player curPlayer) {
 		// if player lands on their own tile don't do anything
-		
+
 		if (pTile.getOwner() == curPlayer)
 			return;
 
 		ArrayList<PropertyTile> forecloseProps = new ArrayList<PropertyTile>();
 		if (pTile.isOwned()) {
-			
+
 			//if the property is mortgaged and it is not owned by the current player.
 			if(pTile.isMortgaged() && !pTile.getOwner().equals(curPlayer) && curPlayer.isAI == false){
 				JOptionPane.showMessageDialog(null, "This properpty is mortgaged. Your lucky day!");
@@ -128,13 +128,13 @@ public class ProcessTurn {
 				// then the player loses
 				if (curPlayer.getMoney() < pTile.getRent()) {
 					// tell the player they lost
-					
+
 					if(curPlayer.isAI == false)
 						JOptionPane.showMessageDialog(null, "You ran out of money and properties. You lose!");
 					else {
 						AI.displayActionMessage(curPlayer.getName() + " has ran out of money and properties, the AI has lost!");
-						
-					}						
+
+					}
 
 					game.playerLose(curPlayer);
 					game.endTurn();
@@ -154,17 +154,17 @@ public class ProcessTurn {
 				String msg = "You didn't have enough money to pay rent so the bank foreclosed these properties:\n";
 				for (PropertyTile prop : forecloseProps)
 					msg += prop.getTileName() + "\n";
-				
+
 				if(curPlayer.isAI == false)
 					JOptionPane.showMessageDialog(null, msg);
 				else {
 					AI.displayActionMessage("The bank has forclosed the following properties: " + msg);
-					
+
 				}
-				
+
 			} else
 				// notify player that they owe someone rent
-				
+
 				if(curPlayer.isAI == false)
 					JOptionPane.showMessageDialog(null, "You landed on " + pTile.getTileName() + " owned by " +
 							pTile.getOwner().getName() + ". You pay them " +
@@ -172,16 +172,16 @@ public class ProcessTurn {
 				else {
 					AI.displayActionMessage("Paid rent $" + pTile.getRent() + " to " + pTile.getOwner().getName());
 				}
-			
+
 				// subtract money from curPlayer and add to owner
 				curPlayer.setMoney(curPlayer.getMoney() - pTile.getRent());
 				pTile.getOwner().setMoney(pTile.getOwner().getMoney() + pTile.getRent());
-				
+
 		} else {
 			// check if player has enough money to purchase property
 			if (curPlayer.getMoney() < pTile.getValue()) {
 				// only display message to actual players
-				
+
 				if(curPlayer.isAI == false)
 					JOptionPane.showMessageDialog(null, "You landed on " + pTile.getTileName() + " but you don't have"
 							+ " enough money to purchase it.\n" + pTile.getTileName() +
@@ -189,12 +189,12 @@ public class ProcessTurn {
 							curPlayer.getMoney() + ". How sad :(");
 				else {
 					AI.displayActionMessage("I can't buy this (sad face)");
-					
+
 				}
-				
+
 				return;
 			}
-			
+
 			if(curPlayer.isAI == false) {
 				//give player option to buy tile
 				int result = JOptionPane.showConfirmDialog(null, "You landed on " + pTile.getTileName() +
@@ -208,7 +208,7 @@ public class ProcessTurn {
 					pTile.setOwnership(curPlayer);
 					curPlayer.addProperty(pTile);
 				}
-				
+
 			}else {
 				AI.displayActionMessage("The AI has bought " + pTile.getTileName() + " for " + pTile.getValue() + " dollars.");
 				// AI auto buys the tile
@@ -216,8 +216,24 @@ public class ProcessTurn {
 				curPlayer.setMoney(curPlayer.getMoney() - pTile.getValue());
 				// set curPlayer as owner of tile
 				pTile.setOwnership(curPlayer);
-				curPlayer.addProperty(pTile);
-				
+
+				//add property and check if player has won the game by 61 bus rule
+				if(curPlayer.addProperty(pTile)){
+					for(int i = 0; i < game.allPlayers.size(); ++i){
+						if(!game.allPlayers.get(i).getName().equals(curPlayer.getName())){
+							game.playerLose(game.allPlayers.get(i));
+						}
+					}
+				}
+
+				if (game.checkWon()) {
+					Player winner = game.getWinner();
+					JOptionPane.showMessageDialog(null, winner.getName() + " has won the game!");
+				}
+
+				game.getGameBoard().refreshBoard();
+
+
 			}
 
 		}
