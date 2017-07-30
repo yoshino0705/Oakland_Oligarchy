@@ -110,14 +110,45 @@ public class Player{
 		return false;
 	}
 
+	/*
+	Remove property from the players propertyOwned list. Checks to see if the
+	property being removed is a bus property. In this case the remaining
+	bus properties owned by this player (if any), must have their rents changed
+	to the appropriate value.
+	@parm - property - the property to remove
+	@return - boolean - true if property was found and was sucessfully removed - false if
+	the property was not owned by this player.
+	*/
+
 	public boolean removeProperty(PropertyTile property){
 		for(int i = 0; i < propertyOwned.size(); ++i){
 			if(propertyOwned.get(i).getTileName().equals(property.getTileName())){
+				//remove this property from the ownership list and reset its rent
 				propertyOwned.remove(i);
+				property.setRent(50);
+
+				if(property.getTileName().contains("61")){
+
+					//count how many 61 tiles the player already owns
+					ArrayList<Integer> count61 = new ArrayList<Integer>();
+					for(int x = 0; x < propertyOwned.size(); ++x){
+						if(propertyOwned.get(x).getTileName().contains("61")){
+							count61.add(x);
+						}
+					}
+
+					//reset rent for each tile if necessary
+					if(count61.size() == 1){
+						propertyOwned.get(count61.get(0)).setRent(50);
+					}else if(count61.size() == 2){
+						propertyOwned.get(count61.get(0)).setRent(100);
+						propertyOwned.get(count61.get(1)).setRent(100);
+					}//no else here
+				}
 				return true;
 			}
 		}
-		System.out.println("Property not removed");
+
 		return false;
 	}
 
