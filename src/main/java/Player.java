@@ -71,18 +71,100 @@ public class Player{
 		return propertyOwned;
 	}
 
-	public void addProperty(PropertyTile property){
+	/*
+	Adds property to the Player's list of owned properties. Also checks the
+	61 bus feature.
+
+	@param - property - the property to be added to the list of propteries owned
+	@return - true when the player wins by 61 bus rule - false otherwise
+
+	*/
+
+	public boolean addProperty(PropertyTile property){
+		//if the property being added is a 61 bus property
+		if(property.getTileName().contains("61")){
+
+			//count how many 61 tiles the player already owns
+			ArrayList<Integer> count61 = new ArrayList<Integer>();
+			for(int i = 0; i < propertyOwned.size(); ++i){
+				if(propertyOwned.get(i).getTileName().contains("61")){
+					count61.add(i);
+				}
+			}
+
+			//reset rent for each tile if necessary
+			if(count61.size() == 1){
+				propertyOwned.get(count61.get(0)).setRent(100);
+				property.setRent(100);
+			}else if(count61.size() == 2){
+				propertyOwned.get(count61.get(0)).setRent(200);
+				propertyOwned.get(count61.get(1)).setRent(200);
+				property.setRent(200);
+			}else if(count61.size() == 3){
+
+				//player wins here
+				for(int i = 0; i < game.allPlayers.size(); ++i){
+					System.out.println(i);
+					if(!game.allPlayers.get(i).getName().equals(this.getName())){
+						game.playerLose(game.allPlayers.get(i));
+						System.out.println(game.allPlayers.get(i) + " loses");
+					}
+				}
+
+				if (game.checkWon()) {
+					System.out.println("Player Wins");
+					Player winner = game.getWinner();
+					JOptionPane.showMessageDialog(null, winner.getName() + " has won the game!");
+				}
+
+				//return true because player has won on bus rule
+				propertyOwned.add(property);
+				return true;
+			}
+		}
 		propertyOwned.add(property);
+		return false;
 	}
+
+	/*
+	Remove property from the players propertyOwned list. Checks to see if the
+	property being removed is a bus property. In this case the remaining
+	bus properties owned by this player (if any), must have their rents changed
+	to the appropriate value.
+	@parm - property - the property to remove
+	@return - boolean - true if property was found and was sucessfully removed - false if
+	the property was not owned by this player.
+	*/
 
 	public boolean removeProperty(PropertyTile property){
 		for(int i = 0; i < propertyOwned.size(); ++i){
 			if(propertyOwned.get(i).getTileName().equals(property.getTileName())){
+				//remove this property from the ownership list and reset its rent
 				propertyOwned.remove(i);
+				property.setRent(50);
+
+				if(property.getTileName().contains("61")){
+
+					//count how many 61 tiles the player already owns
+					ArrayList<Integer> count61 = new ArrayList<Integer>();
+					for(int x = 0; x < propertyOwned.size(); ++x){
+						if(propertyOwned.get(x).getTileName().contains("61")){
+							count61.add(x);
+						}
+					}
+
+					//reset rent for each tile if necessary
+					if(count61.size() == 1){
+						propertyOwned.get(count61.get(0)).setRent(50);
+					}else if(count61.size() == 2){
+						propertyOwned.get(count61.get(0)).setRent(100);
+						propertyOwned.get(count61.get(1)).setRent(100);
+					}//no else here
+				}
 				return true;
 			}
 		}
-		System.out.println("Property not removed");
+
 		return false;
 	}
 
@@ -122,10 +204,10 @@ public class Player{
 				}
 
 				game.getGameBoard().refreshBoard();
-				
+
 			}//end of if player should lose
 
-			
+
 			if(forecloseProps.size() > 0){//if the bank had forclosed on properties
 				String msg = this.getName() + " didn't have enough money so they bank foreclosed these properties:\n";
 				for (PropertyTile prop : forecloseProps)

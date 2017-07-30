@@ -17,7 +17,7 @@ public class StartFrame{
 	JTextField num_players_field = new JTextField(1);
 	JButton num_players_button = new JButton("START");
 	JLabel num_players_error_label = new JLabel();
-	
+
 	//wrappers for sizing
 	JPanel field_panel = new JPanel();
 	JPanel button_panel = new JPanel();
@@ -49,7 +49,7 @@ public class StartFrame{
 		get_num_players_panel.add(num_players_label);
 		//get_num_players_panel.add(num_players_field);
 		//get_num_players_panel.add(num_players_button);
-		
+
 		get_num_players_panel.add(field_panel);
 		get_num_players_panel.add(button_panel);
 		get_num_players_panel.add(num_players_error_label);
@@ -70,7 +70,7 @@ public class StartFrame{
 	public int getNumTurns(){
 		return num_turns;
 	}
-	
+
 	public boolean isDone(){
 		return done;
 	}
@@ -87,7 +87,7 @@ public class StartFrame{
 		new StartFrame();
 	}
 
-	
+
 	class Num_players_listener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			String num_players_str = num_players_field.getText();
@@ -119,13 +119,13 @@ public class StartFrame{
 			name_fields.add(player_field);
 			name_panel.add(player_label);
 			name_panel.add(player_field);
-		}	
+		}
 		//JLabel name_label = new JLabel("<html>Enter name<br>for player 1</html>");
 		//JTextField name_field = new JTextField(20);
 		JButton name_button = new JButton("SET NAMES");
 		JLabel name_error_label = new JLabel("");
 
-		
+
 		ActionListener name_listener = new Name_listener();
 		name_button.addActionListener(name_listener);
 
