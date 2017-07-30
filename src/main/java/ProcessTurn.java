@@ -218,21 +218,9 @@ public class ProcessTurn {
 				curPlayer.setMoney(curPlayer.getMoney() - pTile.getValue());
 				// set curPlayer as owner of tile
 				pTile.setOwnership(curPlayer);
+				//add property to player object
+				curPlayer.addProperty(pTile);
 
-				Player.setPlayerGame(game);
-				//add property and check if player has won the game by 61 bus rule
-				if(curPlayer.addProperty(pTile)){
-					for(int i = 0; i < game.allPlayers.size(); ++i){
-						if(!game.allPlayers.get(i).getName().equals(curPlayer.getName())){
-							game.playerLose(game.allPlayers.get(i));
-						}
-					}
-				}
-
-				if (game.checkWon()) {
-					Player winner = game.getWinner();
-					JOptionPane.showMessageDialog(null, winner.getName() + " has won the game!");
-				}
 
 				game.getGameBoard().refreshBoard();
 
