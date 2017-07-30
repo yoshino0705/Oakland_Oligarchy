@@ -224,7 +224,7 @@ public class GameBoard extends JPanel{
 	public void movePlayer(int playerNum, int toThisTileID){
 		if(playerNum > 4 || playerNum < 0){
 			System.out.println("Error in GameBoard movePlayer(): invalid playerNum");
-			
+			return;
 		}
 
 		playerOnTile[playerNum] = toThisTileID;
