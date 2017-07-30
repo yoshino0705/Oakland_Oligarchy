@@ -101,10 +101,26 @@ public class Player{
 				propertyOwned.get(count61.get(1)).setRent(200);
 				property.setRent(200);
 			}else if(count61.size() == 3){
+
 				//player wins here
+				for(int i = 0; i < game.allPlayers.size(); ++i){
+					System.out.println(i);
+					if(!game.allPlayers.get(i).getName().equals(this.getName())){
+						game.playerLose(game.allPlayers.get(i));
+						System.out.println(game.allPlayers.get(i) + " loses");
+					}
+				}
+
+				if (game.checkWon()) {
+					System.out.println("Player Wins");
+					Player winner = game.getWinner();
+					JOptionPane.showMessageDialog(null, winner.getName() + " has won the game!");
+				}
+
+				//return true because player has won on bus rule
+				propertyOwned.add(property);
 				return true;
 			}
-
 		}
 		propertyOwned.add(property);
 		return false;
