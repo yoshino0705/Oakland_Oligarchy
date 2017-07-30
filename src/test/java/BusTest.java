@@ -43,25 +43,6 @@ public class BusTest {
     }
 
     @Test
-    public void TestAddPropertyTrue(){
-        Player p = new Player("test", 1000000, 0, false);
-        PropertyTile pt = new PropertyTile("61A", 200, 50);
-        PropertyTile pt2 = new PropertyTile("61B", 200, 50);
-        PropertyTile pt3 = new PropertyTile("61C", 200, 50);
-        PropertyTile pt4 = new PropertyTile("61D", 200, 50);
-
-        OaklandOligarchy game = mock(OaklandOligarchy.class);
-        Player.setPlayerGame(game);
-
-        p.addProperty(pt);
-        p.addProperty(pt2);
-        p.addProperty(pt3);
-
-        //OaklandOligarchy can not be mocked. It is used too heavily in function
-        //assertTrue(p.addProperty(pt4));
-    }
-
-    @Test
     public void TestRemovePropertyTrue(){
         Player p = new Player("test", 1000000, 0, false);
         PropertyTile pt = new PropertyTile("61A", 200, 50);
