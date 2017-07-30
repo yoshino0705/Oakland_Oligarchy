@@ -253,6 +253,8 @@ public class ProcessTurn {
 					
 				}
 				
+				game.getGameBoard().refreshBoard();
+				
 			}
 
 		}
