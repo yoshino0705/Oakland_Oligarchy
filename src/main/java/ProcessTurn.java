@@ -93,8 +93,18 @@ public class ProcessTurn {
 	~				 a property tile.											~
 	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 	private void doPropertyInteraction(OaklandOligarchy game, PropertyTile pTile, Player curPlayer) {
-		// if player lands on their own tile don't do anything
+		// update board data
+		BoardData.addLandOnTile(pTile);
+		//BoardData.printChanceOfLanding();
 		
+		// AI will perform buy back mortgaged properties if any, and if it has enough money
+		if (curPlayer.isAI == true) {
+			AI ai = (AI) curPlayer;
+			ai.performBuyBack();
+			
+		}	
+		
+		// if player lands on their own tile don't do anything		
 		if (pTile.getOwner() == curPlayer)
 			return;
 
@@ -103,7 +113,7 @@ public class ProcessTurn {
 			
 			//if the property is mortgaged and it is not owned by the current player.
 			if(pTile.isMortgaged() && !pTile.getOwner().equals(curPlayer) && curPlayer.isAI == false){
-				JOptionPane.showMessageDialog(null, "This properpty is mortgaged. Your lucky day!");
+				JOptionPane.showMessageDialog(null, "This property is mortgaged. Your lucky day!");
 				return;
 			}
 
@@ -188,7 +198,26 @@ public class ProcessTurn {
 							" costs $" + pTile.getValue() + " but you only have $" +
 							curPlayer.getMoney() + ". How sad :(");
 				else {
-					AI.displayActionMessage("I can't buy this (sad face)");
+					if(BoardData.isHighPriorityTile(pTile)) {
+						AI currentAI = (AI) curPlayer;
+						if(currentAI.propTotalMortgageValue() >= pTile.getValue()) {
+							// perform buy
+							currentAI.mortgageForMoney(pTile.getValue());
+							
+							// AI auto buys the tile
+							// subtract cost from player
+							curPlayer.setMoney(curPlayer.getMoney() - pTile.getValue());
+							// set curPlayer as owner of tile
+							pTile.setOwnership(curPlayer);
+							curPlayer.addProperty(pTile);
+							
+							AI.displayActionMessage("The AI has bought " + pTile.getTileName() + " for " + pTile.getValue() + " dollars.");
+
+							
+						}
+						
+					}else
+						AI.displayActionMessage("I can't buy this (sad face)");
 					
 				}
 				
@@ -210,13 +239,25 @@ public class ProcessTurn {
 				}
 				
 			}else {
-				AI.displayActionMessage("The AI has bought " + pTile.getTileName() + " for " + pTile.getValue() + " dollars.");
-				// AI auto buys the tile
-				// subtract cost from player
-				curPlayer.setMoney(curPlayer.getMoney() - pTile.getValue());
-				// set curPlayer as owner of tile
-				pTile.setOwnership(curPlayer);
-				curPlayer.addProperty(pTile);
+				// only buy pass the threshold if it's secondary priority tiles
+				
+				if(curPlayer.getMoney() - pTile.getValue() > 200 || BoardData.isSecondaryPriorityTile(pTile)) {
+					// can buy it regardless
+					
+					AI.displayActionMessage("The AI has bought " + pTile.getTileName() + " for " + pTile.getValue() + " dollars.");
+					// AI auto buys the tile
+					// subtract cost from player
+					curPlayer.setMoney(curPlayer.getMoney() - pTile.getValue());
+					// set curPlayer as owner of tile
+					pTile.setOwnership(curPlayer);
+					curPlayer.addProperty(pTile);
+					
+				}else {
+					AI.displayActionMessage(curPlayer.getName() + " decided to not buy it.");
+					
+				}
+				
+				game.getGameBoard().refreshBoard();
 				
 			}
 

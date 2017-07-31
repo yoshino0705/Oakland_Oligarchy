@@ -102,6 +102,8 @@ public class GameBoard extends JPanel{
 	
 	private CustomizeTokens tokenTexture;
 
+	private BoardData stats;				// for recording data for AI design
+
  	public GameBoard(int x, int y, double scaleX, double scaleY, OaklandOligarchy game){
 		shiftX = x;
 		shiftY = y;
@@ -157,6 +159,8 @@ public class GameBoard extends JPanel{
 		});
 		
 		this.add(changeToken);
+		
+		stats = new BoardData(game);
 	}
 
 	public void paintComponent(Graphics g) {
@@ -221,10 +225,12 @@ public class GameBoard extends JPanel{
 	public void movePlayer(int playerNum, int toThisTileID){
 		if(playerNum > 4 || playerNum < 0){
 			System.out.println("Error in GameBoard movePlayer(): invalid playerNum");
-			System.exit(1);
+
+			return;
 		}
 
 		playerOnTile[playerNum] = toThisTileID;
+		// stats.addLandOnTile(toThisTileID);
 	}
 
 	private void initCenterArray(){
