@@ -93,6 +93,10 @@ public class ProcessTurn {
 	~				 a property tile.											~
 	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	*/
 	private void doPropertyInteraction(OaklandOligarchy game, PropertyTile pTile, Player curPlayer) {
+		// update board data
+		BoardData.addLandOnTile(pTile);
+		//BoardData.printChanceOfLanding();
+		
 		// AI will perform buy back mortgaged properties if any, and if it has enough money
 		if (curPlayer.isAI == true) {
 			AI ai = (AI) curPlayer;

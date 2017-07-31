@@ -7,17 +7,21 @@ import java.util.ArrayList;
 public class BoardData {
 	private static ArrayList<PropertyTile> highPriorityTiles;
 	private static ArrayList<PropertyTile> secondaryPriorityTiles;
-	private ArrayList<Integer> landedOn;
-	private ArrayList<Tile> allTile;
+	private static ArrayList<Integer> landedOn;
+	private static ArrayList<Double> chanceOfLanding;
+	private static ArrayList<Tile> allTile;
 	private OaklandOligarchy theGame;
 	
+	// initializations
 	public BoardData(OaklandOligarchy game) {
 		landedOn = new ArrayList<Integer>();
 		theGame = game;
 		allTile = new ArrayList<Tile>();
+		chanceOfLanding = new ArrayList<Double>();
 		for(int i = 0; i < GameBoard.TILE_COUNT; i++) {
-			landedOn.add(i, 0);
+			landedOn.add(0);
 			allTile.add(theGame.tiles.getTile(i));
+			chanceOfLanding.add(0.0);
 			
 		}
 		
@@ -44,33 +48,75 @@ public class BoardData {
 		secondaryPriorityTiles.add((PropertyTile) game.tiles.getTile(30));
 	}
 	
-	public void addLandOnTile(int propPos) {
-		int oldVal = landedOn.get(propPos);
-		landedOn.set(propPos, oldVal + 1);
-		save();
-		
-	}
-	
-	private void save() {
-		try {
-			BufferedWriter out = new BufferedWriter(new FileWriter(new File("Statistics.txt")));
-			String str = "";
+	// get the index of a tile
+	private static int getTileIndex(Tile tile) {
+		for(int i = 0; i < allTile.size(); i++) {
+			if(tile.getTileName().equalsIgnoreCase(allTile.get(i).getTileName()))
+				return i;
 			
-			for(int i = 0; i < GameBoard.TILE_COUNT; i++) {
-				str += allTile.get(i).getTileName() + " " + landedOn.get(i) + "\n";
-				
-			}
-			
-			out.write(str);
-			out.close();
-			
-		} catch (IOException e) {
-			//e.printStackTrace();
 		}
 		
+		return -1;		// not found
 		
 	}
 	
+	// calculate the chance of landing on a certain property
+	private static void calculateProbability() {
+		int totalCount = 0;
+		for(int count : landedOn)
+			totalCount += count;
+		for(int i = 0; i < landedOn.size(); i++)
+			chanceOfLanding.set(i, (double) (landedOn.get(i) * 1.0 / totalCount));
+		
+	}
+	
+	// update the two arraylists, highPriorityTiles and secondaryPriorityTiles
+	private static void updatePriorityList() {
+		highPriorityTiles = new ArrayList<PropertyTile>();
+		secondaryPriorityTiles = new ArrayList<PropertyTile>();
+		Double chance = 0.0;
+		PropertyTile prop = null;
+		Tile tile = null;
+		
+		// 61 bus
+		highPriorityTiles.add((PropertyTile) allTile.get(22));
+		highPriorityTiles.add((PropertyTile) allTile.get(31));
+		highPriorityTiles.add((PropertyTile) allTile.get(13));
+		highPriorityTiles.add((PropertyTile) allTile.get(4));
+		
+		for(int i = 0; i < chanceOfLanding.size(); i++) {
+			chance = chanceOfLanding.get(i);
+			tile = allTile.get(i);
+			
+			if(tile.isProperty() == true)
+				prop = (PropertyTile) tile;
+			else
+				continue;
+			
+			if(chance >= 0.75)
+				highPriorityTiles.add(prop);
+			else if(chance < 0.75 && chance > 0.50)
+				secondaryPriorityTiles.add(prop);
+			
+		}	
+		
+	}
+	
+	//	add one to the calculation of chances of landing on a property
+	public static void addLandOnTile(Tile currentTile) {
+		if(currentTile.isProperty() == false)
+			return;			// not property
+		
+		int tileIndex = getTileIndex(currentTile);
+		int oldVal = landedOn.get(tileIndex);
+		landedOn.set(tileIndex, oldVal + 1);
+		
+		calculateProbability();
+		updatePriorityList();
+		
+	}
+	
+	// check if a tile is highest priority
 	public static boolean isHighPriorityTile(Tile prop) {
 		if(prop.isProperty() == false)
 			return false;
@@ -84,6 +130,7 @@ public class BoardData {
 		return false;
 	}
 	
+	// check if a tile is secondary priority
 	public static boolean isSecondaryPriorityTile(Tile prop) {
 		if(prop.isProperty() == false)
 			return false;
@@ -97,5 +144,20 @@ public class BoardData {
 		return false;
 	}
 	
+	// print out the chance of landing on each property tiles
+	public static void printChanceOfLanding() {
+		int count = chanceOfLanding.size();
+		System.out.println("[Index] ");
+		
+		for(int i = 0; i < count; i++)
+			System.out.print(i + "\t");
+		
+		System.out.println("\n [Chance] ");
+		
+		for(int i = 0; i < count; i++)
+			System.out.print(chanceOfLanding.get(i) + "\t");
+		
+		System.out.println();
+	}
 	
 }
