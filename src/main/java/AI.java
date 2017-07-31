@@ -3,17 +3,20 @@ import java.awt.Point;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
 import java.util.ArrayList;
+
 import javax.swing.AbstractButton;
 import javax.swing.JOptionPane;
 
 public class AI extends Player{
 	public static int AI_Count = 1;
 	
+	private ArrayList<Integer> mortgageValues;
+	
 	public AI(String name, int money, int playerNumber, boolean lost) {
 		super(name, money, playerNumber, lost);
 		this.isAI = true;
-		new ArrayList<Integer>();
-		
+
+		mortgageValues = new ArrayList<Integer>();
 	}
 	
 	public AI(String name, int money, int playerNumber, boolean lost, int position){
@@ -68,7 +71,7 @@ public class AI extends Player{
 	    //try { Thread.sleep(millis); } catch (Exception e) {}
 	    r.mouseRelease(InputEvent.BUTTON1_MASK);
 	}
-	
+
 	private ArrayList<PropertyTile> getMortgageablePropertyList() {
 		ArrayList<PropertyTile> owned = this.getPropertiesList();
 		ArrayList<PropertyTile> mortgageable = new ArrayList<PropertyTile>();
@@ -84,12 +87,12 @@ public class AI extends Player{
 	}
 	
 	private boolean canPerformMortgage() {
-		return (this.getMortgageablePropertyList().size() == 0)? false : true;
-		
+		return (this.getMortgageablePropertyList().size() == 0)? false : true;	
 	}
 	
 	private void performMortgage(PropertyTile prop) {
 		// uses mortgage method from player class
+
 		if(this.canPerformMortgage()) {
 			this.mortgage(prop);		
 			AI.displayActionMessage(this.getName() + " mortgaged: " + prop.getTileName());
@@ -188,7 +191,6 @@ public class AI extends Player{
 			AI.displayActionMessage(this.getName() + " has bought back " + prop.getTileName());
 		}
 	}
-	
 	
 	public static void displayActionMessage(String msg) {
 		JOptionPane.showMessageDialog(null, msg);

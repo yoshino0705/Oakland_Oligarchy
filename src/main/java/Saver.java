@@ -39,11 +39,13 @@ public class Saver{
 					
 					// write the value of isAI to determine if it's AI
 					str += Boolean.toString(p.isAI) + "\n";
+					str += game.getGameBoard().getTokenTextures().toString(i) + "\n";
 					
 				}//end for loop
 				
+				
 				//cipher the string to hide it
-				str = cipher(str, 10);
+				str = cipher(str, 2);
 				//write string to file
 				out.write(str);
 				//done writing, close the file
