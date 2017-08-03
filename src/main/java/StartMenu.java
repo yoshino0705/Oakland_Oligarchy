@@ -29,7 +29,7 @@ public class StartMenu{
 		playerNames[0] = this.ensureFirstPlayerIsntAI();
 		
 		for(int i = 1; i < playerCount; i++){
-			playerNames[i] = JOptionPane.showInputDialog("Enter Player " + (i+1) + "'s Name");
+			playerNames[i] = JOptionPane.showInputDialog("Enter Player " + (i+1) + "'s Name\nName the player 'ai' to create an ai player");
 				
 			if(playerNames[i].trim().contentEquals(""))
 				playerNames[i] = "Player " + (i+1);
