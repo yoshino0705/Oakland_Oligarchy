@@ -166,17 +166,36 @@ public class ActionTile extends Tile{
         	
         }
         
-        String selectedPlayerName = (String) JOptionPane.showInputDialog(null, "Your lucky day! Pick a player to take $100 from!", "Select", JOptionPane.QUESTION_MESSAGE, null, playerNameSelections, playerNameSelections[0]);
-        Player theChosenOne;
+        if(p.isAI == false) {
+        	String selectedPlayerName = (String) JOptionPane.showInputDialog(null, "Your lucky day! Pick a player to take $100 from!", "Select", JOptionPane.QUESTION_MESSAGE, null, playerNameSelections, playerNameSelections[0]);
+        	Player theChosenOne;
         
-        for(int i = 0; i < pList.size(); i++) {
-        	if(pList.get(i).getName().equals(selectedPlayerName)){
-        		theChosenOne = pList.get(i);  
-        		theChosenOne.setMoney(theChosenOne.getMoney() - 100);
-        		p.setMoney(p.getMoney() + 100);
-        		break;
+        	for(int i = 0; i < pList.size(); i++) {
+        		if(pList.get(i).getName().equals(selectedPlayerName)){
+        			theChosenOne = pList.get(i);  
+        			theChosenOne.setMoney(theChosenOne.getMoney() - 100);
+        			p.setMoney(p.getMoney() + 100);
+        			break;
+        		}
+        	
         	}
         	
+        }else {
+        	// this is an AI
+        	String selectedPlayerName = otherPlayers.get(0).getName();
+        	Player theChosenOne;
+        	
+        	for(int i = 0; i < pList.size(); i++) {
+        		if(pList.get(i).getName().equals(selectedPlayerName)){
+        			theChosenOne = pList.get(i);  
+        			theChosenOne.setMoney(theChosenOne.getMoney() - 100);
+        			p.setMoney(p.getMoney() + 100);
+        			break;
+        		}
+        	
+        	}
+        	
+        	AI.displayActionMessage(p.getName() + " has taken $100 from " + selectedPlayerName);
         }
     }
 
