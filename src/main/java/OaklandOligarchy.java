@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.io.*;
 import java.util.*;
-import java.nio.file.*;
 
 public class OaklandOligarchy implements MouseMotionListener{
 	//main window for the application
@@ -268,6 +267,53 @@ public class OaklandOligarchy implements MouseMotionListener{
 			p.addProperty(prop);
 		} else throw new IllegalArgumentException("Incorrect usage of Oakland Oligarchy class.");
 	}
+	
+	
+	// for demo mode use
+	// parameter is simply an array list of AI
+	OaklandOligarchy(ArrayList<Player> playerList){
+		Player.setPlayerGame(this);			
+		allPlayers = playerList;
+		numPlayers = playerList.size();
+
+		// set window for actual game
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setSize(1000,1000);
+
+		//add top menu
+		currentTurnPlayer = allPlayers.get(getIndexCurrentTurnPlayer());
+		tm = new TopMenu(this);
+		window.add(tm, BorderLayout.NORTH);
+
+		tiles = new ImplementTiles();
+
+		//add info to the left side of the frame
+		info = new InfoPanel(allPlayers, tiles, 0, 0, 0);
+		window.add(info, BorderLayout.WEST);
+
+		gb = new GameBoard(0, 0, .63, .63, this);
+		gb.addMouseMotionListener(this);
+
+		for(int i = 0; i < allPlayers.size(); i++) {
+			if(allPlayers.get(i).getName().contains("LABOON")) {
+				gb.enableEasterEgg();
+				break;
+
+			}
+		}
+
+
+		// add players to gameboard to start
+		for (int i = 0; i < numPlayers; i++) {
+			gb.movePlayer(i, 0);
+		}
+		window.add(gb, BorderLayout.CENTER);
+		window.setVisible(true);
+
+		// initialize tiles
+		tiles = new ImplementTiles();
+	}
+	
 
 	/*	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
 		Function: getIndexCurrentTurnPlayer
